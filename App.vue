@@ -24,6 +24,7 @@ const activeTab = ref('travel') // 'travel' | 'map'
         </div>
       </nav>
       <div class="sidebar-footer">
+        <a href="/docs/" class="docs-link" target="_blank" rel="noopener">📚 기술 문서</a>
         <span class="version-tag">v0.1</span>
         <div class="made-by">
           <span class="made-by-line"></span>
@@ -80,6 +81,14 @@ const activeTab = ref('travel') // 'travel' | 'map'
   padding: 1rem 1.2rem; border-top: 1px solid var(--border-muted);
   display: flex; flex-direction: column; gap: .8rem; align-items: stretch;
 }
+.docs-link {
+  display: block; text-align: center; padding: 8px 10px;
+  background: var(--accent-bg); color: var(--accent);
+  border: 1px solid var(--accent); border-radius: 8px;
+  font-size: .8rem; font-weight: 700; text-decoration: none;
+  transition: var(--transition);
+}
+.docs-link:hover { background: var(--accent); color: #fff; }
 .version-tag { align-self: center; font-size: .72rem; color: var(--text-muted); background: var(--bg-overlay); padding: 2px 10px; border-radius: 12px; }
 .made-by { display: flex; flex-direction: column; align-items: center; gap: .4rem; }
 .made-by-line { display: block; width: 32px; height: 1px; background: linear-gradient(90deg, transparent, var(--text-muted), transparent); }

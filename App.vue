@@ -1,5 +1,9 @@
 <script setup>
+import { ref } from 'vue'
 import TravelItinerary from './TravelItinerary.vue'
+import TravelMap from './TravelMap.vue'
+
+const activeTab = ref('travel') // 'travel' | 'map'
 </script>
 
 <template>
@@ -10,9 +14,13 @@ import TravelItinerary from './TravelItinerary.vue'
         <span class="logo-text">Intl. Research</span>
       </div>
       <nav class="sidebar-nav">
-        <div class="nav-item active">
+        <div class="nav-item" :class="{ active: activeTab === 'travel' }" @click="activeTab = 'travel'">
+          <span class="nav-icon">📋</span>
+          <span>일정표</span>
+        </div>
+        <div class="nav-item" :class="{ active: activeTab === 'map' }" @click="activeTab = 'map'">
           <span class="nav-icon">🗺️</span>
-          <span>사업개발</span>
+          <span>동선 지도</span>
         </div>
       </nav>
       <div class="sidebar-footer">
@@ -26,10 +34,17 @@ import TravelItinerary from './TravelItinerary.vue'
 
     <main class="main-content">
       <header class="page-header">
-        <h1 class="page-title">북미 사업개발 로드맵</h1>
-        <p class="page-subtitle">North America 2026 · SF · Yosemite · Seattle · Las Vegas</p>
+        <template v-if="activeTab === 'travel'">
+          <h1 class="page-title">북미 사업개발 로드맵</h1>
+          <p class="page-subtitle">North America 2026 · SF · Yosemite · Seattle · Las Vegas</p>
+        </template>
+        <template v-else-if="activeTab === 'map'">
+          <h1 class="page-title">동선 지도</h1>
+          <p class="page-subtitle">도시별 이동 경로 시각화 · Plan A / Plan B 비교</p>
+        </template>
       </header>
-      <TravelItinerary />
+      <TravelItinerary v-if="activeTab === 'travel'" />
+      <TravelMap v-if="activeTab === 'map'" />
     </main>
   </div>
 </template>
@@ -53,11 +68,13 @@ import TravelItinerary from './TravelItinerary.vue'
 .sidebar-nav { flex: 1; padding: .5rem 0; }
 .nav-item {
   display: flex; align-items: center; gap: .7rem;
-  padding: .6rem 1.2rem; color: var(--text);
+  padding: .6rem 1.2rem; color: var(--text-muted);
   font-size: .875rem; font-weight: 600;
   transition: var(--transition); border-left: 3px solid transparent;
+  cursor: pointer;
 }
-.nav-item.active { background: var(--accent-bg); border-left-color: var(--accent); }
+.nav-item:hover { color: var(--text); background: var(--accent-bg); }
+.nav-item.active { color: var(--text); background: var(--accent-bg); border-left-color: var(--accent); }
 .nav-icon { font-size: 1rem; }
 .sidebar-footer {
   padding: 1rem 1.2rem; border-top: 1px solid var(--border-muted);

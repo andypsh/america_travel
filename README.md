@@ -1,9 +1,40 @@
 # 🗺 America Travel — 북미 사업개발 로드맵
 
-> 2026년 6/26 ~ 7/4 미국 출장(SF / Yosemite / Seattle / Las Vegas) 일정·예약 전략을 Plan A·Plan B 두 시나리오로 비교 관리하는 Vue 3 SPA.
+> 2026년 6/26 ~ 7/4 미국 출장(SF / Yosemite / Seattle / Las Vegas) 일정·동선·예약 전략을 Plan A·Plan B 두 시나리오로 비교 관리하는 Vue 3 SPA.
 
-**Live**: https://america-travel.vercel.app/
-**Repo**: https://github.com/andypsh/america_travel
+![Vue](https://img.shields.io/badge/Vue-3.4-42b883?logo=vue.js&logoColor=white)
+![Vite](https://img.shields.io/badge/Vite-4.5-646cff?logo=vite&logoColor=white)
+![Leaflet](https://img.shields.io/badge/Leaflet-1.9-199900?logo=leaflet&logoColor=white)
+![Vercel](https://img.shields.io/badge/Vercel-Deployed-000000?logo=vercel&logoColor=white)
+
+🔗 **Live Demo**: <https://america-travel.vercel.app/>
+📦 **Repo**: <https://github.com/andypsh/america_travel>
+
+---
+
+## 🎯 한눈에
+
+| 항목 | 내용 |
+|---|---|
+| **무엇** | 9일 미국 출장 일정·동선·호텔 예약 전략을 단일 SPA로 시각화 |
+| **왜 두 플랜** | 월드컵 R32 한국 조 순위가 6/24 경기로 결정 → 그 전엔 두 시나리오 동시 준비 |
+| **분기점** | **6/30 단 하루** — Plan A (SEA 1박) / Plan B (SF 1박) — 그 외 8박은 공통 |
+| **뷰** | (1) 📅 일정표 — 타임라인·호텔·예약 액션 / (2) 🗺 동선 지도 — Leaflet 기반 인터랙티브 |
+| **배포** | GitHub push → Vercel 자동 빌드 → 글로벌 CDN |
+
+## 📑 목차
+
+1. [프로젝트 개요](#1-프로젝트-개요)
+2. [기술 스택](#2-기술-스택)
+3. [아키텍처](#3-아키텍처)
+4. [브랜치 전략 (Gitflow-lite)](#4-브랜치-전략-gitflow-lite)
+5. [배포 (Vercel)](#5-배포-vercel)
+6. [로컬 개발](#6-로컬-개발)
+7. [주요 기술적 결정](#7-주요-기술적-결정)
+8. [디버깅 회고](#8-디버깅-회고)
+9. [UX 의사결정 노트](#9-ux-의사결정-노트)
+10. [향후 개선 아이디어](#10-향후-개선-아이디어)
+11. [라이센스](#11-라이센스)
 
 ---
 
@@ -13,8 +44,9 @@
 
 **핵심 도메인 문제**
 - Plan A (조3위): SF 1박 → YOS 1박 → SF 2박 → SEA 1박 → LV 3박
-- Plan B (조2위): SF 1박 → YOS 1박 → SF 3박(LA 당일치기 포함) → LV 3박
-- 6/30 단 하루만 다른 도시(SEA vs SF) → 분기 비용 최소화 설계
+- Plan B (조2위): SF 1박 → YOS 1박 → SF 3박(LA 경비행기 당일치기 포함) → LV 3박
+- **6/30 단 하루만 다른 도시**(SEA vs SF) → 분기 비용 최소화 설계
+- 6/27 Yosemite 1박 동안 SF 호텔 체크아웃 + **luggage storage** 요청으로 1박 요금 절약
 
 ---
 
@@ -24,6 +56,7 @@
 |---|---|---|
 | Framework | **Vue 3 (Composition API)** | `<script setup>` 보일러플레이트 최소, 반응성 추적 명시적 |
 | Build | **Vite 4.5** | HMR 1초 미만, 호환성(Node 16) 위해 5 대신 4 고정 |
+| Map | **Leaflet 1.9 + OpenStreetMap** | API 키 불필요, 라이센스 자유, 번들 ~40KB로 가벼움 |
 | Styling | **Scoped CSS + Custom Properties** | 컴포넌트 격리 + 디자인 토큰화로 다크 톤 일괄 제어 |
 | State | **Native ref / computed** | Pinia·Vuex 불필요 — 단일 컴포넌트 트리에서 props·reactive로 충분 |
 | Hosting | **Vercel (Static)** | Git 푸시 → 자동 빌드/배포 + 글로벌 CDN + 자동 HTTPS |
@@ -36,47 +69,54 @@
 순수 클라이언트 SPA. 백엔드·DB 없음. 모든 도메인 데이터(일정·호텔·예약 액션)는 컴포넌트 내부 상수로 선언 → 빌드 시 정적 번들에 인라인.
 
 ```
-┌─────────────────────────────────────────┐
-│  Browser (https://america-travel...)    │
-│  ┌─────────────────────────────────┐    │
-│  │  index.html → main.js           │    │
-│  │     ↓                           │    │
-│  │  App.vue (shell)                │    │
-│  │     ↓                           │    │
-│  │  TravelItinerary.vue (메인)     │    │
-│  │     - aDays / laDays            │    │
-│  │     - aHotels / laHotels        │    │
-│  │     - bookingItems              │    │
-│  │     - sleepByNight              │    │
-│  │     - computed: currentDays...  │    │
-│  └─────────────────────────────────┘    │
-└──────────────┬──────────────────────────┘
+┌──────────────────────────────────────────────────────┐
+│  Browser (https://america-travel.vercel.app)         │
+│  ┌────────────────────────────────────────────┐      │
+│  │  index.html → main.js                      │      │
+│  │     ↓                                      │      │
+│  │  App.vue (shell · sidebar nav)             │      │
+│  │     ├─ activeTab='itinerary'               │      │
+│  │     │     ↓                                │      │
+│  │     │  TravelItinerary.vue (📅 일정표)     │      │
+│  │     │     - aDays / laDays                 │      │
+│  │     │     - aHotels / laHotels             │      │
+│  │     │     - bookingItems · sleepByNight    │      │
+│  │     │                                      │      │
+│  │     └─ activeTab='map'                     │      │
+│  │           ↓                                │      │
+│  │        TravelMap.vue (🗺 동선 지도)         │      │
+│  │           - Leaflet + OSM 타일             │      │
+│  │           - CITIES / POIS / KINDS          │      │
+│  │           - 폴리라인 · 카테고리 필터       │      │
+│  └────────────────────────────────────────────┘      │
+└──────────────┬───────────────────────────────────────┘
                │ (CDN edge fetch)
                ▼
        Vercel Global Edge Network
                ▲
                │ (build artifact push)
-        Vercel Build Container
+        Vercel Build Container (npm install → vite build)
                ▲
-               │ (git push trigger)
-        GitHub (origin/main)
+               │ (git push webhook)
+        GitHub origin/main
 ```
 
 ### 디렉토리
 
 ```
 .
-├── App.vue              # 사이드바 + 메인 콘텐츠 셸
-├── TravelItinerary.vue  # 핵심 — 플랜 토글 / 일정 타임라인 / 예약 전략
-├── PredictionTracker.vue  # (legacy, dev 브랜치에만 활성)
-├── PriceChartLW.vue     # (legacy, 차트 컴포넌트)
-├── api.js               # (legacy, 백엔드 호출용 — feature_andy에선 미사용)
+├── App.vue              # 사이드바 + 탭 전환 (일정표 / 동선 지도)
+├── TravelItinerary.vue  # 📅 플랜 토글 · 일정 타임라인 · 호텔 · 예약 전략
+├── TravelMap.vue        # 🗺 Leaflet 인터랙티브 지도 (도시·POI 핀·폴리라인)
 ├── main.js              # Vue 앱 부트스트랩
 ├── index.html
 ├── style.css            # 글로벌 디자인 토큰 (다크 테마)
-├── vite.config.js
+├── vite.config.js       # Vite 설정 (HTTPS 로컬, /api/ 프록시)
 ├── package.json
-└── README.md
+├── README.md
+├── PredictionTracker.vue  # (legacy · 백엔드 의존 — dev 브랜치 등에서 보존)
+├── PriceChartLW.vue       # (legacy · LightweightCharts 차트)
+└── api.js                 # (legacy · 백엔드 호출 — 현재 미사용)
 ```
 
 ---
@@ -216,6 +256,30 @@ const currentHotels = computed(() => activePlan.value === 'a' ? aHotels : laHote
 - `--text-dim` 을 거의 흰색까지 끌어올림 → 다크 베이스에서도 dim 텍스트 또렷
 - 일정 본문 폰트 .77rem → .88rem, weight 500
 
+### 7-5. 동선 지도 — Leaflet + OSM 무키
+유료 지도 API(Mapbox/Google Maps) 대신 **Leaflet + OpenStreetMap 타일** 선택. 이유:
+- API 키·요금·도메인 등록 불필요
+- 정적 사이트(Vercel)에 그대로 호환
+- 번들 사이즈 ~40KB (Mapbox GL 200KB+ 대비 5배 가벼움)
+
+```js
+// CITIES — 6개 도시 좌표 사전
+const CITIES = {
+  SF:  { name: '샌프란시스코', lat: 37.7749, lng: -122.4194, icon: '🌉' },
+  YOS: { name: '요세미티',     lat: 37.7456, lng: -119.5936, icon: '⛰️' },
+  ...
+}
+
+// POIS — 도시별 카테고리(stadium/activity/sight/lodging) 핀
+// 필터 칩 클릭 → reactive로 즉시 토글 (지도 재렌더 X, 마커만 add/remove)
+```
+
+**인터랙션 설계**
+- 사이드바 일정 리스트 클릭 → `map.flyTo([lat, lng], 12)` 로 해당 도시 줌인
+- Plan 토글 → 폴리라인(이동선) 자동 재그림
+- 카테고리 필터(경기장/액티비티/명소/숙소) 칩 → 마커 그룹 toggle
+- 경기장 핀은 크기·색 강조 (Lumen·SoFi·Oracle)
+
 ---
 
 ## 8. 디버깅 회고
@@ -274,12 +338,16 @@ proxy: { '^/api/': { target: '...' } }
 
 ## 10. 향후 개선 아이디어
 
-- [ ] 비용 합계를 Plan A/B 비교 카드 한 줄로 노출 (현재는 cost-summary 박스만)
-- [ ] 일정 PDF/이미지 export 기능 (현장에서 인쇄 카피로)
+- [x] **동선 지도 추가** ✅ — Leaflet + OSM 으로 도시·POI 핀, 폴리라인, 카테고리 필터 (`844dd39`, `5f8096b`)
+- [x] **README 기술 문서화** ✅ — 본 문서
+- [ ] 비용 합계를 Plan A/B 비교 카드 한 줄로 노출
+- [ ] 일정 PDF/이미지 export 기능 (현장 인쇄 카피)
 - [ ] i18n — 한국 응원단 합류시 외국인 동행자용 영어 토글
 - [ ] 6/24 D-day 카운트다운 표시
 - [ ] 실제 호텔 가격 API 연동 (Booking.com / Expedia affiliate)
-- [ ] PWA 변환 → 오프라인에서도 일정 조회
+- [ ] PWA 변환 → 오프라인에서도 일정/지도 조회
+- [ ] OG 이미지·파비콘 커스텀 (현재 기본값)
+- [ ] 항공편 일정도 일자 타임라인에 통합 (현재는 별도 섹션)
 
 ---
 

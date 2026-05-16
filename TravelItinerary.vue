@@ -592,18 +592,18 @@ const cityColors = {
 .itinerary {
   display: flex; flex-direction: column; gap: 1rem;
 
-  /* ── 이 탭만 밝게 — 다른 탭 영향 없음 ── */
-  --text:         #f1f5f9;
-  --text-muted:   #c8d8ea;
-  --text-dim:     #8faec8;
-  --bg:           #111c2d;
-  --bg-elevated:  #182638;
-  --bg-overlay:   #1f3148;
-  --border:       #2e4a66;
-  --border-muted: #1f3a54;
-  --accent:       #60b4ff;
-  --accent-hover: #93cbff;
-  --accent-bg:    rgba(96,180,255,.13);
+  /* ── 밝은 다크 톤 — 가독성 우선 ── */
+  --text:         #f8fafc;
+  --text-muted:   #dbe7f4;
+  --text-dim:     #aac3da;
+  --bg:           #152339;
+  --bg-elevated:  #1d2d44;
+  --bg-overlay:   #263a52;
+  --border:       #3a5775;
+  --border-muted: #29456a;
+  --accent:       #7dc4ff;
+  --accent-hover: #a8d9ff;
+  --accent-bg:    rgba(125,196,255,.18);
 }
 
 /* ── Plan Toggle ── */

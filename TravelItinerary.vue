@@ -40,12 +40,13 @@ const wcRows = [
 // Annex C 파싱 결과 (FIFA 공식 PDF)
 const annexC = { qualify: 330, total: 495, seattle: 314, foxborough: 16 }
 
-// ── Plan A: SF(4박, 중간 YOS 1박은 짐 보관용 통박) → SEA(1박) → LV(3박) → SFO ──
+// ── Plan A: SF 1박 → YOS 1박 → SF 2박 → SEA 1박 → LV 3박 → SFO ──
 const aHotels = [
-  { city: '샌프란시스코', tag: 'SF',  nights: 4, dates: '6/26~6/30', economy: 190, mid: 230, note: 'Palace Hotel · 4박 통째로 (Yosemite 다녀와도 짐 보관 위해 6/27 빈 1박 유지)' },
-  { city: 'Yosemite',    tag: 'YOS', nights: 1, dates: '6/27~6/28', economy: 200, mid: 350, note: 'Curry Village or Half Dome Village · 6~12개월 전 예약 필수 (recreation.gov / travelyosemite.com)' },
-  { city: '시애틀',       tag: 'SEA', nights: 1, dates: '6/30~7/1',  economy: 280, mid: 400, note: 'Hyatt Regency · ⚠️ 월드컵 서징 · 경기 당일 밤 LV 이동' },
-  { city: '라스베이거스',  tag: 'LV',  nights: 3, dates: '7/1~7/4',  economy: 140, mid: 240, note: 'Paris LV (24h 체크인) · 평일 요금 · 7/4 저녁 SFO' },
+  { city: '샌프란시스코 (1)', tag: 'SF',  nights: 1, dates: '6/26~6/27', economy: 190, mid: 230, note: 'Palace Hotel · 도착 첫박 · 6/27 아침 체크아웃 시 호텔에 큰 짐 보관 요청' },
+  { city: 'Yosemite',       tag: 'YOS', nights: 1, dates: '6/27~6/28', economy: 200, mid: 350, note: 'Curry Village or Half Dome Village · 6~12개월 전 예약 필수 (recreation.gov / travelyosemite.com)' },
+  { city: '샌프란시스코 (2)', tag: 'SF',  nights: 2, dates: '6/28~6/30', economy: 190, mid: 230, note: 'Palace Hotel · 재투숙 (같은 호텔로) · 보관해둔 짐 픽업 · 같은 룸 배정 요청 가능' },
+  { city: '시애틀',          tag: 'SEA', nights: 1, dates: '6/30~7/1',  economy: 280, mid: 400, note: 'Hyatt Regency · ⚠️ 월드컵 서징 · 경기 당일 밤 LV 이동' },
+  { city: '라스베이거스',     tag: 'LV',  nights: 3, dates: '7/1~7/4',  economy: 140, mid: 240, note: 'Paris LV (24h 체크인) · 평일 요금 · 7/4 저녁 SFO' },
 ]
 const aDays = [
   { date: '6/26 금', city: '샌프란시스코', cityTag: 'SF', icon: '✈️', items: [
@@ -113,11 +114,12 @@ const aDays = [
   ]},
 ]
 
-// ── Plan B: SF(5박, 중간 YOS 1박은 짐 보관용 통박, 6/29 LA 당일치기) → LV(3박) → SFO ──
+// ── Plan B: SF 1박 → YOS 1박 → SF 3박 (LA 당일치기 포함) → LV 3박 → SFO ──
 const laHotels = [
-  { city: '샌프란시스코', tag: 'SF',  nights: 5, dates: '6/26~7/1', economy: 190, mid: 230, note: 'Palace Hotel · 5박 통째로 (Yosemite 1박·LA 당일치기 모두 짐 보관 위해 빈박 유지)' },
-  { city: 'Yosemite',    tag: 'YOS', nights: 1, dates: '6/27~6/28', economy: 200, mid: 350, note: 'Curry Village or Half Dome Village · 6~12개월 전 예약 필수' },
-  { city: '라스베이거스',  tag: 'LV',  nights: 3, dates: '7/1~7/4',  economy: 140, mid: 240, note: 'Paris LV · 평일 요금 · 7/4 저녁 SFO 이동' },
+  { city: '샌프란시스코 (1)', tag: 'SF',  nights: 1, dates: '6/26~6/27', economy: 190, mid: 230, note: 'Palace Hotel · 도착 첫박 · 6/27 아침 체크아웃 시 큰 짐 보관 요청' },
+  { city: 'Yosemite',       tag: 'YOS', nights: 1, dates: '6/27~6/28', economy: 200, mid: 350, note: 'Curry Village or Half Dome Village · 6~12개월 전 예약 필수' },
+  { city: '샌프란시스코 (2)', tag: 'SF',  nights: 3, dates: '6/28~7/1', economy: 190, mid: 230, note: 'Palace Hotel · 재투숙 · LA 경비행기 당일치기(6/29) 포함 · 같은 룸 요청 가능' },
+  { city: '라스베이거스',     tag: 'LV',  nights: 3, dates: '7/1~7/4',  economy: 140, mid: 240, note: 'Paris LV · 평일 요금 · 7/4 저녁 SFO 이동' },
 ]
 const laDays = [
   { date: '6/26 금', city: '샌프란시스코', cityTag: 'SF', icon: '✈️', items: [
@@ -243,38 +245,40 @@ const activities = {
 // ── 예약 전략 ──
 // ── 일자별 잠자리 (A/B 공통: 6/26~6/29, 7/1~7/3 / 분기: 6/30) ──
 const sleepByNight = [
-  { date: '6/26 금', a: 'SF · Palace Hotel',         b: 'SF · Palace Hotel',         aTag: 'SF',  bTag: 'SF',  action: 'now',     same: true,  note: '도착 당일 — Giants 경기 후 첫 박' },
-  { date: '6/27 토', a: 'YOS · Curry Village',       b: 'YOS · Curry Village',       aTag: 'YOS', bTag: 'YOS', action: 'now',     same: true,  note: '⚠️ SF Palace는 이 날 밤 빈박 유지 (짐 보관)' },
-  { date: '6/28 일', a: 'SF · Palace Hotel (재투숙)', b: 'SF · Palace Hotel (재투숙)', aTag: 'SF',  bTag: 'SF',  action: 'now',     same: true,  note: 'Yosemite 다녀와서 같은 방으로 복귀' },
-  { date: '6/29 월', a: 'SF · Palace Hotel',         b: 'SF · Palace Hotel',         aTag: 'SF',  bTag: 'SF',  action: 'now',     same: true,  note: 'A: SF Bay 경비행기·Alcatraz / B: LA 당일치기' },
-  { date: '6/30 화', a: 'SEA · Hyatt Regency',       b: 'SF · Palace Hotel',         aTag: 'SEA', bTag: 'SF',  action: 'standby', same: false, note: '🔀 분기점 — 6/24 경기 결과 후 한쪽 취소' },
-  { date: '7/1 수',  a: 'LV · Paris Las Vegas',      b: 'LV · Paris Las Vegas',      aTag: 'LV',  bTag: 'LV',  action: 'now',     same: true,  note: 'A: 시애틀 경기 후 야간 도착 / B: SFO→LAS 오후 도착' },
-  { date: '7/2 목',  a: 'LV · Paris Las Vegas',      b: 'LV · Paris Las Vegas',      aTag: 'LV',  bTag: 'LV',  action: 'now',     same: true,  note: '' },
-  { date: '7/3 금',  a: 'LV · Paris Las Vegas',      b: 'LV · Paris Las Vegas',      aTag: 'LV',  bTag: 'LV',  action: 'now',     same: true,  note: '7/4 아침 체크아웃' },
+  { date: '6/26 금', a: 'SF · Palace Hotel',           b: 'SF · Palace Hotel',           aTag: 'SF',  bTag: 'SF',  action: 'now',     same: true,  note: '도착 당일 — Giants 경기 후 첫 박 (6/27 아침 체크아웃)' },
+  { date: '6/27 토', a: 'YOS · Curry Village',         b: 'YOS · Curry Village',         aTag: 'YOS', bTag: 'YOS', action: 'now',     same: true,  note: '💰 SF 체크아웃 + 호텔에 큰짐 보관 요청 → 1박값 절약' },
+  { date: '6/28 일', a: 'SF · Palace Hotel (재체크인)', b: 'SF · Palace Hotel (재체크인)', aTag: 'SF',  bTag: 'SF',  action: 'now',     same: true,  note: 'Yosemite 복귀 · 보관해둔 짐 픽업 · 같은 룸 배정 요청' },
+  { date: '6/29 월', a: 'SF · Palace Hotel',           b: 'SF · Palace Hotel',           aTag: 'SF',  bTag: 'SF',  action: 'now',     same: true,  note: 'A: SF Bay 경비행기·Alcatraz / B: LA 당일치기' },
+  { date: '6/30 화', a: 'SEA · Hyatt Regency',         b: 'SF · Palace Hotel',           aTag: 'SEA', bTag: 'SF',  action: 'standby', same: false, note: '🔀 분기점 — 6/24 경기 결과 후 한쪽 취소' },
+  { date: '7/1 수',  a: 'LV · Paris Las Vegas',        b: 'LV · Paris Las Vegas',        aTag: 'LV',  bTag: 'LV',  action: 'now',     same: true,  note: 'A: 시애틀 경기 후 야간 도착 / B: SFO→LAS 오후 도착' },
+  { date: '7/2 목',  a: 'LV · Paris Las Vegas',        b: 'LV · Paris Las Vegas',        aTag: 'LV',  bTag: 'LV',  action: 'now',     same: true,  note: '' },
+  { date: '7/3 금',  a: 'LV · Paris Las Vegas',        b: 'LV · Paris Las Vegas',        aTag: 'LV',  bTag: 'LV',  action: 'now',     same: true,  note: '7/4 아침 체크아웃' },
 ]
 
 const bookingItems = [
   // ── 즉시 예약 (A/B 공통) ──
-  { id: 'sf-base',  label: 'SF Palace Hotel (4박 통째로)', tag: 'SF',  dates: '6/26 → 6/30', nights: 4, plans: ['A','B'], type: 'now',
-    note: '💡 6/27 Yosemite 1박 동안 같은 방 유지 → 큰 짐 보관 + 6/28 재체크인 불필요 · 4박 요금 통째 부담 (Plan B는 6/30→7/1 연장 별도)' },
+  { id: 'sf-1',     label: 'SF Palace Hotel — 첫박 (도착일)', tag: 'SF',  dates: '6/26 → 6/27', nights: 1, plans: ['A','B'], type: 'now',
+    note: '도착 당일 1박만 · 6/27 아침 체크아웃 시 프런트에 "luggage storage" 요청 (보통 무료, 가능 시 1박 보관) · 영수증 받아두기' },
   { id: 'yosemite', label: 'Yosemite Curry Village', tag: 'YOS', dates: '6/27 → 6/28', nights: 1, plans: ['A','B'], type: 'now',
     note: '⚠️ 6~12개월 전 예약 필수 · recreation.gov 또는 travelyosemite.com · 6월은 폭포 시즌 만실 위험 → 가장 먼저 예약' },
-  { id: 'lv-base', label: 'LV Paris Las Vegas (3박)', tag: 'LV', dates: '7/1 → 7/4', nights: 3, plans: ['A','B'], type: 'now',
-    note: '24h 프런트 (Plan A 심야 도착) · 평일 요금 · A/B 날짜·호텔 완전 동일 → 1개만 예약' },
+  { id: 'sf-2',     label: 'SF Palace Hotel — 재체크인 (2박 공통)', tag: 'SF',  dates: '6/28 → 6/30', nights: 2, plans: ['A','B'], type: 'now',
+    note: '⭐ 6/26 예약 때와 같은 호텔로 예약 → 짐 픽업 + 단골 효과 · 비고에 "Returning guest, prefer same room as 6/26 stay" 요청 가능' },
+  { id: 'lv-base',  label: 'LV Paris Las Vegas (3박)', tag: 'LV', dates: '7/1 → 7/4', nights: 3, plans: ['A','B'], type: 'now',
+    note: '24h 프런트 (Plan A 심야 도착 대응) · 평일 요금 · A/B 날짜·호텔 완전 동일 → 1개만 예약' },
 
   // ── 6/24 경기 후 분기 — 무료취소 가능 상품으로 동시 대기 ──
   { id: 'sea-a',   label: 'SEA Hyatt Regency', tag: 'SEA', dates: '6/30 → 7/1', nights: 1, plans: ['A'], type: 'standby',
     note: '🟣 Plan A 전용 — 7/1 R32 Match 82 (Lumen Field) 다음날 LV 이동 · 월드컵 서징 가격 ⚠️' },
-  { id: 'sf-b-ext', label: 'SF Palace Hotel 연장 1박', tag: 'SF', dates: '6/30 → 7/1', nights: 1, plans: ['B'], type: 'standby',
-    note: '🔴 Plan B 전용 — 6/30 실리콘밸리 당일치기 후 SF 복귀 · 7/1 오후 LAS 비행 · 가능하면 동일 호텔 연장' },
+  { id: 'sf-b-ext', label: 'SF Palace Hotel — B 연장 1박', tag: 'SF', dates: '6/30 → 7/1', nights: 1, plans: ['B'], type: 'standby',
+    note: '🔴 Plan B 전용 — 실리콘밸리 당일치기 후 SF 복귀 · 7/1 오후 LAS 비행 · sf-2와 같은 호텔로 1박 추가' },
 ]
 
 const decisions = [
   { result: '조3위 진출 (Plan A 확정)', planTag: 'A', color: '#7c3aed',
-    keep:   ['SF Palace 4박 (6/26~6/30)', 'Yosemite 1박 (6/27~6/28)', 'SEA Hyatt 1박 (6/30~7/1)', 'LV Paris 3박 (7/1~7/4)'],
-    cancel: ['SF Palace 연장 (B용)'] },
+    keep:   ['SF 첫박 (6/26~6/27)', 'Yosemite 1박 (6/27~6/28)', 'SF 재체크인 2박 (6/28~6/30)', 'SEA Hyatt 1박 (6/30~7/1)', 'LV Paris 3박 (7/1~7/4)'],
+    cancel: ['SF B 연장 (6/30~7/1)'] },
   { result: '조2위 진출 (Plan B 확정)', planTag: 'B', color: '#e11d48',
-    keep:   ['SF Palace 4박 (6/26~6/30)', 'Yosemite 1박 (6/27~6/28)', 'SF Palace 연장 (6/30~7/1)', 'LV Paris 3박 (7/1~7/4)'],
+    keep:   ['SF 첫박 (6/26~6/27)', 'Yosemite 1박 (6/27~6/28)', 'SF 재체크인 2박 (6/28~6/30)', 'SF B 연장 (6/30~7/1)', 'LV Paris 3박 (7/1~7/4)'],
     cancel: ['SEA Hyatt 1박 (A용)'] },
 ]
 
@@ -549,7 +553,7 @@ const cityColors = {
               </tr>
             </tbody>
           </table>
-          <p class="sleep-hint">💡 <strong>핵심 트릭</strong> — Yosemite 1박 (6/27 밤) 동안 <strong>SF Palace 방을 비우지 말고 유지</strong>해. 큰짐 보관 + 6/28 복귀 시 같은 방으로 바로 들어감 = 짐 옮기는 수고/체크인 시간 절약 ✅</p>
+          <p class="sleep-hint">💡 <strong>핵심 트릭 — 짐 보관으로 1박값 절약</strong> · 6/27 아침 SF Palace 체크아웃 시 프런트에 "<em>Could you store our luggage for one night?</em>" 요청 → 거의 모든 호텔이 무료 보관 OK · 6/28 저녁 복귀해서 같은 호텔로 재체크인 (비고에 "Returning guest" 적으면 같은 룸 배정 시도해줌) · <strong>1박 요금(~$190~230) 절약 + Yosemite 가벼운 짐 ✅</strong></p>
         </div>
 
         <div class="phase-block">

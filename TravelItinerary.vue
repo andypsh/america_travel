@@ -593,17 +593,17 @@ const cityColors = {
   display: flex; flex-direction: column; gap: 1rem;
 
   /* ── 밝은 다크 톤 — 가독성 우선 ── */
-  --text:         #f8fafc;
-  --text-muted:   #dbe7f4;
-  --text-dim:     #aac3da;
-  --bg:           #152339;
-  --bg-elevated:  #1d2d44;
-  --bg-overlay:   #263a52;
-  --border:       #3a5775;
-  --border-muted: #29456a;
-  --accent:       #7dc4ff;
-  --accent-hover: #a8d9ff;
-  --accent-bg:    rgba(125,196,255,.18);
+  --text:         #ffffff;
+  --text-muted:   #f4f8fd;
+  --text-dim:     #e6eef9;
+  --bg:           #1a2a44;
+  --bg-elevated:  #243753;
+  --bg-overlay:   #2f4564;
+  --border:       #587498;
+  --border-muted: #426087;
+  --accent:       #a8d7ff;
+  --accent-hover: #d0e9ff;
+  --accent-bg:    rgba(168,215,255,.25);
 }
 
 /* ── Plan Toggle ── */
@@ -618,7 +618,7 @@ const cityColors = {
 .plan-btn:hover { border-color: var(--accent); color: var(--text); }
 .plan-btn.plan-a.active { border-color: #7c3aed; background: rgba(124,58,237,.08); color: var(--text); }
 .plan-btn.plan-b.active { border-color: #e11d48; background: rgba(225,29,72,.08);  color: var(--text); }
-.plan-sub { font-size: .68rem; font-weight: 400; color: var(--text-dim); }
+.plan-sub { font-size: .78rem; font-weight: 500; color: var(--text-dim); }
 .plan-btn.active .plan-sub { color: var(--text-muted); }
 .plan-badge {
   display: inline-block; font-size: .58rem; font-weight: 800; letter-spacing: .04em;
@@ -637,8 +637,8 @@ const cityColors = {
 }
 .acc-header:hover { background: var(--bg-overlay); }
 .acc-icon { font-size: 1rem; flex-shrink: 0; }
-.acc-title { font-size: .85rem; font-weight: 700; color: var(--text); }
-.acc-meta { font-size: .7rem; color: var(--text-dim); margin-left: .25rem; }
+.acc-title { font-size: 1rem; font-weight: 700; color: var(--text); }
+.acc-meta { font-size: .8rem; font-weight: 500; color: var(--text-dim); margin-left: .25rem; }
 .acc-chevron {
   margin-left: auto; font-size: 1.2rem; color: var(--text-dim);
   display: inline-block; transition: transform .2s; transform: rotate(0deg);
@@ -811,7 +811,7 @@ const cityColors = {
 .timeline-body { padding-top: .25rem; }
 .day-row { display: grid; grid-template-columns: 88px 26px 1fr; gap: 0 .65rem; align-items: stretch; min-height: 76px; }
 .day-left { display: flex; flex-direction: column; align-items: flex-end; padding-top: .8rem; gap: .3rem; }
-.day-date { font-size: .77rem; font-weight: 700; color: var(--text); white-space: nowrap; }
+.day-date { font-size: .9rem; font-weight: 700; color: var(--text); white-space: nowrap; }
 .city-tag { font-size: .6rem; font-weight: 700; padding: 2px 5px; border-radius: 5px; border: 1px solid; white-space: nowrap; }
 .day-connector { display: flex; flex-direction: column; align-items: center; padding-top: .95rem; }
 .connector-dot { width: 9px; height: 9px; border-radius: 50%; background: var(--border); border: 2px solid var(--bg-elevated); flex-shrink: 0; z-index: 1; }
@@ -821,7 +821,7 @@ const cityColors = {
 .day-row.highlight .day-card { border-color: var(--accent); background: var(--accent-bg); }
 .day-header { display: flex; align-items: center; gap: .45rem; margin-bottom: .5rem; }
 .day-icon { font-size: .95rem; }
-.day-city { font-size: .85rem; font-weight: 700; color: var(--text); }
+.day-city { font-size: 1rem; font-weight: 700; color: var(--text); }
 .highlight-badge { font-size: .6rem; font-weight: 700; background: var(--accent); color: #fff; padding: 2px 7px; border-radius: 7px; margin-left: auto; }
 .la-badge { background: #e11d48; }
 .day-standby { display: flex; flex-direction: column; gap: .18rem; background: rgba(234,179,8,.08); border: 1px solid rgba(234,179,8,.3); border-radius: 5px; padding: 5px 9px; margin-bottom: .5rem; }
@@ -830,9 +830,9 @@ const cityColors = {
 .standby-cancel { font-size: .68rem; color: #ca8a04; font-weight: 600; }
 .day-note { font-size: .72rem; color: var(--orange); background: rgba(230,126,34,.1); border-radius: 5px; padding: 4px 8px; margin-bottom: .5rem; }
 .schedule-list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: .3rem; }
-.schedule-item { display: flex; gap: .7rem; font-size: .77rem; align-items: baseline; }
-.sch-time { font-family: ui-monospace,monospace; font-size: .7rem; color: var(--text-dim); min-width: 66px; flex-shrink: 0; }
-.sch-text { color: var(--text-muted); line-height: 1.4; }
+.schedule-item { display: flex; gap: .7rem; font-size: .88rem; align-items: baseline; }
+.sch-time { font-family: ui-monospace,monospace; font-size: .8rem; font-weight: 600; color: var(--text-dim); min-width: 72px; flex-shrink: 0; }
+.sch-text { color: var(--text); line-height: 1.5; font-weight: 500; }
 .sch-text.bold { color: var(--text); font-weight: 600; }
 .sch-text.baseball { color: #f97316; font-weight: 500; }
 

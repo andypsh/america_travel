@@ -40,11 +40,12 @@ const wcRows = [
 // Annex C 파싱 결과 (FIFA 공식 PDF)
 const annexC = { qualify: 330, total: 495, seattle: 314, foxborough: 16 }
 
-// ── Plan A: SF(4박) → SEA(1박) → LV(3박) → SFO 귀국 ──
+// ── Plan A: SF(4박, 중간 YOS 1박은 짐 보관용 통박) → SEA(1박) → LV(3박) → SFO ──
 const aHotels = [
-  { city: '샌프란시스코', tag: 'SF',  nights: 4, dates: '6/26~6/30', economy: 190, mid: 230, note: 'Union Square 3★ · Giants 3연전 포함' },
-  { city: '시애틀',       tag: 'SEA', nights: 1, dates: '6/30~7/1',  economy: 280, mid: 400, note: '⚠️ 월드컵 서징 · 경기 당일 밤 LV 이동' },
-  { city: '라스베이거스',  tag: 'LV',  nights: 3, dates: '7/1~7/4',  economy: 140, mid: 240, note: '심야 체크인 · 평일 요금 · 7/4 저녁 SFO' },
+  { city: '샌프란시스코', tag: 'SF',  nights: 4, dates: '6/26~6/30', economy: 190, mid: 230, note: 'Palace Hotel · 4박 통째로 (Yosemite 다녀와도 짐 보관 위해 6/27 빈 1박 유지)' },
+  { city: 'Yosemite',    tag: 'YOS', nights: 1, dates: '6/27~6/28', economy: 200, mid: 350, note: 'Curry Village or Half Dome Village · 6~12개월 전 예약 필수 (recreation.gov / travelyosemite.com)' },
+  { city: '시애틀',       tag: 'SEA', nights: 1, dates: '6/30~7/1',  economy: 280, mid: 400, note: 'Hyatt Regency · ⚠️ 월드컵 서징 · 경기 당일 밤 LV 이동' },
+  { city: '라스베이거스',  tag: 'LV',  nights: 3, dates: '7/1~7/4',  economy: 140, mid: 240, note: 'Paris LV (24h 체크인) · 평일 요금 · 7/4 저녁 SFO' },
 ]
 const aDays = [
   { date: '6/26 금', city: '샌프란시스코', cityTag: 'SF', icon: '✈️', items: [
@@ -112,10 +113,11 @@ const aDays = [
   ]},
 ]
 
-// ── Plan B: SF(5박, 당일 LA 경비행기) → LV(3박) → SFO 귀국 ──
+// ── Plan B: SF(5박, 중간 YOS 1박은 짐 보관용 통박, 6/29 LA 당일치기) → LV(3박) → SFO ──
 const laHotels = [
-  { city: '샌프란시스코', tag: 'SF', nights: 5, dates: '6/26~7/1',  economy: 190, mid: 230, note: 'Union Square 3★ · 경비행기 당일치기' },
-  { city: '라스베이거스',  tag: 'LV', nights: 3, dates: '7/1~7/4',  economy: 140, mid: 240, note: '평일 요금 · 7/4 저녁 SFO 이동' },
+  { city: '샌프란시스코', tag: 'SF',  nights: 5, dates: '6/26~7/1', economy: 190, mid: 230, note: 'Palace Hotel · 5박 통째로 (Yosemite 1박·LA 당일치기 모두 짐 보관 위해 빈박 유지)' },
+  { city: 'Yosemite',    tag: 'YOS', nights: 1, dates: '6/27~6/28', economy: 200, mid: 350, note: 'Curry Village or Half Dome Village · 6~12개월 전 예약 필수' },
+  { city: '라스베이거스',  tag: 'LV',  nights: 3, dates: '7/1~7/4',  economy: 140, mid: 240, note: 'Paris LV · 평일 요금 · 7/4 저녁 SFO 이동' },
 ]
 const laDays = [
   { date: '6/26 금', city: '샌프란시스코', cityTag: 'SF', icon: '✈️', items: [
@@ -239,19 +241,41 @@ const activities = {
 }
 
 // ── 예약 전략 ──
-const bookingItems = [
-  { id: 'sf-com',   label: 'SF 호텔 (공통 4박)',  tag: 'SF',  dates: '6/26~6/30', nights: 4, plans: ['A','B'], type: 'now',     note: 'A/B 공통 — 지금 바로 예약 (두 플랜 모두 6/26~6/30 SF)' },
-  { id: 'lv',       label: 'LV 호텔',             tag: 'LV',  dates: '7/1~7/4',   nights: 3, plans: ['A','B'], type: 'now',     note: '✅ A/B 날짜 완전 동일 → 1개만 예약' },
-  { id: 'sf-b-ext', label: 'SF 호텔 (B 연장 1박)',tag: 'SF',  dates: '6/30~7/1',  nights: 1, plans: ['B'],     type: 'standby', note: 'Plan B 전용 · A는 6/30 SEA 이동으로 충돌 없음' },
-  { id: 'sea-a',    label: 'SEA 호텔 (A용)',      tag: 'SEA', dates: '6/30~7/1',  nights: 1, plans: ['A'],     type: 'standby', note: 'Plan A 전용 1박 · 경기 후 LV 심야 이동' },
+// ── 일자별 잠자리 (A/B 공통: 6/26~6/29, 7/1~7/3 / 분기: 6/30) ──
+const sleepByNight = [
+  { date: '6/26 금', a: 'SF · Palace Hotel',         b: 'SF · Palace Hotel',         aTag: 'SF',  bTag: 'SF',  action: 'now',     same: true,  note: '도착 당일 — Giants 경기 후 첫 박' },
+  { date: '6/27 토', a: 'YOS · Curry Village',       b: 'YOS · Curry Village',       aTag: 'YOS', bTag: 'YOS', action: 'now',     same: true,  note: '⚠️ SF Palace는 이 날 밤 빈박 유지 (짐 보관)' },
+  { date: '6/28 일', a: 'SF · Palace Hotel (재투숙)', b: 'SF · Palace Hotel (재투숙)', aTag: 'SF',  bTag: 'SF',  action: 'now',     same: true,  note: 'Yosemite 다녀와서 같은 방으로 복귀' },
+  { date: '6/29 월', a: 'SF · Palace Hotel',         b: 'SF · Palace Hotel',         aTag: 'SF',  bTag: 'SF',  action: 'now',     same: true,  note: 'A: SF Bay 경비행기·Alcatraz / B: LA 당일치기' },
+  { date: '6/30 화', a: 'SEA · Hyatt Regency',       b: 'SF · Palace Hotel',         aTag: 'SEA', bTag: 'SF',  action: 'standby', same: false, note: '🔀 분기점 — 6/24 경기 결과 후 한쪽 취소' },
+  { date: '7/1 수',  a: 'LV · Paris Las Vegas',      b: 'LV · Paris Las Vegas',      aTag: 'LV',  bTag: 'LV',  action: 'now',     same: true,  note: 'A: 시애틀 경기 후 야간 도착 / B: SFO→LAS 오후 도착' },
+  { date: '7/2 목',  a: 'LV · Paris Las Vegas',      b: 'LV · Paris Las Vegas',      aTag: 'LV',  bTag: 'LV',  action: 'now',     same: true,  note: '' },
+  { date: '7/3 금',  a: 'LV · Paris Las Vegas',      b: 'LV · Paris Las Vegas',      aTag: 'LV',  bTag: 'LV',  action: 'now',     same: true,  note: '7/4 아침 체크아웃' },
 ]
+
+const bookingItems = [
+  // ── 즉시 예약 (A/B 공통) ──
+  { id: 'sf-base',  label: 'SF Palace Hotel (4박 통째로)', tag: 'SF',  dates: '6/26 → 6/30', nights: 4, plans: ['A','B'], type: 'now',
+    note: '💡 6/27 Yosemite 1박 동안 같은 방 유지 → 큰 짐 보관 + 6/28 재체크인 불필요 · 4박 요금 통째 부담 (Plan B는 6/30→7/1 연장 별도)' },
+  { id: 'yosemite', label: 'Yosemite Curry Village', tag: 'YOS', dates: '6/27 → 6/28', nights: 1, plans: ['A','B'], type: 'now',
+    note: '⚠️ 6~12개월 전 예약 필수 · recreation.gov 또는 travelyosemite.com · 6월은 폭포 시즌 만실 위험 → 가장 먼저 예약' },
+  { id: 'lv-base', label: 'LV Paris Las Vegas (3박)', tag: 'LV', dates: '7/1 → 7/4', nights: 3, plans: ['A','B'], type: 'now',
+    note: '24h 프런트 (Plan A 심야 도착) · 평일 요금 · A/B 날짜·호텔 완전 동일 → 1개만 예약' },
+
+  // ── 6/24 경기 후 분기 — 무료취소 가능 상품으로 동시 대기 ──
+  { id: 'sea-a',   label: 'SEA Hyatt Regency', tag: 'SEA', dates: '6/30 → 7/1', nights: 1, plans: ['A'], type: 'standby',
+    note: '🟣 Plan A 전용 — 7/1 R32 Match 82 (Lumen Field) 다음날 LV 이동 · 월드컵 서징 가격 ⚠️' },
+  { id: 'sf-b-ext', label: 'SF Palace Hotel 연장 1박', tag: 'SF', dates: '6/30 → 7/1', nights: 1, plans: ['B'], type: 'standby',
+    note: '🔴 Plan B 전용 — 6/30 실리콘밸리 당일치기 후 SF 복귀 · 7/1 오후 LAS 비행 · 가능하면 동일 호텔 연장' },
+]
+
 const decisions = [
-  { result: '조3위 진출',                planTag: 'A', color: '#7c3aed',
-    keep:   ['SF 공통 (6/26~6/30)', 'SEA-A (6/30~7/1)', 'LV (7/1~7/4)'],
-    cancel: ['SF-B 연장'] },
-  { result: '조2위 — 🛩 경비행기 + LV', planTag: 'B', color: '#e11d48',
-    keep:   ['SF 공통 (6/26~6/30)', 'SF-B 연장 (6/30~7/1)', 'LV (7/1~7/4)'],
-    cancel: ['SEA-A'] },
+  { result: '조3위 진출 (Plan A 확정)', planTag: 'A', color: '#7c3aed',
+    keep:   ['SF Palace 4박 (6/26~6/30)', 'Yosemite 1박 (6/27~6/28)', 'SEA Hyatt 1박 (6/30~7/1)', 'LV Paris 3박 (7/1~7/4)'],
+    cancel: ['SF Palace 연장 (B용)'] },
+  { result: '조2위 진출 (Plan B 확정)', planTag: 'B', color: '#e11d48',
+    keep:   ['SF Palace 4박 (6/26~6/30)', 'Yosemite 1박 (6/27~6/28)', 'SF Palace 연장 (6/30~7/1)', 'LV Paris 3박 (7/1~7/4)'],
+    cancel: ['SEA Hyatt 1박 (A용)'] },
 ]
 
 // ── Computed ──
@@ -491,8 +515,45 @@ const cityColors = {
         <span class="acc-chevron" :class="{ rotated: open.booking }">›</span>
       </div>
       <div v-show="open.booking" class="acc-body">
+
+        <!-- 🛏 일자별 잠자리 한눈에 -->
+        <div class="sleep-table-wrap">
+          <div class="sleep-table-title">🛏 오늘 어디서 잠? — 일자별 잠자리 한눈에</div>
+          <table class="sleep-table">
+            <thead>
+              <tr>
+                <th>날짜</th>
+                <th><span class="plan-pill plan-pill-a">Plan A</span></th>
+                <th><span class="plan-pill plan-pill-b">Plan B</span></th>
+                <th>예약</th>
+                <th>메모</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="n in sleepByNight" :key="n.date" :class="{ 'sleep-branch': !n.same }">
+                <td class="sleep-date">{{ n.date }}</td>
+                <td>
+                  <span class="ct-tag" :style="{ background: (cityColors[n.aTag]||'#334155')+'22', color: cityColors[n.aTag]||'#94a3b8' }">{{ n.aTag }}</span>
+                  <span class="sleep-where">{{ n.a }}</span>
+                </td>
+                <td>
+                  <span class="ct-tag" :style="{ background: (cityColors[n.bTag]||'#334155')+'22', color: cityColors[n.bTag]||'#94a3b8' }">{{ n.bTag }}</span>
+                  <span class="sleep-where">{{ n.b }}</span>
+                </td>
+                <td>
+                  <span class="sleep-action" :class="'action-' + n.action">
+                    {{ n.action === 'now' ? '✅ 즉시 예약' : '⏳ 6/24 후 분기' }}
+                  </span>
+                </td>
+                <td class="sleep-note">{{ n.note }}</td>
+              </tr>
+            </tbody>
+          </table>
+          <p class="sleep-hint">💡 <strong>핵심 트릭</strong> — Yosemite 1박 (6/27 밤) 동안 <strong>SF Palace 방을 비우지 말고 유지</strong>해. 큰짐 보관 + 6/28 복귀 시 같은 방으로 바로 들어감 = 짐 옮기는 수고/체크인 시간 절약 ✅</p>
+        </div>
+
         <div class="phase-block">
-          <div class="phase-label phase-now">① 지금 바로 예약 (3플랜 공통)</div>
+          <div class="phase-label phase-now">① 지금 바로 예약 — A/B 공통 (변동 0%)</div>
           <div class="bk-list">
             <div v-for="item in bookingItems.filter(i => i.type === 'now')" :key="item.id" class="bk-row">
               <span class="bk-tag" :style="{ background: (cityColors[item.tag]||'#334155')+'22', color: cityColors[item.tag]||'#94a3b8' }">{{ item.tag }}</span>
@@ -505,9 +566,9 @@ const cityColors = {
           </div>
         </div>
         <div class="phase-block">
-          <div class="phase-label phase-standby">② 동시 대기 예약 — 무료취소 가능 상품으로 (6/25 23:59 이전 취소 기준)</div>
+          <div class="phase-label phase-standby">② 동시 대기 — A/B 둘 다 무료취소 상품으로 예약, 6/24 경기 후 하나 취소</div>
           <div class="bk-list">
-            <div v-for="item in bookingItems.filter(i => i.type !== 'now')" :key="item.id" class="bk-row" :class="{ 'bk-conflict': item.type === 'conflict' }">
+            <div v-for="item in bookingItems.filter(i => i.type !== 'now')" :key="item.id" class="bk-row">
               <span class="bk-tag" :style="{ background: (cityColors[item.tag]||'#334155')+'22', color: cityColors[item.tag]||'#94a3b8' }">{{ item.tag }}</span>
               <span class="bk-label">{{ item.label }}</span>
               <span class="bk-dates mono">{{ item.dates }}</span>
@@ -516,7 +577,7 @@ const cityColors = {
               <span class="bk-note">{{ item.note }}</span>
             </div>
           </div>
-          <p class="conflict-hint">⚠️ 주황 행 = 같은 도시·다른 날짜 → 반드시 <strong>다른 호텔</strong>로 각각 예약</p>
+          <p class="conflict-hint">⚠️ 두 박 모두 6/30→7/1 같은 1박이라 동시 점유 불가 → <strong>반드시 무료취소 가능 상품</strong>으로 양쪽 다 잡고 6/24 후 한쪽 캔슬</p>
         </div>
         <div class="decision-header">📅 6/24 (수) 경기 후 — 플랜 확정 & 취소</div>
         <div class="decision-grid">
@@ -767,6 +828,30 @@ const cityColors = {
 .cost-note { font-size: .68rem; color: var(--text-dim); }
 
 /* ── Booking Strategy ── */
+/* ── 일자별 잠자리 테이블 ── */
+.sleep-table-wrap { margin-bottom: 1.25rem; padding: .85rem 1rem; background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-lg); }
+.sleep-table-title { font-size: .95rem; font-weight: 700; color: var(--text); margin-bottom: .6rem; }
+.sleep-table { width: 100%; border-collapse: collapse; font-size: .82rem; }
+.sleep-table thead th {
+  background: var(--bg-overlay); color: var(--text-muted);
+  padding: 7px 9px; text-align: left; font-weight: 700;
+  border-bottom: 1px solid var(--border); white-space: nowrap;
+}
+.sleep-table tbody td { padding: 8px 9px; border-bottom: 1px solid var(--border-muted); color: var(--text); }
+.sleep-table tr.sleep-branch { background: rgba(245,158,11,.08); }
+.sleep-table tr.sleep-branch td { border-bottom-color: rgba(245,158,11,.3); }
+.sleep-date { font-weight: 700; white-space: nowrap; min-width: 80px; }
+.sleep-where { font-weight: 500; margin-left: .35rem; color: var(--text); }
+.sleep-action { display: inline-block; font-size: .75rem; font-weight: 700; padding: 2px 8px; border-radius: 6px; white-space: nowrap; }
+.sleep-action.action-now { background: rgba(34,197,94,.18); color: #4ade80; }
+.sleep-action.action-standby { background: rgba(245,158,11,.18); color: #fbbf24; }
+.sleep-note { font-size: .78rem; color: var(--text-dim); }
+.plan-pill { display: inline-block; font-size: .7rem; font-weight: 800; padding: 2px 8px; border-radius: 5px; }
+.plan-pill-a { background: rgba(124,58,237,.22); color: #c4b5fd; }
+.plan-pill-b { background: rgba(225,29,72,.22); color: #fda4af; }
+.sleep-hint { font-size: .82rem; color: var(--text); background: rgba(168,215,255,.1); border-left: 3px solid var(--accent); padding: .55rem .75rem; border-radius: 0 6px 6px 0; margin-top: .7rem; line-height: 1.55; }
+.sleep-hint strong { color: var(--accent); font-weight: 700; }
+
 .phase-block { margin-bottom: 1rem; }
 .phase-label {
   font-size: .7rem; font-weight: 700; text-transform: uppercase; letter-spacing: .05em;

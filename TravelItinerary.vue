@@ -10,6 +10,7 @@ function krw(n) { return `₩${Math.round(n * KRW / 10000).toLocaleString()}만`
 // ── 아코디언 섹션 상태 ──
 const open = reactive({
   activities: true,
+  transport:  true,
   timeline:   true,
   worldcup:   true,
   flights:    false,
@@ -242,6 +243,160 @@ const activities = {
   ],
 }
 
+// ── 🚇 이동수단 가이드 (도시별 주요 구간) ──
+const activeTransportCity = ref('SF')
+const transportCityLabel = { SF: '🌉 SF', YOS: '⛰ Yosemite', SEA: '🌲 시애틀', LV: '🎰 LV', LA: '🇰🇷 LA', INTER: '✈️ 도시간' }
+
+const transportRoutes = {
+  SF: [
+    { from: 'SFO 공항', to: 'Palace Hotel (Union Square)', distance: '13mi · 21km', icon: '✈️',
+      options: [
+        { mode: '🚇 BART', detail: 'Yellow line · SFO Intl 역 → Powell St → 도보 2분', time: '30~35분', cost: '$10.85/인', tip: '⏰ 04:30~24:00 · 가장 저렴 · 3인 = $32.55' },
+        { mode: '🚕 Uber/Lyft', detail: 'UberX 직행 · 짐 많으면 UberXL($55~75)', time: '25~40분', cost: '$35~55', tip: '3인 분할하면 인당 ~$15 · 러시아워(17~19시) 피하기' },
+        { mode: '🚐 SuperShuttle', detail: '합승 셔틀 · 호텔 앞 도착', time: '45~60분', cost: '$25~30/인', tip: '대형 짐 OK · 사전 예약 권장' },
+      ]
+    },
+    { from: 'Palace Hotel', to: 'Pier 33 (Alcatraz Cruises)', distance: '1.5mi · 2.5km', icon: '⛴',
+      options: [
+        { mode: '🚋 Cable Car', detail: 'Powell-Hyde line · Powell-Market 정류장 출발', time: '25분', cost: '$8/회', tip: '관광 자체가 목적 · 8시 이전 줄 짧음' },
+        { mode: '🚌 Muni Bus 8', detail: 'Stockton St → Fisherman\'s Wharf', time: '15~20분', cost: '$3/인', tip: 'MuniMobile 앱으로 결제' },
+        { mode: '🚕 Uber', detail: '직행', time: '8~15분', cost: '$12~18', tip: '아침 일찍이라 막힘 적음' },
+        { mode: '🚶 도보', detail: 'Union Square → Pier 33', time: '30~35분', cost: '무료', tip: 'Russian Hill 경사 있음 · 사진 스팟 많음' },
+      ]
+    },
+    { from: 'Palace Hotel', to: 'Golden Gate Bridge (Vista Point)', distance: '5mi · 8km', icon: '🌉',
+      options: [
+        { mode: '🚌 Muni 28 + Walk', detail: '28-19th Ave · Pacific Heights 환승', time: '45~60분', cost: '$3/인', tip: '직행 버스 없음 · 환승 1회' },
+        { mode: '🚕 Uber', detail: 'Bridge view point 또는 Sausalito 페리 터미널', time: '20~25분', cost: '$25~35', tip: '강풍 시 다리 폐쇄 가능 · Apple Weather 확인' },
+        { mode: '🚴 자전거 렌탈', detail: 'Blazing Saddles @ Fisherman\'s Wharf', time: '편도 45분 라이딩', cost: '$35~50/일', tip: '⭐추천 — Sausalito까지 라이딩 후 페리 귀환 ($15)' },
+      ]
+    },
+    { from: 'Palace Hotel', to: 'Palo Alto Airport (PAO) — 경비행기', distance: '32mi · 51km', icon: '🛩',
+      options: [
+        { mode: '🚆 Caltrain + Uber', detail: '4th & King → Palo Alto Caltrain · Uber 10분', time: '1h + 10분', cost: '$11.25 + $15 = ~$26', tip: '아침 6:30 출발이면 첫차 시간 확인 (보통 6:00 첫차)' },
+        { mode: '🚕 Uber 직행', detail: 'UberX · 새벽 운행 OK', time: '40~55분', cost: '$80~120', tip: '⭐ 새벽 6:30 출발이면 이게 편함 · 3인 분할 ~$33' },
+        { mode: '🚗 렌트카', detail: 'Hertz Union Square 지점', time: '40~50분', cost: '$60/일 + 주차', tip: '귀환 후 반납 번거로움 — 비추' },
+      ]
+    },
+    { from: 'Palace Hotel', to: 'Stanford Campus (Plan B 6/30)', distance: '32mi · 51km', icon: '🏛',
+      options: [
+        { mode: '🚆 Caltrain', detail: '4th & King → Palo Alto · 도보 10분 캠퍼스', time: '1h 10분', cost: '$11.25/인', tip: '⭐추천 — 주말 30분 간격 · Palo Alto 역 내림' },
+        { mode: '🚕 Uber', detail: 'UberX 직행', time: '40~55분', cost: '$80~110', tip: '주말 통행량 적음 · 3인 분할 ~$30' },
+      ]
+    },
+    { from: 'Palace Hotel', to: 'SFO (Plan A 6/30 출국)', distance: '13mi · 21km', icon: '✈️',
+      options: [
+        { mode: '🚇 BART', detail: 'Powell St → SFO Intl · 도보 2분 터미널', time: '30~35분', cost: '$10.85/인', tip: '국내선 출발 2시간 전 도착 권장' },
+        { mode: '🚕 Uber', detail: 'UberX · 짐 많으면 XL', time: '25~40분', cost: '$35~55', tip: '체크인 카운터 앞까지 직행' },
+      ]
+    },
+  ],
+  YOS: [
+    { from: 'SF Bay Area', to: 'Yosemite Curry Village', distance: '195mi · 314km', icon: '🚗',
+      options: [
+        { mode: '🚗 렌트카', detail: 'I-580 E → I-205 E → CA-120 E (Big Oak Flat)', time: '3.5~4시간', cost: '렌트 $60~80/일 + 주유 $40 + 입장료 $35/차', tip: '⭐ 거의 유일한 현실적 옵션 · 새벽 출발이면 교통 OK · Enterprise SF 지점' },
+        { mode: '🚌 YARTS Bus', detail: 'Amtrak SF→Merced → YARTS 환승 → Yosemite Valley', time: '6~7시간', cost: '$28~50/인', tip: '차 없을 시 유일 · 시간 너무 길어 비추' },
+      ]
+    },
+    { from: 'Curry Village', to: '공원 내 주요 명소', distance: 'Valley 내 ~7mi', icon: '🚐',
+      options: [
+        { mode: '🚐 무료 셔틀', detail: 'Yosemite Valley Shuttle · 모든 주요 stop 순환', time: '15분 간격', cost: '무료', tip: '⭐ 4월~10월 운행 · 6월 성수기 만석 가능 · 7~10시 운영' },
+        { mode: '🚗 자가용', detail: 'Glacier Point Rd (40min), Tunnel View (15min)', time: '편도 15~40분', cost: '주유만', tip: 'Tunnel View 일출은 자가용 필수 (셔틀 안 감)' },
+        { mode: '🚶 도보 트레일', detail: 'Mirror Lake (1mi flat), Lower Yosemite Fall (1mi)', time: '30분~1시간', cost: '무료', tip: 'Bridalveil Fall은 셔틀 + 도보 5분' },
+      ]
+    },
+  ],
+  SEA: [
+    { from: 'SEA-TAC 공항', to: 'Hyatt Regency Downtown', distance: '14mi · 23km', icon: '✈️',
+      options: [
+        { mode: '🚆 Link Light Rail', detail: '1 Line · SeaTac/Airport → Pioneer Square → 도보 5분', time: '40분', cost: '$3/인', tip: '⭐추천 — 5:00~24:00 운행 · 가장 저렴 · 3인 = $9' },
+        { mode: '🚕 Uber/Lyft', detail: 'UberX 직행', time: '25~30분', cost: '$35~50', tip: '평일 러시아워(7~9, 16~18시)엔 라이트레일이 더 빠를 수도' },
+        { mode: '🚕 Taxi', detail: 'STITA 택시 카운터', time: '30~40분', cost: '$45~55', tip: 'Uber 없을 때만' },
+      ]
+    },
+    { from: 'Hyatt Regency', to: 'Lumen Field (7/1 경기)', distance: '1mi · 1.6km', icon: '🏟',
+      options: [
+        { mode: '🚶 도보', detail: 'Downtown → SODO 직진', time: '15~20분', cost: '무료', tip: '⭐ 경기 당일 ⭐ — 차·우버 막힘 · 도보가 최강' },
+        { mode: '🚆 Link Light Rail', detail: 'Pioneer Square → Stadium 1정거장', time: '5분 + 도보 5분', cost: '$2.75/인', tip: '경기 끝나면 만원 — 인내심 필요' },
+        { mode: '🚕 Uber', detail: '경기일 surge', time: '10~15분 (정상시), 30~60분 (경기 종료)', cost: '$10 정상 → $25~40 surge', tip: '경기 끝나고 우버는 비추 — 도보로 빠져나와서 호출' },
+      ]
+    },
+    { from: 'Hyatt Regency', to: 'SEA 공항 (7/1 저녁 LAS행)', distance: '14mi · 23km', icon: '✈️',
+      options: [
+        { mode: '🚆 Link Light Rail', detail: 'Pioneer Square → SeaTac/Airport', time: '40분', cost: '$3/인', tip: '경기 후 짐 픽업 → 라이트레일이 가장 빠름 (도로 막힘)' },
+        { mode: '🚕 Uber', detail: '경기 종료 후 surge 주의', time: '30~50분', cost: '$45~70 (surge)', tip: '저녁 비행기라 시간 여유 있게' },
+      ]
+    },
+  ],
+  LV: [
+    { from: 'LAS 공항 (Harry Reid Intl)', to: 'Paris Las Vegas (Strip 중심)', distance: '3mi · 5km', icon: '🎰',
+      options: [
+        { mode: '🚕 Uber/Lyft', detail: 'Terminal 3 ride-share zone (3층)', time: '15~20분', cost: '$15~25 (Plan A 심야엔 surge $25~35)', tip: '⭐ Strip 호텔 직행 OK · Plan A 22시 도착이면 surge 주의' },
+        { mode: '🚕 Taxi', detail: 'Strip 호텔 정찰 요금', time: '15~20분', cost: '$25~35 (flat rate)', tip: '미터기 안 켜고 정찰가로 가달라 요청' },
+        { mode: '🚐 셔틀 (BellTrans)', detail: '합승 셔틀 · Strip 호텔 순회', time: '30~45분', cost: '$13/인 편도', tip: '왕복 $24/인 · 시간 여유 있을 때' },
+        { mode: '🚌 RTC Bus (CX 또는 109)', detail: 'Centennial Express · 짐 적을 때만', time: '30~40분', cost: '$2/회', tip: '거의 안 씀 — 짐 제약 있음' },
+      ]
+    },
+    { from: 'Strip 내', to: 'Bellagio · Caesars · Fremont Street 등', distance: '0.5~4mi', icon: '🚶',
+      options: [
+        { mode: '🚶 도보', detail: 'Strip 내 호텔 간 (Paris→Bellagio→Caesars)', time: '5~15분', cost: '무료', tip: 'Strip은 거리 착시 — 표시보다 1.5배 걸림' },
+        { mode: '🚆 Las Vegas Monorail', detail: 'Sahara → MGM Grand · Strip 동쪽', time: '15분 (양 끝)', cost: '$5/회, $15/하루', tip: '⭐ Strip 동쪽 호텔만 커버 (Caesars 비포함 주의)' },
+        { mode: '🚌 RTC Deuce', detail: '24h 운행 · Strip + Downtown 풀커버', time: '구간별 5~30분', cost: '$6/2h, $8/24h', tip: '⭐ Fremont Street 갈 때 추천' },
+        { mode: '🚕 Uber Strip 내', detail: '바로 호텔 정문', time: '5~10분', cost: '$8~15', tip: 'Strip 도로 자주 막힘 — 짧은 거리도 시간 안 빠름' },
+        { mode: '🚌 Fremont까지 Deuce', detail: 'Strip → Fremont Street (4mi)', time: '40~50분', cost: '$8/하루', tip: '저녁 분수쇼 후 Fremont는 Uber도 OK ($15~20)' },
+      ]
+    },
+    { from: 'Paris Las Vegas', to: 'LAS 공항 (7/4 귀국)', distance: '3mi · 5km', icon: '✈️',
+      options: [
+        { mode: '🚕 Uber', detail: '터미널 출발 zone', time: '15~25분 (7/4 독립기념일 혼잡)', cost: '$20~35', tip: '⚠️ 7/4 공항 혼잡 — 출발 3시간 전 떠나기' },
+        { mode: '🚕 Taxi', detail: 'Strip 호텔 → 공항 flat', time: '15~25분', cost: '$25~35', tip: 'flat rate라 막혀도 추가비 없음' },
+      ]
+    },
+  ],
+  LA: [
+    { from: 'Hawthorne Muni (HHR) 공항', to: 'SoFi Stadium (Plan B 6/29)', distance: '1.8mi · 2.9km', icon: '🏟',
+      options: [
+        { mode: '🚇 LA Metro K Line', detail: 'Downtown Inglewood 역 → 도보 10분 (스타디움 동측)', time: '15~25분 (대기 + 탑승 + 도보)', cost: '$1.75/인 (TAP 카드)', tip: '⭐추천 — 한국 응원단도 K Line 많이 이용' },
+        { mode: '🛴 Lime/Bird Scooter', detail: '앱으로 잠금 해제 · 직선거리', time: '12~18분', cost: '$5~8', tip: '시간 압박 시 좋음 · 헬멧 없음 주의' },
+        { mode: '🚕 Uber', detail: '직행 (Inglewood 공항 픽업)', time: '8~15분', cost: '$10~18', tip: '경기 임박엔 surge 가능' },
+        { mode: '🚶 도보', detail: '직선 1.8mi · 평지', time: '30~40분', cost: '무료', tip: '여유 있으면 도보도 OK · 분위기 즐김' },
+      ]
+    },
+    { from: 'SoFi Stadium', to: 'HHR 공항 (귀환)', distance: '1.8mi · 2.9km', icon: '🛩',
+      options: [
+        { mode: '🛴 Scooter', detail: 'Lime/Bird', time: '12~18분', cost: '$5~8', tip: '경기 후 우버 surge — 스쿠터가 빠를 수도' },
+        { mode: '🚇 K Line', detail: 'Westchester/Veterans 역', time: '20~30분', cost: '$1.75/인', tip: '경기 후 만원 · 인내심' },
+        { mode: '🚕 Uber', detail: 'surge 심함', time: '15~30분', cost: '$15~35 (surge)', tip: '⏰ TFR 17:00까지 활성 → 16시 이전 복귀 권장' },
+      ]
+    },
+  ],
+  INTER: [
+    { from: 'SFO', to: 'SEA (Plan A 6/30)', distance: '679mi · 1,093km', icon: '✈️',
+      options: [
+        { mode: '✈️ Alaska Airlines', detail: '직항 다수 · 짐 별도', time: '2시간 30분', cost: '$120~180 (편도)', tip: 'Alaska·Delta 둘 다 많음 · 시애틀 ↔ SF 가장 흔한 노선' },
+        { mode: '✈️ Delta', detail: '직항', time: '2시간 30분', cost: '$130~200', tip: '연결편 없음 · 직항 권장' },
+      ]
+    },
+    { from: 'SEA', to: 'LAS (Plan A 7/1)', distance: '961mi · 1,547km', icon: '✈️',
+      options: [
+        { mode: '✈️ Alaska / Delta', detail: '직항', time: '2시간 30분', cost: '$140~220 (편도)', tip: '경기 후 저녁 비행 — 19시대 항공편 많음' },
+      ]
+    },
+    { from: 'SFO', to: 'LAS (Plan B 7/1)', distance: '417mi · 671km', icon: '✈️',
+      options: [
+        { mode: '✈️ Southwest', detail: '직항 다수', time: '1시간 30분', cost: '$80~150 (편도)', tip: '⭐ 가장 저렴 · 짐 2개 무료' },
+        { mode: '✈️ Alaska / Delta', detail: '직항', time: '1시간 30분', cost: '$120~200', tip: '마일리지 있으면 활용' },
+      ]
+    },
+    { from: 'LAS', to: 'SFO (7/4 귀국 분기)', distance: '417mi · 671km', icon: '✈️',
+      options: [
+        { mode: '✈️ Southwest', detail: '직항', time: '1시간 20분', cost: '$90~160', tip: '⚠️ 7/4 독립기념일 — 운임 ↑, 좌석 일찍 매진' },
+        { mode: '✈️ United', detail: '직항', time: '1시간 20분', cost: '$110~200', tip: 'OZ211 환승 시간 여유 있게 (3시간 권장)' },
+      ]
+    },
+  ],
+}
+
 // ── 예약 전략 ──
 // ── 일자별 잠자리 (A/B 공통: 6/26~6/29, 7/1~7/3 / 분기: 6/30) ──
 const sleepByNight = [
@@ -342,6 +497,53 @@ const cityColors = {
               </div>
               <div class="act-desc">{{ act.desc }}</div>
               <div class="act-tip">💡 {{ act.tip }}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── 🚇 이동수단 가이드 ── -->
+    <div class="accordion card">
+      <div class="acc-header" @click="open.transport = !open.transport">
+        <span class="acc-icon">🚇</span>
+        <span class="acc-title">이동수단 가이드</span>
+        <span class="acc-meta">도시별 주요 구간 · 지하철·버스·택시·Uber 비교</span>
+        <span class="acc-chevron" :class="{ rotated: open.transport }">›</span>
+      </div>
+      <div v-show="open.transport" class="acc-body">
+        <div class="tp-city-tabs">
+          <button
+            v-for="(label, city) in transportCityLabel"
+            :key="city"
+            class="tp-tab"
+            :class="{ 'tp-tab-active': activeTransportCity === city }"
+            @click="activeTransportCity = city"
+          >{{ label }}</button>
+        </div>
+        <div class="tp-routes">
+          <div v-for="route in transportRoutes[activeTransportCity]" :key="route.from + route.to" class="tp-route-card">
+            <div class="tp-route-head">
+              <span class="tp-route-icon">{{ route.icon }}</span>
+              <div class="tp-route-od">
+                <span class="tp-from">{{ route.from }}</span>
+                <span class="tp-arrow">→</span>
+                <span class="tp-to">{{ route.to }}</span>
+              </div>
+              <span class="tp-dist">{{ route.distance }}</span>
+            </div>
+            <div class="tp-options">
+              <div v-for="opt in route.options" :key="opt.mode" class="tp-option">
+                <div class="tp-mode">{{ opt.mode }}</div>
+                <div class="tp-detail-col">
+                  <div class="tp-detail">{{ opt.detail }}</div>
+                  <div class="tp-tip">💡 {{ opt.tip }}</div>
+                </div>
+                <div class="tp-meta-col">
+                  <div class="tp-time">⏱ {{ opt.time }}</div>
+                  <div class="tp-cost">💵 {{ opt.cost }}</div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -970,6 +1172,48 @@ const cityColors = {
   padding: 3px 7px; line-height: 1.4;
 }
 
+/* ── 🚇 Transport guide ── */
+.tp-city-tabs { display: flex; gap: .35rem; flex-wrap: wrap; margin-bottom: .85rem; }
+.tp-tab {
+  font-size: .78rem; font-weight: 600; padding: 5px 12px; border-radius: 7px;
+  background: var(--bg); border: 1px solid var(--border); color: var(--text-muted);
+  transition: var(--transition); cursor: pointer;
+}
+.tp-tab:hover { color: var(--text); border-color: var(--accent); }
+.tp-tab.tp-tab-active { background: var(--accent-bg); border-color: var(--accent); color: var(--accent); }
+
+.tp-routes { display: flex; flex-direction: column; gap: .8rem; }
+.tp-route-card {
+  background: var(--bg); border: 1px solid var(--border);
+  border-radius: var(--radius-lg); overflow: hidden;
+}
+.tp-route-head {
+  display: flex; align-items: center; gap: .65rem; padding: .65rem .9rem;
+  background: var(--bg-overlay); border-bottom: 1px solid var(--border);
+}
+.tp-route-icon { font-size: 1.1rem; }
+.tp-route-od { flex: 1; display: flex; align-items: center; gap: .4rem; flex-wrap: wrap; font-size: .9rem; }
+.tp-from { font-weight: 600; color: var(--text); }
+.tp-to { font-weight: 700; color: var(--text); }
+.tp-arrow { color: var(--accent); font-weight: 700; }
+.tp-dist { font-size: .72rem; color: var(--text-dim); font-family: ui-monospace,monospace; white-space: nowrap; }
+
+.tp-options { display: flex; flex-direction: column; }
+.tp-option {
+  display: grid; grid-template-columns: 130px 1fr 130px; gap: .6rem;
+  padding: .65rem .9rem; border-bottom: 1px solid var(--border-muted);
+  align-items: center;
+}
+.tp-option:last-child { border-bottom: none; }
+.tp-option:hover { background: var(--bg-overlay); }
+.tp-mode { font-size: .85rem; font-weight: 700; color: var(--text); white-space: nowrap; }
+.tp-detail-col { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
+.tp-detail { font-size: .82rem; color: var(--text-muted); line-height: 1.4; }
+.tp-tip { font-size: .73rem; color: var(--text-dim); line-height: 1.4; }
+.tp-meta-col { display: flex; flex-direction: column; gap: 3px; align-items: flex-end; white-space: nowrap; }
+.tp-time { font-size: .78rem; color: var(--text); font-weight: 600; }
+.tp-cost { font-size: .78rem; color: var(--accent); font-weight: 700; }
+
 .mono { font-family: ui-monospace,monospace; }
 
 @media (max-width: 768px) {
@@ -978,6 +1222,8 @@ const cityColors = {
   .giants-grid { grid-template-columns: 1fr; }
   .bar-row { grid-template-columns: 1fr; gap: .3rem; }
   .prob-summary { gap: .35rem; }
+  .tp-option { grid-template-columns: 1fr; gap: .3rem; }
+  .tp-meta-col { flex-direction: row; gap: .8rem; align-items: flex-start; }
 }
 @media (max-width: 600px) {
   .day-row { grid-template-columns: 70px 20px 1fr; gap: 0 .4rem; }

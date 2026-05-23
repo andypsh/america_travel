@@ -28,8 +28,8 @@ const flights = [
 // ── Giants ──
 const giants = [
   { date: '6/26 금', time: '19:15', opponent: 'vs Atlanta Braves', note: '⭐ 도착 당일 — 체크인 후 관람 (이번 일정 관람 경기)' },
-  { date: '6/27 토', time: '18:05', opponent: 'vs Atlanta Braves', note: 'Plan A: ⛰ 요세미티 1박 — 관람 불가 / Plan B: 실리콘밸리 후 ⭐관람 가능' },
-  { date: '6/28 일', time: '13:05', opponent: 'vs Atlanta Braves', note: 'Plan A: ⛰ 요세미티 → SF 복귀 — 관람 불가 / Plan B: 🇰🇷 LA 경기 충돌 — 관람 불가' },
+  { date: '6/27 토', time: '18:05', opponent: 'vs Atlanta Braves', note: '⛰ 요세미티 1박 (A/B 공통) — 관람 불가' },
+  { date: '6/28 일', time: '13:05', opponent: 'vs Atlanta Braves', note: 'A: ⛰ 요세미티 → SF 복귀 / B: 🇰🇷 LA 경기 — 어느 쪽이든 관람 불가' },
 ]
 
 // ── 월드컵 시나리오 (FIFA Annex C 원문 파싱 결과) ──
@@ -115,12 +115,11 @@ const aDays = [
   ]},
 ]
 
-// ── Plan B: SF 2박 → LA 당일치기 → YOS 1박 → SF 1박 → LV 3박 → SFO ──
+// ── Plan B: SF 1박 → YOS 1박 (A 공통) → SF 3박 (LA 당일치기 포함) → LV 3박 → SFO ──
 const laHotels = [
-  { city: '샌프란시스코 (1)', tag: 'SF',  nights: 2, dates: '6/26~6/28', economy: 190, mid: 230, note: 'Palace Hotel · 6/27 실리콘밸리 · 6/28 LA 경비행기 당일치기 (큰짐 보관)' },
-  { city: '샌프란시스코 (2)', tag: 'SF',  nights: 1, dates: '6/28~6/29', economy: 190, mid: 230, note: 'Palace Hotel · LA 경기 후 복귀 1박 · 같은 룸 요청 가능' },
-  { city: 'Yosemite',       tag: 'YOS', nights: 1, dates: '6/29~6/30', economy: 200, mid: 350, note: 'Curry Village or Half Dome Village · 6~12개월 전 예약 필수 · LA 경기 후 회복' },
-  { city: '샌프란시스코 (3)', tag: 'SF',  nights: 1, dates: '6/30~7/1', economy: 190, mid: 230, note: 'Palace Hotel · 요세미티 복귀 1박 · 7/1 LAS 비행 전' },
+  { city: '샌프란시스코 (1)', tag: 'SF',  nights: 1, dates: '6/26~6/27', economy: 190, mid: 230, note: 'Palace Hotel · 도착 첫박 · 6/27 아침 체크아웃 시 큰 짐 보관 요청' },
+  { city: 'Yosemite',       tag: 'YOS', nights: 1, dates: '6/27~6/28', economy: 200, mid: 350, note: '⭐ Plan A·B 공통 (무료취소 불가 → 같은 날짜 공유) · Curry Village · 6~12개월 전 예약' },
+  { city: '샌프란시스코 (2)', tag: 'SF',  nights: 3, dates: '6/28~7/1', economy: 190, mid: 230, note: 'Palace Hotel · 재투숙 · 6/28 LA 경비행기 당일치기 (요세미티 → SF 새벽 복귀 후) · 같은 룸 요청' },
   { city: '라스베이거스',     tag: 'LV',  nights: 3, dates: '7/1~7/4',  economy: 140, mid: 240, note: 'Paris LV · 평일 요금 · 7/4 저녁 SFO 이동' },
 ]
 const laDays = [
@@ -128,40 +127,37 @@ const laDays = [
     { time: '~14:30', text: 'OZ212 SFO 도착 — 호텔 체크인' },
     { time: '19:15', text: '⚾ Giants vs Braves @ Oracle Park (도착 당일)', baseball: true },
   ]},
-  { date: '6/27 토', city: '실리콘밸리', cityTag: 'SV', icon: '💻', items: [
-    { time: '09:30~', text: '🚂 Caltrain 또는 🚙 Uber → Stanford Campus (Palo Alto, 1시간)' },
-    { time: '10:00-12:00', text: '🏛 Stanford 캠퍼스 산책 · Hoover Tower · Oval · 기념품샵' },
-    { time: '12:00-13:00', text: '🔵 Google Visitor Center (예약 필수, 무료) · 제품 몰 투어 · 주변 Sunnyvale' },
-    { time: '13:00-14:00', text: '🍜 Palo Alto / Mountain View 점심 (인도, 중국, 한식)' },
-    { time: '14:30~', text: '🍎 Apple Park Visitor Center · Computer History Museum (선택)' },
-    { time: '16:30~', text: '🚙 Caltrain/Uber로 SF 귀환' },
-    { time: '18:05', text: '⚾ Giants vs Braves @ Oracle Park', baseball: true },
-  ]},
-  { date: '6/28 일', city: 'KR ✈️ 경비행기 SF ↔ LA', cityTag: 'SF↔LA', icon: '🇰🇷', highlight: true, items: [
-    { time: '07:00', text: '🛩️ PAO/SQL 출발 — 렌탈 경비행기 (Cessna 182 / SR22) · Giants 13:05 ❌ 충돌·포기' },
-    { time: '~09:15', text: '🛬 HHR (Hawthorne Muni) 착륙 · TFR 발동 전 여유 있게 착지 ✅' },
-    { time: '09:30~', text: '🛴 K Line 또는 킥보드로 SoFi 이동 (1.8mi · 15~40분)' },
-    { time: '10:30~', text: '🏟 SoFi Stadium 입장 · 한국 응원단 합류' },
-    { time: '12:00 PT', text: '🏟 한국(조A 2위) vs 조B 2위 — SoFi Stadium (Match 73)', bold: true },
-    { time: '~15:30', text: '경기 종료 · HHR 귀환 대기 (TFR 17:00까지 활성)' },
-    { time: '~16:00', text: '🥤 인근 카페/바에서 경기 복기 🍻 · TFR 해제 대기' },
-    { time: '17:00~', text: '🛩️ HHR 출발 → PAO/SQL 귀환 (~2h 15m)' },
-    { time: '~19:30', text: 'SF 귀환 · 호텔 체크인 · 저녁 식사' },
-  ]},
-  { date: '6/29 월', city: '샌프란시스코 → 요세미티', cityTag: 'SF→YOS', icon: '⛰️', items: [
-    { time: '06:30-07:00', text: '🏨 호텔 조식 후 출발 · 요세미티 1박짐만 챙기고 큰짐은 호텔 보관' },
+  { date: '6/27 토', city: '요세미티 국립공원', cityTag: 'YOS', icon: '⛰️', items: [
+    { time: '06:30-07:00', text: '🏨 호텔 조식 후 출발 · 요세미티 1박짐만 챙기고 큰짐은 호텔 보관 (Plan A와 공통)' },
     { time: '08:00~', text: '🚙 SF → Yosemite 드라이브 (3.5시간) · Hwy 120 scenic route' },
-    { time: '~12:00', text: '🏕 Yosemite 도착 · Curry Village / Half Dome Village 체크인' },
-    { time: '13:00~16:00', text: '⛰ 오후 투어 — Yosemite Valley 순환 · Bridalveil Fall · 엘 캐피탄 전망' },
-    { time: '17:00~', text: '🍽 저녁 식사 · 롯지 라운지 · Fireplace · 야간 폭포 야경 · LA 경기 회복' },
+    { time: '~12:00', text: '🏕 Yosemite 도착 · Curry Village 체크인' },
+    { time: '13:00~16:00', text: '⛰ 오후 투어 — Yosemite Valley · Bridalveil Fall · El Capitan' },
+    { time: '17:00~', text: '🍽 저녁 식사 · ⚠️ 일찍 취침 — 내일 04:00 기상!' },
   ]},
-  { date: '6/30 화', city: '요세미티 → 샌프란시스코', cityTag: 'YOS→SF', icon: '⛰️', items: [
-    { time: '07:00', text: '🌅 아침 조식 · 일출 감상 (El Capitan / Cathedral Rocks)' },
-    { time: '08:00~12:00', text: '🥾 가이드 하이킹 (Tunnel View · Mirror Lake · Vernal Falls viewpoint)' },
-    { time: '점심', text: '🥪 트레일상 피크닉 or Yosemite Valley Lodge 카페' },
-    { time: '14:00~15:00', text: '🏔 Glacier Point 파노라마 뷰' },
-    { time: '15:30~', text: '🚙 Yosemite → SF 귀환 드라이브 (3.5시간)' },
-    { time: '~22:00', text: '🏨 SF 호텔 귀환 · 짐 찾기 · 내일 LV 이동 준비' },
+  { date: '6/28 일', city: '🛩 요세미티 → SF → LA → SF', cityTag: 'SF↔LA', icon: '🇰🇷', highlight: true, items: [
+    { time: '04:00', text: '⏰ 기상 · 짐 정리 · 체크아웃 (브루털 일정 — 한국 경기를 위한 새벽 강행)', bold: true },
+    { time: '04:30~08:00', text: '🚙 Yosemite → SF 새벽 드라이브 (3.5시간) · 차량 내 시리얼·커피' },
+    { time: '08:00~08:30', text: '🏨 Palace Hotel 도착 · 빠른 샤워·옷 갈아입기 · 짐 보관' },
+    { time: '08:45', text: '🚙 SF → PAO (Palo Alto Airport, 40분)' },
+    { time: '09:30', text: '🛩️ PAO 출발 — 렌탈 경비행기 (Cessna 182 / SR22)' },
+    { time: '~11:30', text: '🛬 HHR (Hawthorne Muni) 착륙 · TFR 발동 전 여유 있게 착지 ✅' },
+    { time: '11:45~', text: '🛴 K Line 또는 킥보드로 SoFi (1.8mi · 15분)' },
+    { time: '12:00 PT', text: '🏟 한국(조A 2위) vs 조B 2위 — SoFi Stadium (Match 73)', bold: true },
+    { time: '~15:30', text: '경기 종료 · HHR 귀환 (TFR 17:00까지)' },
+    { time: '17:00~', text: '🛩️ HHR 출발 → PAO 귀환 (~2h 15m)' },
+    { time: '~19:30', text: '🏨 SF Palace Hotel 체크인 · 저녁 식사 · 휴식' },
+  ]},
+  { date: '6/29 월', city: '샌프란시스코 · 실리콘밸리', cityTag: 'SV', icon: '💻', items: [
+    { time: '오전', text: '늦잠 · 호텔 조식 · 어제 강행 피로 회복' },
+    { time: '11:00~', text: '🚂 Caltrain 또는 🚙 Uber → Stanford Campus (Palo Alto)' },
+    { time: '점심', text: '🍜 Palo Alto / Mountain View 점심' },
+    { time: '오후', text: '🔵 Google Visitor Center · 🍎 Apple Park Visitor Center' },
+    { time: '저녁', text: '🚙 SF 귀환 · 마지막 SF 저녁 식사' },
+  ]},
+  { date: '6/30 화', city: '샌프란시스코', cityTag: 'SF', icon: '🌉', items: [
+    { time: '오전', text: '⛴ Alcatraz Cruises — Pier 33 출발 (사전 예약 필수)' },
+    { time: '오후', text: '🚴 Golden Gate Bridge 자전거 라이딩 · Sausalito 페리' },
+    { time: '저녁', text: '🦞 Fisherman\'s Wharf 씨푸드 · 내일 LV 이동 준비' },
   ]},
   { date: '7/1 수', city: '샌프란시스코 → 라스베이거스', cityTag: 'SF→LV', icon: '✈️', items: [
     { time: '오전', text: 'Fisherman\'s Wharf 브런치 · 마지막 SF' },
@@ -399,13 +395,13 @@ const transportRoutes = {
 }
 
 // ── 예약 전략 ──
-// ── 일자별 잠자리 (A/B 공통: 6/26, 7/1~7/3 / 분기: 6/27~6/30) ──
+// ── 일자별 잠자리 (A/B 공통: 6/26~6/29, 7/1~7/3 / 분기: 6/30) ──
 const sleepByNight = [
-  { date: '6/26 금', a: 'SF · Palace Hotel',           b: 'SF · Palace Hotel',           aTag: 'SF',  bTag: 'SF',  action: 'now',     same: true,  note: '도착 당일 — Giants 경기 후 첫 박' },
-  { date: '6/27 토', a: 'YOS · Curry Village',         b: 'SF · Palace Hotel',           aTag: 'YOS', bTag: 'SF',  action: 'standby', same: false, note: '🔀 A: Yosemite / B: SF (실리콘밸리 + Giants 18:05)' },
-  { date: '6/28 일', a: 'SF · Palace Hotel (재체크인)', b: 'SF · Palace Hotel',           aTag: 'SF',  bTag: 'SF',  action: 'standby', same: false, note: 'A: Yosemite 복귀·짐 픽업 / B: LA 경기 당일치기 후 SF 복귀' },
-  { date: '6/29 월', a: 'SF · Palace Hotel',           b: 'YOS · Curry Village',         aTag: 'SF',  bTag: 'YOS', action: 'standby', same: false, note: '🔀 A: SF Bay 경비행기·Alcatraz / B: Yosemite (LA 경기 후 회복)' },
-  { date: '6/30 화', a: 'SEA · Hyatt Regency',         b: 'SF · Palace Hotel',           aTag: 'SEA', bTag: 'SF',  action: 'standby', same: false, note: '🔀 A: SEA / B: Yosemite 복귀' },
+  { date: '6/26 금', a: 'SF · Palace Hotel',           b: 'SF · Palace Hotel',           aTag: 'SF',  bTag: 'SF',  action: 'now',     same: true,  note: '도착 당일 — Giants 경기 후 첫 박 (6/27 아침 체크아웃)' },
+  { date: '6/27 토', a: 'YOS · Curry Village',         b: 'YOS · Curry Village',         aTag: 'YOS', bTag: 'YOS', action: 'now',     same: true,  note: '⭐ A/B 공통 — 요세미티 1박 (무료취소 불가 → 동일 예약). B는 04:00 기상' },
+  { date: '6/28 일', a: 'SF · Palace Hotel (재체크인)', b: 'SF · Palace Hotel (재체크인)', aTag: 'SF',  bTag: 'SF',  action: 'now',     same: true,  note: 'A: 오후 여유롭게 복귀 / B: 새벽 복귀 → LA 경기 → SF 저녁 복귀' },
+  { date: '6/29 월', a: 'SF · Palace Hotel',           b: 'SF · Palace Hotel',           aTag: 'SF',  bTag: 'SF',  action: 'now',     same: true,  note: 'A: SF Bay 경비행기·Alcatraz / B: 실리콘밸리 (경기 다음날 회복)' },
+  { date: '6/30 화', a: 'SEA · Hyatt Regency',         b: 'SF · Palace Hotel',           aTag: 'SEA', bTag: 'SF',  action: 'standby', same: false, note: '🔀 분기점 — 6/24 경기 결과 후 한쪽 취소' },
   { date: '7/1 수',  a: 'LV · Paris Las Vegas',        b: 'LV · Paris Las Vegas',        aTag: 'LV',  bTag: 'LV',  action: 'now',     same: true,  note: 'A: 시애틀 경기 후 야간 도착 / B: SFO→LAS 오후 도착' },
   { date: '7/2 목',  a: 'LV · Paris Las Vegas',        b: 'LV · Paris Las Vegas',        aTag: 'LV',  bTag: 'LV',  action: 'now',     same: true,  note: '' },
   { date: '7/3 금',  a: 'LV · Paris Las Vegas',        b: 'LV · Paris Las Vegas',        aTag: 'LV',  bTag: 'LV',  action: 'now',     same: true,  note: '7/4 아침 체크아웃' },
@@ -414,34 +410,28 @@ const sleepByNight = [
 const bookingItems = [
   // ── 즉시 예약 (A/B 공통) ──
   { id: 'sf-1',     label: 'SF Palace Hotel — 첫박 (도착일)', tag: 'SF',  dates: '6/26 → 6/27', nights: 1, plans: ['A','B'], type: 'now',
-    note: '도착 당일 1박 · A: 6/27 아침 체크아웃 후 짐 보관 (요세미티) · B: 그대로 6/27 박 이어서 (실리콘밸리)' },
+    note: '도착 당일 1박 · 6/27 아침 체크아웃 시 프런트에 "luggage storage" 요청 (무료) · 영수증 보관' },
+  { id: 'yosemite', label: 'Yosemite Curry Village (1박)', tag: 'YOS', dates: '6/27 → 6/28', nights: 1, plans: ['A','B'], type: 'now',
+    note: '⭐ A/B 공통 — 무료취소 불가 상품 → A·B 어느 쪽이든 사용 · ⚠️ 6~12개월 전 예약 필수 · recreation.gov / travelyosemite.com · 6월 폭포 시즌 만실' },
+  { id: 'sf-2',     label: 'SF Palace Hotel — 재체크인 (2박 공통)', tag: 'SF',  dates: '6/28 → 6/30', nights: 2, plans: ['A','B'], type: 'now',
+    note: '⭐ A/B 공통 — 같은 호텔로 재투숙 · 짐 픽업 + 같은 룸 요청 · A: 여유 복귀 / B: 새벽 복귀→LA→저녁 복귀' },
   { id: 'lv-base',  label: 'LV Paris Las Vegas (3박)', tag: 'LV', dates: '7/1 → 7/4', nights: 3, plans: ['A','B'], type: 'now',
-    note: '24h 프런트 (Plan A 심야 도착 대응) · 평일 요금 · A/B 날짜·호텔 완전 동일 → 1개만 예약' },
+    note: '24h 프런트 · 평일 요금 · A/B 날짜·호텔 완전 동일 → 1개만 예약' },
 
   // ── 6/24 경기 후 분기 — 무료취소 가능 상품으로 동시 대기 ──
-  { id: 'yosemite-a', label: 'Yosemite Curry Village (A용)', tag: 'YOS', dates: '6/27 → 6/28', nights: 1, plans: ['A'], type: 'standby',
-    note: '🟣 Plan A 전용 — ⚠️ 6~12개월 전 예약 필수 · recreation.gov 또는 travelyosemite.com · 6월 폭포 시즌 만실 위험' },
-  { id: 'sf-2-a',     label: 'SF Palace Hotel — A 재체크인 2박', tag: 'SF', dates: '6/28 → 6/30', nights: 2, plans: ['A'], type: 'standby',
-    note: '🟣 Plan A 전용 — Yosemite 복귀 후 SF 2박 (6/29 SF Bay 경비행기·Alcatraz)' },
-  { id: 'sea-a',      label: 'SEA Hyatt Regency', tag: 'SEA', dates: '6/30 → 7/1', nights: 1, plans: ['A'], type: 'standby',
-    note: '🟣 Plan A 전용 — 7/1 R32 Match 82 (Lumen Field) 다음날 LV 이동 · 월드컵 서징 가격 ⚠️' },
-  { id: 'sf-b-1',     label: 'SF Palace Hotel — B 6/27 1박', tag: 'SF', dates: '6/27 → 6/28', nights: 1, plans: ['B'], type: 'standby',
-    note: '🔴 Plan B 전용 — 실리콘밸리 당일치기 + Giants 18:05 관람' },
-  { id: 'sf-b-2',     label: 'SF Palace Hotel — B LA 경기 후 1박', tag: 'SF', dates: '6/28 → 6/29', nights: 1, plans: ['B'], type: 'standby',
-    note: '🔴 Plan B 전용 — LA 경비행기 당일치기 (Match 73) 후 SF 복귀 1박' },
-  { id: 'yosemite-b', label: 'Yosemite Curry Village (B용)', tag: 'YOS', dates: '6/29 → 6/30', nights: 1, plans: ['B'], type: 'standby',
-    note: '🔴 Plan B 전용 — LA 경기 다음날 요세미티 1박 · 6~12개월 전 예약 필수' },
-  { id: 'sf-b-3',     label: 'SF Palace Hotel — B 요세미티 복귀 1박', tag: 'SF', dates: '6/30 → 7/1', nights: 1, plans: ['B'], type: 'standby',
-    note: '🔴 Plan B 전용 — Yosemite 복귀 후 1박 · 7/1 오후 LAS 비행' },
+  { id: 'sea-a',    label: 'SEA Hyatt Regency', tag: 'SEA', dates: '6/30 → 7/1', nights: 1, plans: ['A'], type: 'standby',
+    note: '🟣 Plan A 전용 — 7/1 R32 Match 82 (Lumen Field) 다음날 LV 이동 · 월드컵 서징 ⚠️' },
+  { id: 'sf-b-ext', label: 'SF Palace Hotel — B 연장 1박', tag: 'SF', dates: '6/30 → 7/1', nights: 1, plans: ['B'], type: 'standby',
+    note: '🔴 Plan B 전용 — 7/1 오후 LAS 비행 전 SF 1박 · sf-2와 같은 호텔' },
 ]
 
 const decisions = [
   { result: '조3위 진출 (Plan A 확정)', planTag: 'A', color: '#7c3aed',
-    keep:   ['SF 첫박 (6/26~6/27)', 'Yosemite-A (6/27~6/28)', 'SF-2-A 재체크인 2박 (6/28~6/30)', 'SEA Hyatt 1박 (6/30~7/1)', 'LV Paris 3박 (7/1~7/4)'],
-    cancel: ['SF-B-1, SF-B-2, SF-B-3', 'Yosemite-B'] },
+    keep:   ['SF 첫박 (6/26~6/27)', 'Yosemite 1박 (6/27~6/28)', 'SF 재체크인 2박 (6/28~6/30)', 'SEA Hyatt 1박 (6/30~7/1)', 'LV Paris 3박 (7/1~7/4)'],
+    cancel: ['SF B 연장 (6/30~7/1)'] },
   { result: '조2위 진출 (Plan B 확정)', planTag: 'B', color: '#e11d48',
-    keep:   ['SF 첫박 (6/26~6/27)', 'SF-B-1 (6/27~6/28)', 'SF-B-2 (6/28~6/29)', 'Yosemite-B (6/29~6/30)', 'SF-B-3 (6/30~7/1)', 'LV Paris 3박 (7/1~7/4)'],
-    cancel: ['Yosemite-A', 'SF-2-A 재체크인', 'SEA Hyatt 1박 (A용)'] },
+    keep:   ['SF 첫박 (6/26~6/27)', 'Yosemite 1박 (6/27~6/28)', 'SF 재체크인 2박 (6/28~6/30)', 'SF B 연장 (6/30~7/1)', 'LV Paris 3박 (7/1~7/4)'],
+    cancel: ['SEA Hyatt 1박 (A용)'] },
 ]
 
 // ── Computed ──
@@ -468,7 +458,7 @@ const cityColors = {
       </button>
       <button class="plan-btn plan-b" :class="{ active: activePlan === 'b' }" @click="activePlan = 'b'">
         🇰🇷 Plan B — LA 한국 R32 + LV <span class="plan-badge red">조2위</span>
-        <span class="plan-sub">SF(4박, 🛩 6/28 LA 경비행기 + ⛰ 6/29 요세미티 1박) → LV(3박) → SFO · Match 73 SoFi 6/28</span>
+        <span class="plan-sub">SF(5박, ⛰요세미티 1박 공통 + 🛩 6/28 LA 경비행기) → LV(3박) → SFO · Match 73 SoFi 6/28</span>
       </button>
     </div>
 

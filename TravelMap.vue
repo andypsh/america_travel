@@ -32,10 +32,10 @@ const POIS = {
     { kind: 'activity', name: 'Palo Alto Airport (PAO)', lat: 37.4611, lng: -122.1150, icon: '🛩️', day: '6/29',   detail: '경비행기 출발 · Bay 투어 또는 LA 왕복' },
   ],
   YOS: [
-    { kind: 'sight',   name: 'Yosemite Valley',       lat: 37.7456, lng: -119.5936, icon: '⛰️', day: 'A:6/27 / B:6/29', detail: 'Valley 순환 · Bridalveil Fall · El Capitan' },
-    { kind: 'sight',   name: 'Tunnel View',           lat: 37.7156, lng: -119.6779, icon: '👁',  day: 'A:6/28 / B:6/30', detail: '아침 하이킹 출발점 · 파노라마 포토스팟' },
-    { kind: 'sight',   name: 'Glacier Point',         lat: 37.7281, lng: -119.5740, icon: '🏔', day: 'A:6/28 / B:6/30', detail: '오후 파노라마 · 마지막 자연 감상' },
-    { kind: 'lodging', name: 'Curry Village (1박)',   lat: 37.7375, lng: -119.5736, icon: '🏕',  day: 'A:6/27~28 / B:6/29~30', detail: 'Half Dome Village · 캐빈 1박' },
+    { kind: 'sight',   name: 'Yosemite Valley',       lat: 37.7456, lng: -119.5936, icon: '⛰️', day: '6/27', detail: 'Valley 순환 · Bridalveil Fall · El Capitan (A/B 공통)' },
+    { kind: 'sight',   name: 'Tunnel View',           lat: 37.7156, lng: -119.6779, icon: '👁',  day: '6/28', detail: 'A: 아침 하이킹 / B: 04:00 새벽 출발 (LA 경기行)' },
+    { kind: 'sight',   name: 'Glacier Point',         lat: 37.7281, lng: -119.5740, icon: '🏔', day: '6/28', detail: 'A: 오후 파노라마 / B: 패스 (LA 경기行)' },
+    { kind: 'lodging', name: 'Curry Village (1박)',   lat: 37.7375, lng: -119.5736, icon: '🏕',  day: '6/27~28', detail: '⭐ A/B 공통 1박 · 무료취소 불가 → 공통 예약' },
   ],
   SEA: [
     { kind: 'stadium',  name: 'Lumen Field 🇰🇷',              lat: 47.5952, lng: -122.3316, icon: '⚽', day: '7/1 13:00 PT', detail: 'R32 Match 82 — 한국 vs 16강 약자 · Plan A 핵심', highlight: true },
@@ -63,9 +63,9 @@ const POIS = {
     { kind: 'activity', name: 'Hawthorne Municipal (HHR)',  lat: 33.9223, lng: -118.3352, icon: '🛬', day: '6/28',           detail: 'PAO에서 경비행기 도착 · 도보 거리 SoFi' },
   ],
   SV: [
-    { kind: 'sight', name: 'Stanford Campus',           lat: 37.4275, lng: -122.1697, icon: '🏛', day: '6/27 오전', detail: 'Hoover Tower · Oval · 기념품 (Plan B)' },
-    { kind: 'sight', name: 'Google Visitor Center',     lat: 37.4220, lng: -122.0841, icon: '🔵', day: '6/27 점심', detail: '예약 필수 · 무료 · Sunnyvale (Plan B)' },
-    { kind: 'sight', name: 'Apple Park Visitor Center', lat: 37.3327, lng: -122.0053, icon: '🍎', day: '6/27 오후', detail: 'Cupertino · 옥상 카페 (Plan B)' },
+    { kind: 'sight', name: 'Stanford Campus',           lat: 37.4275, lng: -122.1697, icon: '🏛', day: '6/29 오전', detail: 'Hoover Tower · Oval · 기념품 (Plan B 6/29)' },
+    { kind: 'sight', name: 'Google Visitor Center',     lat: 37.4220, lng: -122.0841, icon: '🔵', day: '6/29 점심', detail: '예약 필수 · 무료 · Sunnyvale (Plan B 6/29)' },
+    { kind: 'sight', name: 'Apple Park Visitor Center', lat: 37.3327, lng: -122.0053, icon: '🍎', day: '6/29 오후', detail: 'Cupertino · 옥상 카페 (Plan B 6/29)' },
     { kind: 'sight', name: 'Computer History Museum',   lat: 37.4144, lng: -122.0775, icon: '💻', detail: '선택 방문 · Mountain View' },
   ],
 }
@@ -94,10 +94,10 @@ const planB = {
   name: 'Plan B — LA 한국전 + 실리콘밸리',
   legs: [
     { city: 'SF',  date: '6/26 금', label: '도착 · Giants 경기',          icon: '✈️', desc: 'OZ212 SFO 도착 · Oracle Park' },
-    { city: 'SV',  date: '6/27 토', label: '실리콘밸리 + Giants',            icon: '💻', desc: 'Stanford · Google · Apple Park · 저녁 Giants 18:05' },
-    { city: 'LA',  date: '6/28 일', label: '🇰🇷 LA 당일치기 (경비행기)',     icon: '🛩', desc: 'PAO→HHR 경비행기 · SoFi Match 73 · 당일 SF 복귀', highlight: true },
-    { city: 'YOS', date: '6/29 월', label: '요세미티 1박 (회복)',            icon: '⛰️', desc: 'SF→Yosemite · Valley 투어 · LA 경기 회복' },
-    { city: 'SF',  date: '6/30 화', label: '요세미티 → SF 귀환',            icon: '🚙', desc: 'Glacier Point · 하이킹 · SF 귀환' },
+    { city: 'YOS', date: '6/27 토', label: '요세미티 1박 (A 공통)',          icon: '⛰️', desc: 'SF→Yosemite · Valley 투어 · 일찍 취침 (04:00 기상)' },
+    { city: 'LA',  date: '6/28 일', label: '🇰🇷 요세미티→SF→LA (브루털)',    icon: '🛩', desc: '04:00 기상 · 새벽 드라이브 · 경비행기 → SoFi Match 73', highlight: true },
+    { city: 'SV',  date: '6/29 월', label: '실리콘밸리 (회복)',              icon: '💻', desc: 'Stanford · Google · Apple Park · 어제 강행 회복' },
+    { city: 'SF',  date: '6/30 화', label: 'SF 자유시간',                    icon: '🌉', desc: 'Alcatraz · Golden Gate · Fisherman\'s Wharf' },
     { city: 'LV',  date: '7/1 수',  label: 'SF → LV 이동',                  icon: '✈️', desc: 'SFO→LAS 국내선 · The Strip 야경' },
     { city: 'LV',  date: '7/2 목',  label: '라스베이거스',                  icon: '🎰', desc: 'Fremont · SpeedVegas · 쇼' },
     { city: 'LV',  date: '7/3 금',  label: '라스베이거스',                  icon: '🎯', desc: '후버댐 · iFly · 마지막 카지노' },

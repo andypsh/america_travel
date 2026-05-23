@@ -27,9 +27,9 @@ const flights = [
 
 // ── Giants ──
 const giants = [
-  { date: '6/26 금', time: '19:15', opponent: 'vs Atlanta Braves', note: '⭐ 도착 당일 — 체크인 후 관람 (이번 일정 관람 경기)' },
-  { date: '6/27 토', time: '18:05', opponent: 'vs Atlanta Braves', note: '⭐ A/B 모두 관람 가능 (A: 관광 후 / B: 실리콘밸리 후)' },
-  { date: '6/28 일', time: '13:05', opponent: 'vs Atlanta Braves', note: 'A: ⭐ Bay 경비행기 후 관람 가능 / B: 🇰🇷 LA 경기 충돌 — 관람 불가' },
+  { date: '6/26 금', time: '19:15', opponent: 'vs Atlanta Braves', note: '✈️ 도착 당일 — 장거리 비행 피로 회복 우선 → 관람 X' },
+  { date: '6/27 토', time: '18:05', opponent: 'vs Atlanta Braves', note: '⭐ 이번 일정 유일 관람 경기 (A: 관광 후 / B: 실리콘밸리 후 합류)' },
+  { date: '6/28 일', time: '13:05', opponent: 'vs Atlanta Braves', note: 'A: Bay 경비행기·SF 관광 / B: 🇰🇷 LA 경기 — 둘 다 관람 X' },
 ]
 
 // ── 월드컵 시나리오 (FIFA Annex C 원문 파싱 결과) ──
@@ -51,7 +51,7 @@ const aHotels = [
 const aDays = [
   { date: '6/26 금', city: '샌프란시스코', cityTag: 'SF', icon: '✈️', items: [
     { time: '~14:30', text: 'OZ212 SFO 도착 — Palace Hotel 체크인' },
-    { time: '19:15', text: '⚾ Giants vs Braves @ Oracle Park (도착 당일 경기)', baseball: true },
+    { time: '저녁', text: '🍜 Union Square 근처 가벼운 저녁 (Mensho 라멘 등) · 시차 적응 · 일찍 취침 (Giants 19:15 ❌ 패스 — 장거리 비행 피로)' },
   ]},
   { date: '6/27 토', city: '샌프란시스코', cityTag: 'SF', icon: '🌉', items: [
     { time: '오전', text: '⛴ Alcatraz Cruises — Pier 33 출발 (사전 예약 필수)' },
@@ -125,7 +125,7 @@ const laHotels = [
 const laDays = [
   { date: '6/26 금', city: '샌프란시스코', cityTag: 'SF', icon: '✈️', items: [
     { time: '~14:30', text: 'OZ212 SFO 도착 — 호텔 체크인' },
-    { time: '19:15', text: '⚾ Giants vs Braves @ Oracle Park (도착 당일)', baseball: true },
+    { time: '저녁', text: '🍜 Union Square 근처 가벼운 저녁 · 시차 적응 · 일찍 취침 (Giants 19:15 ❌ 패스)' },
   ]},
   { date: '6/27 토', city: '실리콘밸리', cityTag: 'SV', icon: '💻', items: [
     { time: '09:30~', text: '🚂 Caltrain 또는 🚙 Uber → Stanford Campus (Palo Alto, 1시간)' },

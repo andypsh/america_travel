@@ -116,12 +116,12 @@ const aDays = [
   ]},
 ]
 
-// ── Plan B: SF 3박 → YOS 1박 (A 공통) → SF 1박 → LV 3박 → SFO ── (호텔 A와 100% 동일)
+// ── Plan B: SF 3박 → YOS 1박 → SEA 1박 → LV 3박 → SFO (A와 호텔·항공편 100% 동일) ──
 const laHotels = [
-  { city: '샌프란시스코 (1)', tag: 'SF',  nights: 3, dates: '6/26~6/29', economy: 190, mid: 230, note: 'Palace Hotel · 도착 + SF/실리콘밸리/LA 경기' },
-  { city: 'Yosemite',       tag: 'YOS', nights: 1, dates: '6/29~6/30', economy: 200, mid: 350, note: '⭐ A/B 공통 · Curry Village · LA 경기 후 회복일' },
-  { city: '샌프란시스코 (2)', tag: 'SF',  nights: 1, dates: '6/30~7/1', economy: 190, mid: 230, note: 'Palace Hotel · 요세미티 복귀 · 7/1 LAS 비행 전' },
-  { city: '라스베이거스',     tag: 'LV',  nights: 3, dates: '7/1~7/4',  economy: 140, mid: 240, note: 'Paris LV · 평일 요금 · 7/4 저녁 SFO' },
+  { city: '샌프란시스코', tag: 'SF',  nights: 3, dates: '6/26~6/29', economy: 190, mid: 230, note: 'Palace Hotel · 도착 + SF/실리콘밸리/LA 경기' },
+  { city: 'Yosemite',    tag: 'YOS', nights: 1, dates: '6/29~6/30', economy: 200, mid: 350, note: '⭐ A/B 공통 · Curry Village · LA 경기 후 회복일' },
+  { city: '시애틀',       tag: 'SEA', nights: 1, dates: '6/30~7/1', economy: 280, mid: 400, note: '⭐ A/B 공통 — Hyatt Regency · A: 경기 전날 입성 / B: SEA 관광 (Space Needle·Chihuly)' },
+  { city: '라스베이거스', tag: 'LV',  nights: 3, dates: '7/1~7/4',  economy: 140, mid: 240, note: 'Paris LV · 평일 요금 · 7/4 저녁 SFO' },
 ]
 const laDays = [
   { date: '6/26 금', city: '샌프란시스코', cityTag: 'SF', icon: '✈️', items: [
@@ -155,19 +155,24 @@ const laDays = [
     { time: '13:00~16:00', text: '⛰ 오후 투어 — Yosemite Valley · Bridalveil Fall · El Capitan' },
     { time: '17:00~', text: '🍽 저녁 식사 · 야간 폭포 야경 · LA 경기 회복' },
   ]},
-  { date: '6/30 화', city: '요세미티 → 샌프란시스코', cityTag: 'YOS→SF', icon: '⛰️', items: [
+  { date: '6/30 화', city: '요세미티 → SF → 시애틀', cityTag: 'YOS→SEA', icon: '✈️', items: [
     { time: '07:00', text: '🌅 아침 조식 · 일출 감상 (El Capitan / Cathedral Rocks)' },
-    { time: '08:00~12:00', text: '🥾 가이드 하이킹 (Tunnel View · Mirror Lake · Vernal Falls viewpoint)' },
-    { time: '점심', text: '🥪 트레일상 피크닉 or Yosemite Valley Lodge 카페' },
-    { time: '14:00~15:00', text: '🏔 Glacier Point 파노라마 뷰' },
-    { time: '15:30~', text: '🚙 Yosemite → SF 귀환 드라이브 (3.5시간)' },
-    { time: '~20:00', text: '🏨 SF Palace Hotel 귀환 · 늦은 저녁 식사' },
+    { time: '08:00~10:30', text: '🥾 짧은 하이킹 (Tunnel View · Bridalveil Fall)' },
+    { time: '11:00', text: '🚙 Yosemite → SF 귀환 드라이브 (3.5시간) · 차내 점심' },
+    { time: '~14:30', text: 'SF Palace Hotel 도착 · 빠르게 짐 챙김' },
+    { time: '15:00', text: '🚙 SFO 공항 이동' },
+    { time: '16:30~', text: '✈️ SFO → SEA 국내선 (Alaska/Delta 직항 2h 30m) ⭐ A와 공통 항공편' },
+    { time: '~19:00', text: '🛬 SEA 도착 · Uber로 Hyatt Regency Seattle (downtown)' },
+    { time: '저녁', text: '🍽 Pike Place Market 저녁 · Ivar\'s 씨푸드 · 일찍 휴식' },
   ]},
-  { date: '7/1 수', city: '샌프란시스코 → 라스베이거스', cityTag: 'SF→LV', icon: '✈️', items: [
-    { time: '오전', text: 'Fisherman\'s Wharf 브런치 · 체크아웃' },
-    { time: '~13:00', text: 'SFO → LAS 국내선 (약 1시간 20분)' },
-    { time: '~15:00', text: '라스베이거스 호텔 체크인' },
-    { time: '저녁', text: 'The Strip 야경 · Bellagio 분수쇼 · 카지노 🎡 빅휠' },
+  { date: '7/1 수', city: '시애틀 관광 → 라스베이거스', cityTag: 'SEA→LV', icon: '🌲', items: [
+    { time: '09:00', text: '☀️ 늦잠 · 호텔 조식 (A는 같은 호텔에서 경기 준비)' },
+    { time: '오전', text: '🗼 Space Needle · Chihuly Garden & Glass · Seattle Center' },
+    { time: '점심', text: '🦀 Pike Place Market · Ivar\'s 클램차우더 · 스타벅스 1호점' },
+    { time: '오후', text: '🌉 Kerry Park 전망 · Capitol Hill 카페거리 · Olympic Sculpture Park (선택)' },
+    { time: '16:30-17:00', text: '🚙 호텔 체크아웃 · Uber로 SEA 공항' },
+    { time: '17:30~', text: '✈️ SEA → LAS 야간 국내선 (약 2.5시간) ⭐ A와 공통 항공편' },
+    { time: '~20:00', text: '🎰 라스베이거스 도착 · 심야 체크인 (Paris Las Vegas 24h) · The Strip 야경' },
   ]},
   { date: '7/2 목', city: '라스베이거스', cityTag: 'LV', icon: '🎰', items: [
     { time: '오전', text: 'Fremont Street Experience (구시가지 · 집라인)' },
@@ -399,41 +404,37 @@ const transportRoutes = {
 }
 
 // ── 예약 전략 ──
-// ── 일자별 잠자리 (A/B 공통 6/26~6/29, 분기 6/30 / 7/1~7/3 공통 LV) ──
+// ── 일자별 잠자리 (A/B 100% 동일 — 호텔·항공편 모두 공유) ──
 const sleepByNight = [
-  { date: '6/26 금', a: 'SF · Palace Hotel',     b: 'SF · Palace Hotel',     aTag: 'SF',  bTag: 'SF',  action: 'now',     same: true,  note: '도착 당일 — 비행 피로 회복' },
-  { date: '6/27 토', a: 'SF · Palace Hotel',     b: 'SF · Palace Hotel',     aTag: 'SF',  bTag: 'SF',  action: 'now',     same: true,  note: 'A: Alcatraz·Golden Gate·Giants 18:05 / B: 실리콘밸리·Giants 18:05' },
-  { date: '6/28 일', a: 'SF · Palace Hotel',     b: 'SF · Palace Hotel',     aTag: 'SF',  bTag: 'SF',  action: 'now',     same: true,  note: 'A: SF Bay 경비행기·관광 / B: 🇰🇷 LA 경비행기 당일치기 (Match 73)' },
-  { date: '6/29 월', a: 'YOS · Curry Village',   b: 'YOS · Curry Village',   aTag: 'YOS', bTag: 'YOS', action: 'now',     same: true,  note: '⭐ A/B 공통 — 요세미티 1박 (무료취소 불가 · 가장 먼저 예약)' },
-  { date: '6/30 화', a: 'SEA · Hyatt Regency',   b: 'SF · Palace Hotel',     aTag: 'SEA', bTag: 'SF',  action: 'standby', same: false, note: '🔀 분기점 — A: 요세미티 오전만 → SEA 저녁 도착 / B: 요세미티 풀데이 → SF 복귀' },
-  { date: '7/1 수',  a: 'LV · Paris Las Vegas',  b: 'LV · Paris Las Vegas',  aTag: 'LV',  bTag: 'LV',  action: 'now',     same: true,  note: 'A: SEA Lumen 경기 → 저녁 LAS / B: 오후 SFO→LAS' },
-  { date: '7/2 목',  a: 'LV · Paris Las Vegas',  b: 'LV · Paris Las Vegas',  aTag: 'LV',  bTag: 'LV',  action: 'now',     same: true,  note: '' },
-  { date: '7/3 금',  a: 'LV · Paris Las Vegas',  b: 'LV · Paris Las Vegas',  aTag: 'LV',  bTag: 'LV',  action: 'now',     same: true,  note: '7/4 아침 체크아웃' },
+  { date: '6/26 금', a: 'SF · Palace Hotel',     b: 'SF · Palace Hotel',     aTag: 'SF',  bTag: 'SF',  action: 'now', same: true, note: '도착 당일 — 비행 피로 회복' },
+  { date: '6/27 토', a: 'SF · Palace Hotel',     b: 'SF · Palace Hotel',     aTag: 'SF',  bTag: 'SF',  action: 'now', same: true, note: 'A: Alcatraz·Golden Gate·Giants 18:05 / B: 실리콘밸리·Giants 18:05' },
+  { date: '6/28 일', a: 'SF · Palace Hotel',     b: 'SF · Palace Hotel',     aTag: 'SF',  bTag: 'SF',  action: 'now', same: true, note: 'A: Bay 경비행기·SF 관광 / B: 🇰🇷 LA 경비행기 당일치기 (Match 73)' },
+  { date: '6/29 월', a: 'YOS · Curry Village',   b: 'YOS · Curry Village',   aTag: 'YOS', bTag: 'YOS', action: 'now', same: true, note: '⭐ A/B 공통 — 요세미티 1박 (무료취소 불가 · 가장 먼저 예약)' },
+  { date: '6/30 화', a: 'SEA · Hyatt Regency',   b: 'SEA · Hyatt Regency',   aTag: 'SEA', bTag: 'SEA', action: 'now', same: true, note: '⭐ A/B 공통 — 같은 SFO→SEA 항공편 + 같은 Hyatt 1박 (월드컵 서징 ⚠️ 일찍)' },
+  { date: '7/1 수',  a: 'LV · Paris Las Vegas',  b: 'LV · Paris Las Vegas',  aTag: 'LV',  bTag: 'LV',  action: 'now', same: true, note: 'A: 13:00 Lumen 경기 / B: SEA 관광 (Space Needle·Pike Place) → 같은 SEA→LAS 저녁 항공편' },
+  { date: '7/2 목',  a: 'LV · Paris Las Vegas',  b: 'LV · Paris Las Vegas',  aTag: 'LV',  bTag: 'LV',  action: 'now', same: true, note: '' },
+  { date: '7/3 금',  a: 'LV · Paris Las Vegas',  b: 'LV · Paris Las Vegas',  aTag: 'LV',  bTag: 'LV',  action: 'now', same: true, note: '7/4 아침 체크아웃' },
 ]
 
 const bookingItems = [
-  // ── 즉시 예약 (A/B 공통) ──
+  // ── 모든 예약 A/B 공통 — 6/24 결과 무관하게 동일 예약 (standby 없음) ──
   { id: 'sf-base',  label: 'SF Palace Hotel — SF 3박 연속', tag: 'SF',  dates: '6/26 → 6/29', nights: 3, plans: ['A','B'], type: 'now',
     note: '⭐ A/B 공통 — 도착부터 요세미티 출발 전까지 연속 3박 · 같은 룸 유지' },
   { id: 'yosemite', label: 'Yosemite Curry Village (1박)', tag: 'YOS', dates: '6/29 → 6/30', nights: 1, plans: ['A','B'], type: 'now',
     note: '⭐ A/B 공통 — 무료취소 불가 → A·B 어느 쪽이든 사용 · ⚠️ 6~12개월 전 예약 필수 · recreation.gov / travelyosemite.com · 6월 폭포 시즌 만실' },
+  { id: 'sea-hyatt', label: 'SEA Hyatt Regency (1박)', tag: 'SEA', dates: '6/30 → 7/1', nights: 1, plans: ['A','B'], type: 'now',
+    note: '⭐ A/B 공통 — A: 경기 전날 입성 / B: 7/1 SEA 관광 (Space Needle·Pike Place) · downtown Hyatt · ⚠️ 월드컵 서징 ⚠️ 일찍 예약' },
   { id: 'lv-base',  label: 'LV Paris Las Vegas (3박)', tag: 'LV', dates: '7/1 → 7/4', nights: 3, plans: ['A','B'], type: 'now',
-    note: '⭐ A/B 공통 — 24h 프런트 (A 야간 도착 대응) · 평일 요금 · 7/4 저녁 SFO' },
-
-  // ── 6/30 분기 — 무료취소 가능 상품으로 동시 대기 (6/24 결과 후 한쪽 취소) ──
-  { id: 'sea-a',    label: 'SEA Hyatt Regency (A용)', tag: 'SEA', dates: '6/30 → 7/1', nights: 1, plans: ['A'], type: 'standby',
-    note: '🟣 Plan A 전용 — 7/1 Lumen 경기 전날 시애틀 입성 · downtown Hyatt Regency · ⚠️ 월드컵 서징 가격 — 일찍 예약' },
-  { id: 'sf-b-ext', label: 'SF Palace Hotel — B 연장 1박', tag: 'SF', dates: '6/30 → 7/1', nights: 1, plans: ['B'], type: 'standby',
-    note: '🔴 Plan B 전용 — 요세미티 풀데이 후 SF 복귀 1박 · 7/1 오후 LAS 비행 · sf-base와 같은 호텔로' },
+    note: '⭐ A/B 공통 — 24h 프런트 (야간 도착 대응) · 평일 요금 · 7/4 저녁 SFO' },
 ]
 
 const decisions = [
   { result: '조3위 진출 (Plan A 확정)', planTag: 'A', color: '#7c3aed',
     keep:   ['SF 3박 (6/26~6/29)', 'Yosemite 1박 (6/29~6/30)', 'SEA Hyatt 1박 (6/30~7/1)', 'LV Paris 3박 (7/1~7/4)'],
-    cancel: ['SF B 연장 (6/30~7/1)'] },
+    cancel: ['(없음 — 호텔·항공편 변경 X · 활동만 분기: 7/1 Lumen 경기)'] },
   { result: '조2위 진출 (Plan B 확정)', planTag: 'B', color: '#e11d48',
-    keep:   ['SF 3박 (6/26~6/29)', 'Yosemite 1박 (6/29~6/30)', 'SF B 연장 (6/30~7/1)', 'LV Paris 3박 (7/1~7/4)'],
-    cancel: ['SEA Hyatt 1박 (A용)'] },
+    keep:   ['SF 3박 (6/26~6/29)', 'Yosemite 1박 (6/29~6/30)', 'SEA Hyatt 1박 (6/30~7/1)', 'LV Paris 3박 (7/1~7/4)'],
+    cancel: ['(없음 — 호텔·항공편 변경 X · 활동만 분기: 6/28 LA 경비행기 / 7/1 SEA 관광)'] },
 ]
 
 // ── Computed ──
@@ -456,11 +457,11 @@ const cityColors = {
     <div class="plan-toggle">
       <button class="plan-btn plan-a" :class="{ active: activePlan === 'a' }" @click="activePlan = 'a'">
         🏟️ Plan A — 시애틀 R32 + LV <span class="plan-badge">조3위</span>
-        <span class="plan-sub">SF(3박) + ⛰요세미티 1박 + SEA(1박) → LV(3박) · 6/30 요세미티 오전→SEA 저녁 / 7/1 Lumen Match 82</span>
+        <span class="plan-sub">SF(3박) + ⛰YOS 1박 + SEA(1박) + LV(3박) · 7/1 Lumen Match 82 · ⭐ A/B 호텔·항공 100% 동일</span>
       </button>
       <button class="plan-btn plan-b" :class="{ active: activePlan === 'b' }" @click="activePlan = 'b'">
         🇰🇷 Plan B — LA 한국 R32 + LV <span class="plan-badge red">조2위</span>
-        <span class="plan-sub">SF(4박, 🛩 6/28 LA 경비행기) + ⛰요세미티 1박 → LV(3박) · Match 73 SoFi 6/28</span>
+        <span class="plan-sub">SF(3박, 🛩 6/28 LA 경비행기) + ⛰YOS 1박 + SEA(1박 관광) + LV(3박) · Match 73 SoFi 6/28 · ⭐ A와 동일 예약</span>
       </button>
     </div>
 

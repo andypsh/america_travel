@@ -25,7 +25,7 @@ const costData = {
   a: {
     label: 'Plan A (SEA 한국전)',
     hotel: [
-      { name: 'SF Hyatt Regency Embarcadero (카페테리아 적용 후)', detail: '3박 · 본인 부담 ≈ 54만 + 현지 $180', perPerson: 790000 },
+      { name: 'SF Hyatt Regency Embarcadero (카페테리아 적용 후)', detail: '3박 객실 ≈ 54만 + 현지 $180 · 3명 분담', perPerson: 263000 },
       { name: 'YOS 1박 2일 투어 (숙박+가이드 포함)', detail: '1박', perPerson: 730000 },
       { name: 'SEA 호텔 (쉐라톤 그랜드)', detail: '1박', perPerson: 150000 },
       { name: 'LV Caesars Palace Octavius (회사보조 후)', detail: '3박', perPerson: 300000 },
@@ -56,7 +56,7 @@ const costData = {
   b: {
     label: 'Plan B (LA 한국전)',
     hotel: [
-      { name: 'SF Hyatt Regency Embarcadero (카페테리아 적용 후)', detail: '4박 · 본인 부담 ≈ 72만 + 현지 $240 (3박 기준 × 4/3)', perPerson: 1050000 },
+      { name: 'SF Hyatt Regency Embarcadero (카페테리아 적용 후)', detail: '4박 객실 ≈ 72만 + 현지 $240 · 3명 분담', perPerson: 350000 },
       { name: 'YOS 1박 2일 투어 (숙박+가이드 포함)', detail: '1박', perPerson: 730000 },
       { name: 'LV Caesars Palace Octavius (회사보조 후)', detail: '3박', perPerson: 300000 },
     ],

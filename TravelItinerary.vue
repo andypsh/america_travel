@@ -124,7 +124,7 @@ const annexC = { qualify: 330, total: 495, seattle: 314, foxborough: 16 }
 // ── Plan A: SF 3박 → YOS 1박 → SEA 1박 → LV 3박 → SFO (7/1 게임 전날 시애틀 숙박) ──
 const aHotels = [
   { city: '샌프란시스코',    tag: 'SF',  nights: 3, dates: '6/26~6/29', economy: 190, mid: 230, note: '✅ Hyatt Regency Embarcadero · 정가 1실 3박 1,200k원 → CJ 콘도지원 후 실부담 인당 ~212k원 (한국 결제 149k + 현지 fees $46) · BART Embarcadero 역 직결' },
-  { city: 'Yosemite',       tag: 'YOS', nights: 1, dates: '6/29~6/30', economy: 530, mid: 530, note: '⭐ A/B 공통 · 마이리얼트립 1박2일 투어 730,000원/인 · SF 픽업·드롭 + Curry Village 숙박 + 가이드 + 저녁 BBQ 포함 (렌트카·입장료 별도 필요 X)' },
+  { city: 'Yosemite',       tag: 'YOS', nights: 1, dates: '6/29~6/30', economy: 530, mid: 530, perPerson: true, note: '⭐ A/B 공통 · 마이리얼트립 1박2일 투어 730,000원/인 · SF 픽업·드롭 + Curry Village 숙박 + 가이드 + 저녁 BBQ 포함 (렌트카·입장료 별도 필요 X)' },
   { city: '시애틀',          tag: 'SEA', nights: 1, dates: '6/30~7/1', economy: 280, mid: 400, note: 'Hyatt Regency · ⚠️ 월드컵 서징 · 경기 전날 입성 → 다음날 여유 (요세미티 오전만 보고 일찍 출발)' },
   { city: '라스베이거스',     tag: 'LV',  nights: 3, dates: '7/1~7/4',  economy: 140, mid: 240, note: 'Caesars Palace (24h 체크인) · 평일 요금 · 7/4 저녁 SFO' },
 ]
@@ -202,7 +202,7 @@ const aDays = [
 // ── Plan B: SF 3박 → YOS 1박 → SEA 1박 → LV 3박 → SFO (A와 호텔·항공편 100% 동일) ──
 const laHotels = [
   { city: '샌프란시스코', tag: 'SF',  nights: 3, dates: '6/26~6/29', economy: 190, mid: 230, note: '✅ Hyatt Regency Embarcadero · 정가 1실 3박 1,200k원 → CJ 콘도지원 후 실부담 인당 ~212k원 · 6/28 LA 항공 당일치기(SFO↔LAX) 포함' },
-  { city: 'Yosemite',    tag: 'YOS', nights: 1, dates: '6/29~6/30', economy: 530, mid: 530, note: '⭐ A/B 공통 · 마이리얼트립 1박2일 투어 730,000원/인 · SF 픽업·드롭 + Curry Village 숙박 + 가이드 + 저녁 BBQ 포함' },
+  { city: 'Yosemite',    tag: 'YOS', nights: 1, dates: '6/29~6/30', economy: 530, mid: 530, perPerson: true, note: '⭐ A/B 공통 · 마이리얼트립 1박2일 투어 730,000원/인 · SF 픽업·드롭 + Curry Village 숙박 + 가이드 + 저녁 BBQ 포함' },
   { city: '시애틀',       tag: 'SEA', nights: 1, dates: '6/30~7/1', economy: 280, mid: 400, note: '⭐ A/B 공통 — Hyatt Regency · A: 경기 전날 입성 / B: SEA 관광 (Space Needle·Chihuly)' },
   { city: '라스베이거스', tag: 'LV',  nights: 3, dates: '7/1~7/4',  economy: 140, mid: 240, note: 'Caesars Palace · 평일 요금 · 7/4 저녁 SFO' },
 ]
@@ -526,7 +526,14 @@ const decisions = [
 // ── Computed ──
 const currentDays = computed(() => activePlan.value === 'a' ? aDays : laDays)
 const currentHotels = computed(() => activePlan.value === 'a' ? aHotels : laHotels)
-function totalFor(tier) { return currentHotels.value.reduce((s, h) => s + h[tier] * h.nights, 0) }
+// 1박당 1인 금액 — perPerson:true이면 그대로, 아니면 1실가격/3
+function perNightPerPerson(h, tier) { return h.perPerson ? h[tier] : h[tier] / 3 }
+// 호텔당 인당 총액 (박당 × 박수)
+function perPersonHotel(h, tier) { return perNightPerPerson(h, tier) * h.nights }
+// 전체 일정 인당 합계
+function totalPerPerson(tier) { return currentHotels.value.reduce((s, h) => s + perPersonHotel(h, tier), 0) }
+// 3인 그룹 합계
+function totalFor(tier) { return totalPerPerson(tier) * 3 }
 
 const cityColors = {
   'SF': '#0052cc', 'SF→SEA': '#0ea5e9', 'SF→LA': '#e11d48', 'SF→LV': '#7c3aed',
@@ -903,14 +910,18 @@ const cityColors = {
       <div v-show="open.hotels" class="acc-body">
         <div class="cost-table-wrap">
           <table class="cost-table">
-            <thead><tr><th>도시</th><th>기간</th><th>박수</th><th>이코노미/박</th><th>추천/박</th><th>비고</th></tr></thead>
+            <thead><tr><th>도시</th><th>기간</th><th>박수</th><th>이코노미/박/인</th><th>추천/박/인</th><th>인당 소계</th><th>비고</th></tr></thead>
             <tbody>
               <tr v-for="h in currentHotels" :key="h.dates + h.city">
-                <td><span class="ct-tag" :style="{ background: (cityColors[h.tag]||'#334155')+'22', color: cityColors[h.tag]||'#94a3b8' }">{{ h.city }}</span></td>
+                <td>
+                  <span class="ct-tag" :style="{ background: (cityColors[h.tag]||'#334155')+'22', color: cityColors[h.tag]||'#94a3b8' }">{{ h.city }}</span>
+                  <span v-if="h.perPerson" class="pp-badge" title="이미 1인 기준 가격">1인</span>
+                </td>
                 <td class="mono">{{ h.dates }}</td>
                 <td class="center">{{ h.nights }}박</td>
-                <td class="num eco">{{ usd(h.economy) }}</td>
-                <td class="num mid">{{ usd(h.mid) }}</td>
+                <td class="num eco">{{ usd(Math.round(perNightPerPerson(h, 'economy'))) }}</td>
+                <td class="num mid">{{ usd(Math.round(perNightPerPerson(h, 'mid'))) }}</td>
+                <td class="num eco" style="font-weight:700">{{ usd(Math.round(perPersonHotel(h, 'economy'))) }}</td>
                 <td class="note-cell">{{ h.note }}</td>
               </tr>
             </tbody>
@@ -918,19 +929,19 @@ const cityColors = {
         </div>
         <div class="cost-summary">
           <div class="cost-block eco-block">
-            <div class="cb-label">이코노미 합계</div>
-            <div class="cb-usd">{{ usd(totalFor('economy')) }}</div>
-            <div class="cb-krw">{{ krw(totalFor('economy')) }}</div>
-            <div class="cb-per">1인 {{ usd(Math.round(totalFor('economy')/3)) }} · {{ krw(totalFor('economy')/3) }}</div>
+            <div class="cb-label">이코노미 · 인당 합계</div>
+            <div class="cb-usd">{{ usd(Math.round(totalPerPerson('economy'))) }}</div>
+            <div class="cb-krw">{{ krw(totalPerPerson('economy')) }}</div>
+            <div class="cb-per">3인 {{ usd(Math.round(totalFor('economy'))) }} · {{ krw(totalFor('economy')) }}</div>
           </div>
           <div class="cost-block mid-block">
-            <div class="cb-label">추천 합계</div>
-            <div class="cb-usd">{{ usd(totalFor('mid')) }}</div>
-            <div class="cb-krw">{{ krw(totalFor('mid')) }}</div>
-            <div class="cb-per">1인 {{ usd(Math.round(totalFor('mid')/3)) }} · {{ krw(totalFor('mid')/3) }}</div>
+            <div class="cb-label">추천 · 인당 합계</div>
+            <div class="cb-usd">{{ usd(Math.round(totalPerPerson('mid'))) }}</div>
+            <div class="cb-krw">{{ krw(totalPerPerson('mid')) }}</div>
+            <div class="cb-per">3인 {{ usd(Math.round(totalFor('mid'))) }} · {{ krw(totalFor('mid')) }}</div>
           </div>
         </div>
-        <p class="cost-note">※ 1실 3인 공유 기준 · 세금·리조트피 포함 추정 · 실제 가격은 예약 시 확인 필요</p>
+        <p class="cost-note">※ <strong>1인 기준 금액</strong> · SF/SEA/LV는 1실 3인 공유로 ÷3 적용 · YOS는 투어가 이미 1인 기준 (1인 뱃지 표시) · 세금·리조트피 포함 추정</p>
       </div>
     </div>
 
@@ -1192,6 +1203,7 @@ const cityColors = {
 /* ── Cost Table ── */
 .cost-table-wrap { overflow-x: auto; margin-bottom: .85rem; }
 .cost-table { width: 100%; border-collapse: collapse; font-size: .77rem; }
+.pp-badge { display: inline-block; margin-left: .35rem; padding: 1px 6px; font-size: .6rem; font-weight: 800; border-radius: 4px; background: rgba(34,197,94,.18); color: #22c55e; vertical-align: middle; }
 .cost-table th {
   background: var(--bg-overlay); color: var(--text-muted); font-size: .67rem;
   font-weight: 700; text-transform: uppercase; letter-spacing: .04em;

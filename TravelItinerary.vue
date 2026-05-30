@@ -31,7 +31,7 @@ const costData = {
       { name: 'LV Caesars Palace Octavius (회사보조 후)', detail: '3박', perPerson: 300000 },
     ],
     flight: [
-      { name: 'OZ212/OZ211 ICN ↔ SFO 왕복', detail: '6/26·7/4', perPerson: 1800000 },
+      { name: 'OZ212/OZ211 ICN ↔ SFO 왕복', detail: '6/26·7/4', perPerson: 1200000 },
       { name: 'SFO → SEA', detail: '6/30 저녁', perPerson: 250000 },
       { name: 'SEA → LAS', detail: '7/1 저녁', perPerson: 180000 },
       { name: 'LAS → SFO', detail: '7/4', perPerson: 200000 },
@@ -61,7 +61,7 @@ const costData = {
       { name: 'LV Caesars Palace Octavius (회사보조 후)', detail: '3박', perPerson: 300000 },
     ],
     flight: [
-      { name: 'OZ212/OZ211 ICN ↔ SFO 왕복', detail: '6/26·7/4', perPerson: 1800000 },
+      { name: 'OZ212/OZ211 ICN ↔ SFO 왕복', detail: '6/26·7/4', perPerson: 1200000 },
       { name: 'SFO ↔ LAX 왕복 (LA 당일치기)', detail: '6/28', perPerson: 280000 },
       { name: 'SFO → LAS', detail: '7/1', perPerson: 220000 },
       { name: 'LAS → SFO', detail: '7/4', perPerson: 200000 },

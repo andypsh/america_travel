@@ -41,7 +41,7 @@ const costData = {
     ],
     activity: [
       { name: '🏎 SpeedVegas 슈퍼카', detail: '람보·페라리·포르쉐', perPerson: 280000 },
-      { name: '⚾ Giants 경기 티켓', detail: '6/27', perPerson: 150000 },
+      { name: '⚾ Giants 경기 티켓 (외야 가장 싼 자리)', detail: '6/27 vs Braves 18:05', perPerson: 50000 },
       { name: '🏝 Alcatraz 투어', detail: '6/27', perPerson: 70000 },
       { name: '🚴 Golden Gate 자전거', detail: '6/27', perPerson: 60000 },
       { name: '🏛 실리콘밸리 셀프 (Caltrain·식사)', detail: '6/28', perPerson: 80000 },
@@ -71,7 +71,7 @@ const costData = {
     ],
     activity: [
       { name: '🏎 SpeedVegas 슈퍼카', detail: '람보·페라리·포르쉐', perPerson: 280000 },
-      { name: '⚾ Giants 경기 티켓', detail: '6/27', perPerson: 150000 },
+      { name: '⚾ Giants 경기 티켓 (외야 가장 싼 자리)', detail: '6/27 vs Braves 18:05', perPerson: 50000 },
       { name: '🏛 실리콘밸리 풀데이 (Stanford·Google·Apple)', detail: '6/27', perPerson: 80000 },
       { name: '🍽 Bacchanal Buffet × 2회', detail: 'LV', perPerson: 220000 },
       { name: '🎰 Caesars 카지노 베팅 (보수적)', detail: 'LV', perPerson: 280000 },

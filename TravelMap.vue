@@ -34,14 +34,15 @@ const BOOKING = {
         { name: '커리 빌리지 (Curry Village)', stars: 2.5, perNight: 516491, total: 516491, note: 'Yosemite Valley 내 유일 옵션 · 캐빈/텐트' },
       ],
     },
-    { id: 'sf-base', hotel: 'SF · Union Square 베이스', tag: 'SF', nights: 3, dates: '6/26 → 6/29', priority: 2,
-      action: '지금 예약', site: '오투어', note: 'Union Square 도보권 — 케이블카·BART·Alcatraz 페리 접근 OK',
+    { id: 'sf-base', hotel: '✅ JW 메리어트 SF 유니언 스퀘어 (예약 확정)', tag: 'SF', nights: 3, dates: '6/26 → 6/29', priority: 2,
+      action: '예약 완료', site: '오투어 · 515 Mason St', note: '4.5★ · Union Square 정중앙 · 케이블카 1분 · BART Powell 도보 4분',
+      picked: 'JW 메리어트 SF 유니언 스퀘어',
       candidates: [
-        { name: '챈슬러 호텔 온 유니언 스퀘어', stars: 3.5, perNight: 263298, total: 789896, note: '⭐ 가성비 · Powell St 한복판' },
-        { name: '파크 55 SF (a Hilton Hotel)',  stars: 4,   perNight: 295468, total: 886404, note: '힐튼 멤버 혜택 · Cyril Magnin' },
-        { name: '그랜드 하얏트 SF 유니언 스퀘어', stars: 4,   perNight: 311168, total: 933506, note: 'Stockton · 케이블카 도보 1분' },
-        { name: '힐튼 SF 유니언 스퀘어',         stars: 4,   perNight: 330067, total: 990202, note: "O'Farrell · 대형 컨벤션 호텔" },
-        { name: 'JW 메리어트 SF 유니언 스퀘어',  stars: 4.5, perNight: 389836, total: 1169508, note: 'Mason · 럭셔리' },
+        { name: 'JW 메리어트 SF 유니언 스퀘어',  stars: 4.5, perNight: 389836, total: 1169508, note: '✅ 예약 확정 · 515 Mason St · 치안/위치/시설 균형', picked: true },
+        { name: '챈슬러 호텔 온 유니언 스퀘어', stars: 3.5, perNight: 263298, total: 789896, note: '가성비 후보 (검토 대상)' },
+        { name: '파크 55 SF (a Hilton Hotel)',  stars: 4,   perNight: 295468, total: 886404, note: '힐튼 멤버 혜택 (검토 대상)' },
+        { name: '그랜드 하얏트 SF 유니언 스퀘어', stars: 4,   perNight: 311168, total: 933506, note: '4성 위치 (검토 대상)' },
+        { name: '인터컨티넨탈 SF',              stars: 4.5, perNight: 388184, total: 1164553, note: 'SOMA 인피니티 풀 (검토 대상)' },
       ],
     },
     { id: 'sea', hotel: 'SEA · Downtown', tag: 'SEA', nights: 1, dates: '6/30 → 7/1', priority: 3,
@@ -77,9 +78,10 @@ const POIS = {
     { kind: 'sight',    name: 'Alcatraz Island',         lat: 37.8267, lng: -122.4230, icon: '🏝',  day: '6/27 (A)',  detail: 'Pier 33 페리 · 사전 예약 필수' },
     { kind: 'sight',    name: 'Golden Gate Bridge',      lat: 37.8199, lng: -122.4783, icon: '🌉', day: '6/27 (A)',  detail: '자전거 라이딩 → Sausalito 페리' },
     { kind: 'sight',    name: "Fisherman's Wharf",       lat: 37.8080, lng: -122.4177, icon: '🦀', detail: 'Pier 39 · 자전거 렌탈 출발' },
-    { kind: 'lodging',  name: 'Palace Hotel (베이스)',   lat: 37.7884, lng: -122.4017, icon: '🏨',
-      booking: 'now', bookingPlan: 'AB', bookingNights: '3박',
-      detail: 'Union Square · A/B 공통 3박 (6/26~6/29)' },
+    { kind: 'lodging',  name: '✅ JW 메리어트 SF 유니언 스퀘어',   lat: 37.7891, lng: -122.4096, icon: '🏨',
+      booking: 'now', bookingPlan: 'AB', bookingNights: '3박 · ✅ 예약 확정',
+      detail: '4.5★ · 515 Mason St · Union Square 정중앙 · 케이블카 도보 1분 · BART Powell 도보 4분 · A/B 공통 3박 (6/26~6/29)',
+      picked: true },
     { kind: 'activity', name: 'SFO (Plan B 6/28 LA 당일치기 출발)', lat: 37.6213, lng: -122.3790, icon: '✈️', day: '6/28', detail: 'Southwest/Delta 직항 · SFO→LAX 1h 30m' },
   ],
   YOS: [
@@ -232,15 +234,24 @@ function buildCityIcon(label, count, color) {
 
 function buildPoiIcon(p) {
   const k = KINDS[p.kind]
-  const sz = k.size
+  let sz = k.size
   // 호텔 standby 핀은 점선 테두리로 차별화 (분기되는 호텔)
   const isStandby = p.kind === 'lodging' && p.booking === 'standby'
   const borderStyle = isStandby ? 'border:2px dashed #fff;' : 'border:2px solid #fff;'
-  const ring = p.highlight
-    ? `box-shadow: 0 0 0 4px ${k.color}55, 0 0 0 8px ${k.color}22, 0 2px 6px rgba(0,0,0,.4);`
-    : `box-shadow: 0 2px 4px rgba(0,0,0,.35);`
+  // 예약 확정 호텔(picked)은 크기 +6 + 초록 링 강조
+  let ring
+  if (p.picked) {
+    sz = k.size + 6
+    ring = `box-shadow: 0 0 0 3px #16a34a, 0 0 0 6px #16a34a55, 0 2px 8px rgba(0,0,0,.5);`
+  } else if (p.highlight) {
+    ring = `box-shadow: 0 0 0 4px ${k.color}55, 0 0 0 8px ${k.color}22, 0 2px 6px rgba(0,0,0,.4);`
+  } else {
+    ring = `box-shadow: 0 2px 4px rgba(0,0,0,.35);`
+  }
+  const checkmark = p.picked ? `<span class="poi-check">✓</span>` : ''
   const html = `<div class="poi-pin" style="background:${k.color};width:${sz}px;height:${sz}px;${borderStyle}${ring}">
     <span class="poi-emoji" style="font-size:${Math.round(sz*0.55)}px">${p.icon}</span>
+    ${checkmark}
   </div>`
   return L.divIcon({ html, className: 'poi-pin-wrap', iconSize: [sz, sz], iconAnchor: [sz/2, sz/2] })
 }
@@ -365,7 +376,7 @@ watch(filters, () => { draw() }, { deep: true })
             <span>지금 바로 예약 — A/B 100% 공통 ({{ totalNightsNow }}박 · 분기 없음)</span>
           </div>
           <div class="booking-grid">
-            <div v-for="b in BOOKING.now" :key="b.id" class="booking-item now" :class="{ priority: b.priority === 1 }">
+            <div v-for="b in BOOKING.now" :key="b.id" class="booking-item now" :class="{ priority: b.priority === 1, confirmed: b.picked }">
               <div class="bi-head">
                 <span class="bi-tag" :data-tag="b.tag">{{ b.tag }}</span>
                 <span class="bi-action">{{ b.action }}</span>
@@ -381,7 +392,7 @@ watch(filters, () => { draw() }, { deep: true })
                 </div>
                 <div class="bi-cand-list">
                   <div v-for="(c, i) in b.candidates" :key="i" class="bi-cand-row"
-                       :class="{ best: c.note && c.note.startsWith('⭐') }">
+                       :class="{ best: c.note && c.note.startsWith('⭐'), picked: c.picked }">
                     <span class="bi-cand-stars">{{ '★'.repeat(Math.floor(c.stars)) }}{{ c.stars % 1 ? '½' : '' }}</span>
                     <span class="bi-cand-name">{{ c.name }}</span>
                     <span class="bi-cand-price"><b>{{ formatKRW(c.perNight) }}</b>/박<span v-if="b.nights > 1" class="bi-cand-total">· {{ b.nights }}박 {{ formatKRW(c.total) }}</span></span>
@@ -479,6 +490,20 @@ watch(filters, () => { draw() }, { deep: true })
   border: 2px solid #fff;
 }
 .poi-emoji { line-height: 1; }
+.poi-check {
+  position: absolute;
+  bottom: -4px; right: -4px;
+  width: 16px; height: 16px;
+  background: #16a34a;
+  color: #fff;
+  border-radius: 50%;
+  border: 2px solid #fff;
+  font-size: 10px;
+  font-weight: 900;
+  display: flex; align-items: center; justify-content: center;
+  line-height: 1;
+}
+.poi-pin { position: relative; }
 .leaflet-popup-content { font-size: .85rem; line-height: 1.5; }
 .leaflet-popup-content b { color: #111; }
 </style>
@@ -573,6 +598,24 @@ watch(filters, () => { draw() }, { deep: true })
   transition: var(--transition);
 }
 .booking-item.now { border-left: 3px solid #16a34a; }
+.booking-item.confirmed {
+  border: 2px solid #16a34a;
+  background: rgba(22,163,74,.04);
+  position: relative;
+}
+.booking-item.confirmed::after {
+  content: '✅ 예약 확정';
+  position: absolute;
+  top: -10px; right: 10px;
+  background: #16a34a;
+  color: #fff;
+  font-size: .68rem;
+  font-weight: 800;
+  padding: 3px 10px;
+  border-radius: 10px;
+  letter-spacing: .04em;
+  box-shadow: 0 2px 6px rgba(22,163,74,.4);
+}
 .booking-item.standby { border-left: 3px solid #ea580c; border-style: solid solid solid solid; background: rgba(234,88,12,.04); }
 .booking-item.priority { box-shadow: 0 0 0 2px rgba(234,179,8,.35); border-color: #eab308; }
 .booking-item.plan-a { background: rgba(124,58,237,.06); }
@@ -634,6 +677,24 @@ watch(filters, () => { draw() }, { deep: true })
   background: rgba(234,179,8,.08);
   border-left-color: #eab308;
 }
+.bi-cand-row.picked {
+  background: rgba(22,163,74,.12);
+  border-left: 3px solid #16a34a;
+  position: relative;
+}
+.bi-cand-row.picked::before {
+  content: '✅ 예약';
+  position: absolute;
+  top: -7px; right: 8px;
+  background: #16a34a;
+  color: #fff;
+  font-size: .58rem;
+  font-weight: 800;
+  padding: 1px 6px;
+  border-radius: 8px;
+  letter-spacing: .04em;
+}
+.bi-cand-row.picked .bi-cand-name { color: #16a34a; }
 .bi-cand-stars {
   font-size: .65rem; color: #f59e0b; letter-spacing: -1px;
   white-space: nowrap;

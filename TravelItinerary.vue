@@ -26,7 +26,7 @@ const costData = {
     label: 'Plan A (SEA 한국전)',
     hotel: [
       { name: 'SF Hyatt Regency Embarcadero', detail: '3박', perPerson: 400000 },
-      { name: 'YOS 1박 2일 투어 (숙박+가이드 포함)', detail: '1박', perPerson: 600000 },
+      { name: 'YOS 1박 2일 투어 (숙박+가이드 포함)', detail: '1박', perPerson: 730000 },
       { name: 'SEA 호텔 (쉐라톤 그랜드)', detail: '1박', perPerson: 150000 },
       { name: 'LV Caesars Palace Octavius (회사보조 후)', detail: '3박', perPerson: 300000 },
     ],
@@ -57,7 +57,7 @@ const costData = {
     label: 'Plan B (LA 한국전)',
     hotel: [
       { name: 'SF Hyatt Regency Embarcadero', detail: '4박 (베이스 1박 연장)', perPerson: 530000 },
-      { name: 'YOS 1박 2일 투어 (숙박+가이드 포함)', detail: '1박', perPerson: 600000 },
+      { name: 'YOS 1박 2일 투어 (숙박+가이드 포함)', detail: '1박', perPerson: 730000 },
       { name: 'LV Caesars Palace Octavius (회사보조 후)', detail: '3박', perPerson: 300000 },
     ],
     flight: [

@@ -23,17 +23,50 @@ const KINDS = {
 
 // ── 예약 전략 (지도 상단 박스 + 호텔 popup에 표시) ──
 // Plan A/B가 호텔·항공편 100% 동일하게 통합되면서 분기(standby) 박스는 제거 — 전부 즉시 예약 8박
+// 후보 호텔은 오투어 (otour.cjonstyle.com) 검색 결과 기반 (성인 2명 기준 가격, 1박 평균)
 const BOOKING = {
   totalNote: '✨ Plan A/B 호텔·항공편 100% 동일 — 분기 없음 · 한국전 티켓만 분기 결정 (6/24 한국 순위 확정 후)',
+  siteUrl: 'https://otour.cjonstyle.com/pages/overseas/hotel/main',
   now: [
     { id: 'yos', hotel: 'Yosemite · Curry Village', tag: 'YOS', nights: 1, dates: '6/29 → 6/30', priority: 1,
-      action: '⭐ 최우선', site: 'recreation.gov / travelyosemite.com', note: '무료취소 불가 · 6~12개월 전 매진 → 가장 먼저' },
-    { id: 'sf-base', hotel: 'SF · Palace Hotel', tag: 'SF', nights: 3, dates: '6/26 → 6/29', priority: 2,
-      action: '지금 예약', site: 'booking.com / hotels.com', note: 'Union Square · 도착 + SF 관광 베이스' },
-    { id: 'sea', hotel: 'SEA · Hyatt Regency', tag: 'SEA', nights: 1, dates: '6/30 → 7/1', priority: 3,
-      action: '지금 예약', site: 'hyatt.com', note: 'downtown · A는 경기 전날 입성 / B는 SEA 관광' },
-    { id: 'lv', hotel: 'LV · Paris Las Vegas', tag: 'LV', nights: 3, dates: '7/1 → 7/4', priority: 4,
-      action: '지금 예약', site: 'caesars.com / booking.com', note: '평일 요금 · 24h 체크인 (7/1 야간 도착)' },
+      action: '⭐ 최우선', site: '오투어', note: '무료취소 불가 · 6~12개월 전 매진 → 가장 먼저',
+      candidates: [
+        { name: '커리 빌리지 (Curry Village)', stars: 2.5, perNight: 516491, total: 516491, note: 'Yosemite Valley 내 유일 옵션 · 캐빈/텐트' },
+      ],
+    },
+    { id: 'sf-base', hotel: 'SF · Union Square 베이스', tag: 'SF', nights: 3, dates: '6/26 → 6/29', priority: 2,
+      action: '지금 예약', site: '오투어', note: 'Union Square 도보권 — 케이블카·BART·Alcatraz 페리 접근 OK',
+      candidates: [
+        { name: '챈슬러 호텔 온 유니언 스퀘어', stars: 3.5, perNight: 263298, total: 789896, note: '⭐ 가성비 · Powell St 한복판' },
+        { name: '파크 55 SF (a Hilton Hotel)',  stars: 4,   perNight: 295468, total: 886404, note: '힐튼 멤버 혜택 · Cyril Magnin' },
+        { name: '그랜드 하얏트 SF 유니언 스퀘어', stars: 4,   perNight: 311168, total: 933506, note: 'Stockton · 케이블카 도보 1분' },
+        { name: '힐튼 SF 유니언 스퀘어',         stars: 4,   perNight: 330067, total: 990202, note: "O'Farrell · 대형 컨벤션 호텔" },
+        { name: 'JW 메리어트 SF 유니언 스퀘어',  stars: 4.5, perNight: 389836, total: 1169508, note: 'Mason · 럭셔리' },
+      ],
+    },
+    { id: 'sea', hotel: 'SEA · Downtown', tag: 'SEA', nights: 1, dates: '6/30 → 7/1', priority: 3,
+      action: '지금 예약', site: '오투어', note: 'Lumen Field 도보권 (1~1.5km) — 경기 당일 이동 최소화',
+      candidates: [
+        { name: '쉐라톤 그랜드 시애틀',         stars: 4.5, perNight: 460711, total: 460711, note: '6th Ave · Lumen 1.2km · Pike Place 도보' },
+        { name: '하얏트 엣 올리브 8',           stars: 4,   perNight: 473199, total: 473199, note: '⭐ 가성비 · 8th Ave · 친환경 호텔' },
+        { name: '그랜드 하얏트 시애틀',         stars: 4.5, perNight: 536468, total: 536468, note: 'Pine St · 컨벤션 인접' },
+        { name: '코스트 시애틀 다운타운 (구 힐튼)', stars: 4, perNight: 545434, total: 545434, note: '6th Ave · 가격 안정적' },
+        { name: '롯데 호텔 시애틀',             stars: 5,   perNight: 871603, total: 871603, note: '5th Ave · 한국계 럭셔리' },
+      ],
+    },
+    { id: 'lv', hotel: 'LV · The Strip', tag: 'LV', nights: 3, dates: '7/1 → 7/4', priority: 4,
+      action: '지금 예약', site: '오투어', note: 'The Strip 평일 요금 · 7/1 야간 도착 → 24시간 체크인 가능 호텔 권장',
+      candidates: [
+        { name: '룩소 호텔 & 카지노',           stars: 3.5, perNight: 161373, total: 484119,  note: '⭐ 가성비 끝판 · 이집트 테마' },
+        { name: '엑스칼리버 호텔 & 카지노',     stars: 3.5, perNight: 168940, total: 506820,  note: 'South Strip · 가성비' },
+        { name: '플라밍고 라스베이거스',         stars: 3.5, perNight: 275742, total: 827226,  note: 'Strip 한복판 · 24h 카지노' },
+        { name: '패리스 라스베이거스',           stars: 4,   perNight: 341994, total: 1025982, note: '⭐ 일정 매치 · Bellagio 분수쇼 정면' },
+        { name: '플래닛 할리우드',               stars: 4,   perNight: 368167, total: 1104501, note: 'Strip 중심' },
+        { name: '만달레이 베이',                stars: 4.5, perNight: 365673, total: 1097019, note: 'South Strip · 풀장 강함' },
+        { name: '벨라지오',                    stars: 5,   perNight: 706976, total: 2120928, note: '럭셔리 · 분수쇼 직결' },
+        { name: '시저스 팰리스',                stars: 4.5, perNight: 745875, total: 2237625, note: '럭셔리 · Forum Shops' },
+      ],
+    },
   ],
 }
 
@@ -136,6 +169,12 @@ const plan = computed(() => PLANS[activePlan.value])
 // 예약 전략 박스 펼침 상태
 const bookingOpen = ref(true)
 const totalNightsNow = BOOKING.now.reduce((s, b) => s + b.nights, 0)
+
+function formatKRW(n) {
+  if (!n) return '—'
+  if (n >= 10000) return Math.round(n / 1000) / 10 + '만원'
+  return n.toLocaleString() + '원'
+}
 
 // 도시별 그룹 (활성 플랜에서 방문하는 도시만)
 const visitedCities = computed(() => {
@@ -334,6 +373,22 @@ watch(filters, () => { draw() }, { deep: true })
               <div class="bi-hotel">{{ b.hotel }}</div>
               <div class="bi-dates"><b>{{ b.dates }}</b> · {{ b.nights }}박</div>
               <div class="bi-note">{{ b.note }}</div>
+              <!-- 후보 호텔 (오투어 검색 결과) -->
+              <div v-if="b.candidates" class="bi-candidates">
+                <div class="bi-cand-head">
+                  <span>🏨 오투어 호텔 후보 ({{ b.candidates.length }}개)</span>
+                  <a :href="BOOKING.siteUrl" target="_blank" rel="noopener" class="bi-cand-link">검색하기 ↗</a>
+                </div>
+                <div class="bi-cand-list">
+                  <div v-for="(c, i) in b.candidates" :key="i" class="bi-cand-row"
+                       :class="{ best: c.note && c.note.startsWith('⭐') }">
+                    <span class="bi-cand-stars">{{ '★'.repeat(Math.floor(c.stars)) }}{{ c.stars % 1 ? '½' : '' }}</span>
+                    <span class="bi-cand-name">{{ c.name }}</span>
+                    <span class="bi-cand-price"><b>{{ formatKRW(c.perNight) }}</b>/박<span v-if="b.nights > 1" class="bi-cand-total">· {{ b.nights }}박 {{ formatKRW(c.total) }}</span></span>
+                    <span v-if="c.note" class="bi-cand-note">{{ c.note }}</span>
+                  </div>
+                </div>
+              </div>
               <div class="bi-site">→ {{ b.site }}</div>
             </div>
           </div>
@@ -545,6 +600,59 @@ watch(filters, () => { draw() }, { deep: true })
 .booking-item.plan-a .bi-when { color: #7c3aed; }
 .booking-item.plan-b .bi-when { color: #e11d48; }
 .bi-site { font-size: .68rem; color: var(--text-dim); margin-top: 2px; font-style: italic; }
+
+/* 호텔 후보 (오투어 검색 결과) */
+.bi-candidates {
+  margin-top: .4rem;
+  padding-top: .5rem;
+  border-top: 1px dashed var(--border);
+  display: flex; flex-direction: column; gap: .3rem;
+}
+.bi-cand-head {
+  display: flex; justify-content: space-between; align-items: center;
+  font-size: .7rem; font-weight: 700; color: var(--text-muted);
+}
+.bi-cand-link {
+  font-size: .66rem; color: var(--accent); font-weight: 600;
+  text-decoration: none; padding: 1px 6px; border-radius: 6px;
+  background: var(--accent-bg);
+}
+.bi-cand-link:hover { background: var(--accent); color: #fff; }
+.bi-cand-list { display: flex; flex-direction: column; gap: .25rem; }
+.bi-cand-row {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: .35rem .5rem;
+  align-items: baseline;
+  padding: .35rem .5rem;
+  background: var(--bg-overlay);
+  border-radius: 5px;
+  font-size: .72rem;
+  border-left: 2px solid transparent;
+}
+.bi-cand-row.best {
+  background: rgba(234,179,8,.08);
+  border-left-color: #eab308;
+}
+.bi-cand-stars {
+  font-size: .65rem; color: #f59e0b; letter-spacing: -1px;
+  white-space: nowrap;
+}
+.bi-cand-name { font-weight: 700; color: var(--text); }
+.bi-cand-price {
+  text-align: right;
+  font-size: .7rem;
+  font-family: ui-monospace, monospace;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+.bi-cand-price b { color: var(--text); }
+.bi-cand-total { display: block; font-size: .62rem; color: var(--text-dim); margin-top: 1px; }
+.bi-cand-note {
+  grid-column: 1 / -1;
+  font-size: .66rem; color: var(--text-muted);
+  line-height: 1.4; margin-top: 1px;
+}
 
 /* 필터 영역 */
 .filter-row {

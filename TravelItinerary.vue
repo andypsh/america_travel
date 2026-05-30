@@ -7,12 +7,12 @@ const activePlan = ref('a')
 function usd(n) { return `$${n.toLocaleString()}` }
 function krw(n) { return `₩${Math.round(n * KRW / 10000).toLocaleString()}만` }
 
-// ── 아코디언 섹션 상태 ──
+// ── 아코디언 섹션 상태 ── (timeline만 펼침, 나머지 부록처럼 닫힘)
 const open = reactive({
-  activities: true,
-  transport:  true,
-  timeline:   true,
-  worldcup:   true,
+  timeline:   true,   // 일정 — 최상단 + 펼침 (메인)
+  activities: false,
+  transport:  false,
+  worldcup:   false,
   flights:    false,
   giants:     false,
   hotels:     false,
@@ -100,14 +100,14 @@ const aDays = [
     { time: '~20:00', text: '🎰 라스베이거스 도착 · 심야 체크인 (Caesars Palace 24h) · The Strip 야경' },
   ]},
   { date: '7/2 목', city: '라스베이거스', cityTag: 'LV', icon: '🎰', items: [
-    { time: '오전', text: '늦잠 · 호텔 풀장 · 브런치 (전날 경기 피로 회복)' },
-    { time: '오후', text: 'Fremont Street Experience · 구시가지 집라인' },
-    { time: '저녁', text: 'Bellagio 분수쇼 · 카지노 🎡 빅휠 · Caesars Palace' },
+    { time: '오전', text: '😴 늦잠 · Caesars 풀장 (Garden of the Gods) · 브런치 (전날 경기 피로 회복)' },
+    { time: '오후', text: '🎡 Fremont Street Experience · 구시가지 LED 쇼 · 우버 13분' },
+    { time: '저녁', text: '💦 Bellagio 분수쇼 (도보 3분) · 🎰 Caesars 카지노 빅휠·룰렛 · ⚽ Sportsbook 월드컵 R16' },
   ]},
-  { date: '7/3 금', city: '라스베이거스', cityTag: 'LV', icon: '🎯', items: [
-    { time: '오전', text: 'SpeedVegas 슈퍼카 레이싱 or ATV 사막 투어' },
-    { time: '오후', text: 'Topgolf Las Vegas · Forum Shops 쇼핑' },
-    { time: '저녁', text: 'Bacchanal 뷔페 or 스테이크하우스 · 마지막 카지노' },
+  { date: '7/3 금', city: '라스베이거스', cityTag: 'LV', icon: '🏎', items: [
+    { time: '오전', text: '🏎 SpeedVegas 슈퍼카 레이싱 (람보·페라리·포르쉐, 국제면허 필수)', bold: true },
+    { time: '오후', text: '🛍 Forum Shops 쇼핑 (Caesars 직결) · 호텔 카지노' },
+    { time: '저녁', text: '🍽 Bacchanal 뷔페 (LV 1위) · 🎰 Caesars 카지노 빅휠·블랙잭 · 🌃 OMNIA Nightclub (선택)' },
   ]},
   { date: '7/4 토', city: '라스베이거스 → SFO 귀국', cityTag: 'LV→SFO', icon: '🏠',
     note: '미국 독립기념일 — 공항 혼잡 예상, 오후 일찍 이동',
@@ -178,14 +178,14 @@ const laDays = [
     { time: '~20:00', text: '🎰 라스베이거스 도착 · 심야 체크인 (Caesars Palace 24h) · The Strip 야경' },
   ]},
   { date: '7/2 목', city: '라스베이거스', cityTag: 'LV', icon: '🎰', items: [
-    { time: '오전', text: 'Fremont Street Experience (구시가지 · 집라인)' },
-    { time: '오후', text: 'SpeedVegas 슈퍼카 · Topgolf · Forum Shops' },
-    { time: '저녁', text: '쇼 관람 (Cirque du Soleil 등) · 카지노' },
+    { time: '오전', text: '😴 늦잠 · Caesars 풀장 (Garden of the Gods) · 브런치' },
+    { time: '오후', text: '🎡 Fremont Street Experience · LED 쇼 · 우버 13분' },
+    { time: '저녁', text: '💦 Bellagio 분수쇼 (도보 3분) · 🎰 Caesars 카지노 빅휠·룰렛 · ⚽ Sportsbook 월드컵 R16' },
   ]},
-  { date: '7/3 금', city: '라스베이거스', cityTag: 'LV', icon: '🎯', items: [
-    { time: '오전', text: '후버댐 투어 (왕복 약 3시간)' },
-    { time: '오후', text: 'Grand Canal Shoppes · iFly 실내 스카이다이빙' },
-    { time: '저녁', text: 'Bacchanal 뷔페 or 스테이크하우스 · 마지막 카지노' },
+  { date: '7/3 금', city: '라스베이거스', cityTag: 'LV', icon: '🏎', items: [
+    { time: '오전', text: '🏎 SpeedVegas 슈퍼카 레이싱 (람보·페라리·포르쉐, 국제면허 필수)', bold: true },
+    { time: '오후', text: '🛍 Forum Shops 쇼핑 (Caesars 직결) · 호텔 카지노' },
+    { time: '저녁', text: '🍽 Bacchanal 뷔페 (LV 1위) · 🎰 Caesars 카지노 · 🌃 OMNIA Nightclub (선택)' },
   ]},
   { date: '7/4 토', city: '라스베이거스 → SFO 귀국', cityTag: 'LV→SFO', icon: '🏠',
     note: '미국 독립기념일 — 공항 혼잡 예상, 오후 일찍 이동',
@@ -217,22 +217,26 @@ const activities = {
       desc: '주말 오전 Soccer Field 6~7면 상시 픽업게임 · 그냥 가면 끼워줌 · 월드컵 시즌 특히 활발 · 미국인·라틴계 혼합 팀', tip: 'Playo 앱으로 사전 게임 조인 가능 · 클릿 없이 런닝화도 OK · 물 꼭 챙기기' },
   ],
   LV: [
-    { emoji: '🔫', name: '사격장 (자동소총 체험)', type: '액티브', price: '$60~150/인', duration: '1~2h',
-      desc: 'The Gun Store / LV Outdoor Range — AR-15·AK-47·M16 실탄 사격 체험', tip: '스트립에서 차로 10~20분 · 패키지 다양 · 신분증 필수' },
-    { emoji: '🚁', name: '그랜드캐니언 헬기 투어', type: '액티브', price: '$200~400/인', duration: '4~6h',
-      desc: 'LV 출발 → 협곡 착륙 패키지 or 상공 비행 선택 · 점심 포함', tip: '새벽 일찍 출발 권장 (여름 낮 열기 심함)' },
     { emoji: '🏎️', name: 'SpeedVegas 슈퍼카 레이싱', type: '액티브', price: '$99~299/인', duration: '1~2h',
       desc: '람보르기니·페라리·포르쉐 실제 서킷 드라이빙 · 전문 강사 동승', tip: '스트립 남쪽 15분 · 사전 예약 필수 · 국제면허 필요' },
-    { emoji: '⛳', name: 'Topgolf Las Vegas', type: '레저', price: '$35~55/h (베이)', duration: '2h',
-      desc: 'The Strip 옆 · 3층 · 야경 보며 골프 · 식음료 주문 가능', tip: '베이 1개당 6명까지 · 저녁 예약 권장' },
-    { emoji: '🛻', name: 'ATV 사막 투어', type: '액티브', price: '$150~250/인', duration: '3~4h',
-      desc: 'Lake Mead 국립공원 사막 코스 질주 · 헬기+ATV+사격 트리플 콤보 패키지 존재', tip: '여름 오전 일찍 or 저녁 투어 권장' },
-    { emoji: '🪂', name: 'iFly 실내 스카이다이빙', type: '액티브', price: '$80~100/인', duration: '1h',
-      desc: '풍동 이용 자유낙하 체험 · 면허·경험 불필요 · 5분 사전 교육', tip: '스트립 내 위치 · 당일 워크인 가능' },
-    { emoji: '🎾', name: 'Wimbledon 스포츠북 관람', type: '관람', price: '무료(베팅 선택)', duration: '자유',
-      desc: '6/29 Wimbledon 개막 · 카지노 스포츠북 대형 스크린 · 음료 서비스', tip: 'MGM Grand · Wynn · Caesars 스포츠북 추천' },
-    { emoji: '⚽', name: 'Desert Breeze 픽업 사커', type: '스포츠', price: '무료~$10', duration: '1~2h',
-      desc: 'LV 최대 축구 시설 12면 · 저녁 드롭인 픽업게임 · 낮 40도 → 반드시 저녁 6시 이후만 가능 · 라틴계 상주', tip: 'Playo 앱으로 저녁 게임 확인 후 이동 · 물 2L 이상 필수 · 스트립에서 차 15분' },
+    { emoji: '🎰', name: 'Caesars 카지노 (빅휠·블랙잭·바카라·룰렛)', type: '관람·베팅', price: '베팅액 자유', duration: '자유',
+      desc: 'LV 최대급 카지노 9.6만 sqft · 빅휠·룰렛·블랙잭·바카라·포커·1,300+ 슬롯', tip: '호텔 내 24h · 신분증 필수' },
+    { emoji: '⚽', name: 'Caesars Sportsbook (월드컵 R32/R16 라이브 베팅)', type: '관람·베팅', price: '베팅액 자유', duration: '자유',
+      desc: '대형 LED 스크린 · William Hill 출신 Caesars Sports 운영 · 라이브 베팅 · 머니라인·핸디캡·득점왕', tip: '7/1~7/4 = R32~R16 한창 · 한국전 보러 가는 분위기' },
+    { emoji: '🌃', name: 'OMNIA Nightclub (Caesars 호텔 내)', type: '나이트라이프', price: '입장료 $30~80/인', duration: '~새벽 4am',
+      desc: 'LV TOP 3 클럽 · 7,500명 수용 · 메이저 DJ 매주 (Calvin Harris·Tiësto·Steve Aoki)', tip: '호텔 게스트 입장 우선권 · 드레스코드 (정장 셔츠·청바지 OK / 슬리퍼·반바지 X)' },
+    { emoji: '💦', name: 'Venus Pool Club (Caesars 어덜트 풀)', type: '풀파티', price: '$10~30 입장료', duration: '낮~저녁',
+      desc: '18+ 어덜트 풀 · 토플리스 가능 (시즌별) · DJ·칵테일', tip: '여름 성수기 토·일 가장 활기' },
+    { emoji: '💦', name: 'Bellagio 분수쇼', type: '관광', price: '무료', duration: '15분',
+      desc: 'The Strip 야경의 정수 · 매 15~30분 음악·분수 쇼', tip: '저녁 8시~자정 사이가 가장 화려 · Caesars에서 도보 3분' },
+    { emoji: '🎡', name: 'Fremont Street Experience', type: '관광', price: '무료', duration: '2~3h',
+      desc: '구시가지 · LED 천장 쇼 · 집라인 ($30~50) · 거리 공연', tip: 'Caesars에서 우버 13분 · 저녁 분위기' },
+    { emoji: '🏗', name: '후버댐', type: '관광', price: '$15~30 (투어)', duration: '3~4h',
+      desc: '댐 + Lake Mead 뷰 · Boulder City 인근', tip: 'Caesars에서 우버 35분 · 오전 권장 (오후 더움)' },
+    { emoji: '🛍', name: 'Forum Shops (Caesars 직결)', type: '쇼핑', price: '브랜드별', duration: '2~4h',
+      desc: '160 매장 · Gucci·Versace·Apple·Tom Ford · 로마 인테리어 + 분수쇼 + 아쿠아리움', tip: '도보 직결 · 식당·바도 多' },
+    { emoji: '🍽', name: 'Bacchanal Buffet (Caesars 내)', type: '미식', price: '$80/인', duration: '2~3h',
+      desc: 'LV 1위 뷔페 · 일본·중식·한식·미식 다 있음 · 음료 별도', tip: '점심·저녁 예약 권장' },
   ],
   SEA: [
     { emoji: '🐋', name: '범고래 크루즈 (Whale Watching)', type: '액티브', price: '$80~120/인', duration: '4~5h',
@@ -465,7 +469,52 @@ const cityColors = {
       </button>
     </div>
 
-    <!-- ── 🎯 액티비티 (플랜 선택 직후 바로 노출) ── -->
+    <!-- ── 📅 일정 타임라인 (메인 · 최상단 · 디폴트 펼침) ── -->
+    <div class="accordion card">
+      <div class="acc-header" @click="open.timeline = !open.timeline">
+        <span class="acc-icon">📅</span>
+        <span class="acc-title">일정 타임라인</span>
+        <span class="acc-meta">6/26(금) ~ 7/4(토) · {{ currentDays.length }}일</span>
+        <span class="acc-chevron" :class="{ rotated: open.timeline }">›</span>
+      </div>
+      <div v-show="open.timeline" class="acc-body timeline-body">
+        <div v-for="(day, idx) in currentDays" :key="activePlan + idx" class="day-row" :class="{ highlight: day.highlight }">
+          <div class="day-left">
+            <div class="day-date">{{ day.date }}</div>
+            <span class="city-tag" :style="{ background: (cityColors[day.cityTag]||'#334155')+'22', color: cityColors[day.cityTag]||'#94a3b8', borderColor: (cityColors[day.cityTag]||'#334155')+'55' }">{{ day.cityTag }}</span>
+          </div>
+          <div class="day-connector">
+            <div class="connector-dot" :class="{ highlight: day.highlight }"></div>
+            <div v-if="idx < currentDays.length - 1" class="connector-line"></div>
+          </div>
+          <div class="day-card">
+            <div class="day-header">
+              <span class="day-icon">{{ day.icon }}</span>
+              <span class="day-city">{{ day.city }}</span>
+              <span v-if="day.rvDay" class="rv-day-badge">🚐 캠핑카</span>
+              <span v-if="day.highlight && activePlan === 'a'" class="highlight-badge">⚽ R32</span>
+              <span v-if="day.highlight && activePlan === 'b'" class="highlight-badge la-badge">🇰🇷 한국 R32</span>
+            </div>
+            <div v-if="day.note" class="day-note">⚠️ {{ day.note }}</div>
+            <div v-if="day.standby" class="day-standby">
+              <span class="standby-label">{{ day.standby.label }}</span>
+              <span class="standby-text">{{ day.standby.text }}</span>
+              <span class="standby-cancel">취소 기한: {{ day.standby.cancelBy }}</span>
+            </div>
+            <ul class="schedule-list">
+              <li v-for="(item, i) in day.items" :key="i" class="schedule-item">
+                <span class="sch-time">{{ item.time }}</span>
+                <span class="sch-text" :class="{ bold: item.bold, baseball: item.baseball }">{{ item.text }}</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── 부록: 부가 정보 (디폴트 닫힘) ── -->
+
+    <!-- ── 🎯 액티비티 ── -->
     <div class="accordion card">
       <div class="acc-header" @click="open.activities = !open.activities">
         <span class="acc-icon">🎯</span>
@@ -807,49 +856,6 @@ const cityColors = {
           </div>
         </div>
         <p class="booking-tip">💡 예약 시 취소 정책 스크린샷 필수 보관. 6/24 경기 종료 즉시 불필요 예약 취소 진행.</p>
-      </div>
-    </div>
-
-    <!-- ── 📅 일정 타임라인 ── -->
-    <div class="accordion card">
-      <div class="acc-header" @click="open.timeline = !open.timeline">
-        <span class="acc-icon">📅</span>
-        <span class="acc-title">일정 타임라인</span>
-        <span class="acc-meta">6/26(금) ~ 7/4(토) · {{ currentDays.length }}일</span>
-        <span class="acc-chevron" :class="{ rotated: open.timeline }">›</span>
-      </div>
-      <div v-show="open.timeline" class="acc-body timeline-body">
-        <div v-for="(day, idx) in currentDays" :key="activePlan + idx" class="day-row" :class="{ highlight: day.highlight }">
-          <div class="day-left">
-            <div class="day-date">{{ day.date }}</div>
-            <span class="city-tag" :style="{ background: (cityColors[day.cityTag]||'#334155')+'22', color: cityColors[day.cityTag]||'#94a3b8', borderColor: (cityColors[day.cityTag]||'#334155')+'55' }">{{ day.cityTag }}</span>
-          </div>
-          <div class="day-connector">
-            <div class="connector-dot" :class="{ highlight: day.highlight }"></div>
-            <div v-if="idx < currentDays.length - 1" class="connector-line"></div>
-          </div>
-          <div class="day-card">
-            <div class="day-header">
-              <span class="day-icon">{{ day.icon }}</span>
-              <span class="day-city">{{ day.city }}</span>
-              <span v-if="day.rvDay" class="rv-day-badge">🚐 캠핑카</span>
-              <span v-if="day.highlight && activePlan === 'a'" class="highlight-badge">⚽ R32</span>
-              <span v-if="day.highlight && activePlan === 'b'" class="highlight-badge la-badge">🇰🇷 한국 R32</span>
-            </div>
-            <div v-if="day.note" class="day-note">⚠️ {{ day.note }}</div>
-            <div v-if="day.standby" class="day-standby">
-              <span class="standby-label">{{ day.standby.label }}</span>
-              <span class="standby-text">{{ day.standby.text }}</span>
-              <span class="standby-cancel">취소 기한: {{ day.standby.cancelBy }}</span>
-            </div>
-            <ul class="schedule-list">
-              <li v-for="(item, i) in day.items" :key="i" class="schedule-item">
-                <span class="sch-time">{{ item.time }}</span>
-                <span class="sch-text" :class="{ bold: item.bold, baseball: item.baseball }">{{ item.text }}</span>
-              </li>
-            </ul>
-          </div>
-        </div>
       </div>
     </div>
 

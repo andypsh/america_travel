@@ -128,10 +128,10 @@ const POIS = {
     { kind: 'activity', name: 'LAX 공항',                   lat: 33.9416, lng: -118.4085, icon: '🛬', day: '6/28',           detail: 'SFO에서 직항 도착 · Uber로 SoFi 25~45분' },
   ],
   SV: [
-    { kind: 'sight', name: 'Stanford Campus',           lat: 37.4275, lng: -122.1697, icon: '🏛', day: '6/27 오전 (B)', detail: 'Hoover Tower · Oval · 기념품' },
-    { kind: 'sight', name: 'Google Visitor Center',     lat: 37.4220, lng: -122.0841, icon: '🔵', day: '6/27 점심 (B)', detail: '예약 필수 · 무료 · Sunnyvale' },
-    { kind: 'sight', name: 'Apple Park Visitor Center', lat: 37.3327, lng: -122.0053, icon: '🍎', day: '6/27 오후 (B)', detail: 'Cupertino · 옥상 카페' },
-    { kind: 'sight', name: 'Computer History Museum',   lat: 37.4144, lng: -122.0775, icon: '💻', detail: '선택 방문 · Mountain View' },
+    { kind: 'sight', name: 'Stanford Campus',           lat: 37.4275, lng: -122.1697, icon: '🏛', day: 'A: 6/28 / B: 6/27 오전', detail: 'Hoover Tower · Oval · 기념품샵' },
+    { kind: 'sight', name: 'Google Visitor Center',     lat: 37.4220, lng: -122.0841, icon: '🔵', day: 'A: 6/28 / B: 6/27 점심', detail: '예약 필수 · 무료 · Sunnyvale' },
+    { kind: 'sight', name: 'Apple Park Visitor Center', lat: 37.3327, lng: -122.0053, icon: '🍎', day: 'A: 6/28 / B: 6/27 오후', detail: 'Cupertino · 옥상 카페 · Apple 굿즈' },
+    { kind: 'sight', name: 'Computer History Museum',   lat: 37.4144, lng: -122.0775, icon: '💻', day: 'A: 6/28 / B: 6/27', detail: 'Mountain View · 컴퓨터 역사 박물관 · 약 2시간' },
   ],
 }
 
@@ -143,7 +143,7 @@ const planA = {
   legs: [
     { city: 'SF',  date: '6/26 금', label: '도착',                          icon: '✈️', desc: 'OZ212 SFO 도착 · Hyatt Regency Embarcadero 체크인 · 비행 피로 회복' },
     { city: 'SF',  date: '6/27 토', label: 'Alcatraz·Golden Gate·Giants', icon: '🌉', desc: '알카트라즈 · 자전거 라이딩 · 저녁 Giants 18:05' },
-    { city: 'SF',  date: '6/28 일', label: 'Alcatraz · Golden Gate',       icon: '🌉', desc: 'Pier 33 Alcatraz · Golden Gate 자전거 · Sausalito 페리' },
+    { city: 'SV',  date: '6/28 일', label: '실리콘밸리 풀데이 투어',         icon: '💻', desc: 'Stanford · Google Visitor Center · Apple Park · Computer History Museum · Caltrain or Uber 왕복' },
     { city: 'YOS', date: '6/29 월', label: '요세미티 1박 (A/B 공통)',       icon: '⛰️', desc: 'SF→Yosemite 3.5h · Valley 투어' },
     { city: 'SEA', date: '6/30 화', label: '요세미티 오전 → SEA 저녁 입성',  icon: '✈️', desc: '오전 짧은 하이킹 · 11:00 SF 출발 · 16:30 SFO→SEA · Hyatt Regency 1박' },
     { city: 'SEA', date: '7/1 수',  label: '🇰🇷 R32 Match 82 + LV 야간 이동', icon: '⚽', desc: '여유로운 아침 · Space Needle · 13:00 Lumen 경기 · 저녁 SEA→LAS', highlight: true },

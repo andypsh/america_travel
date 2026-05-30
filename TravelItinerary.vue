@@ -43,7 +43,7 @@ const annexC = { qualify: 330, total: 495, seattle: 314, foxborough: 16 }
 
 // ── Plan A: SF 3박 → YOS 1박 → SEA 1박 → LV 3박 → SFO (7/1 게임 전날 시애틀 숙박) ──
 const aHotels = [
-  { city: '샌프란시스코',    tag: 'SF',  nights: 3, dates: '6/26~6/29', economy: 190, mid: 230, note: '✅ Hyatt Regency Embarcadero (예약 완료) · BART 직결 · 도착 + SF 관광 (Alcatraz · Golden Gate 등)' },
+  { city: '샌프란시스코',    tag: 'SF',  nights: 3, dates: '6/26~6/29', economy: 190, mid: 230, note: '✅ Hyatt Regency Embarcadero (예약 완료) · BART 직결 · 도착 + Alcatraz·Golden Gate·Giants(6/27) + 실리콘밸리 당일치기(6/28)' },
   { city: 'Yosemite',       tag: 'YOS', nights: 1, dates: '6/29~6/30', economy: 200, mid: 350, note: '⭐ A/B 공통 · Curry Village · 6~12개월 전 예약 필수 · recreation.gov / travelyosemite.com' },
   { city: '시애틀',          tag: 'SEA', nights: 1, dates: '6/30~7/1', economy: 280, mid: 400, note: 'Hyatt Regency · ⚠️ 월드컵 서징 · 경기 전날 입성 → 다음날 여유 (요세미티 오전만 보고 일찍 출발)' },
   { city: '라스베이거스',     tag: 'LV',  nights: 3, dates: '7/1~7/4',  economy: 140, mid: 240, note: 'Paris LV (24h 체크인) · 평일 요금 · 7/4 저녁 SFO' },
@@ -59,13 +59,16 @@ const aDays = [
     { time: '15:00~', text: '🚴 Golden Gate Bridge 자전거 라이딩 · Sausalito 페리' },
     { time: '18:05', text: '⚾ Giants vs Braves @ Oracle Park (저녁 경기)', baseball: true },
   ]},
-  { date: '6/28 일', city: '샌프란시스코', cityTag: 'SF', icon: '🌉', items: [
-    { time: '09:00', text: '🍳 Hyatt Regency Embarcadero 조식 · 여유로운 출발' },
-    { time: '11:00', text: '⛴ Alcatraz Cruises — Pier 33 출발 (사전 예약 필수)', bold: true },
-    { time: '11:45-14:30', text: '🏝 Alcatraz Island 투어 (탈옥 역사 · 가이드 투어 · Bay View)' },
-    { time: '15:00~', text: '🚴 Golden Gate Bridge 자전거 라이딩 (Blazing Saddles 렌탈)' },
-    { time: '17:00~', text: '⛴ Sausalito 페리 → SF 귀환' },
-    { time: '저녁', text: '🦞 씨푸드 · 내일 요세미티 출발 준비 (일찍 취침)' },
+  { date: '6/28 일', city: '실리콘밸리 (당일치기)', cityTag: 'SV', icon: '💻', items: [
+    { time: '08:30', text: '🍳 Hyatt Regency Embarcadero 조식 · BART/Caltrain or Uber 준비' },
+    { time: '09:30', text: '🚂 4th & King 역에서 Caltrain → Palo Alto (or Uber 1시간)' },
+    { time: '10:30-12:00', text: '🏛 Stanford University 캠퍼스 — Hoover Tower · Main Quad · 기념품샵', bold: true },
+    { time: '12:00-13:00', text: '🍜 Palo Alto / Mountain View 점심 (인도·중식·한식 풍부)' },
+    { time: '13:30-14:30', text: '🔵 Google Visitor Center · 안드로이드 동상 · Visitor Experience (Mountain View)' },
+    { time: '14:30-15:30', text: '💻 Computer History Museum (선택) · 컴퓨터 역사·실리콘밸리 헤리티지' },
+    { time: '16:00-17:00', text: '🍎 Apple Park Visitor Center (Cupertino) · 옥상 카페 · Apple 굿즈 쇼핑' },
+    { time: '17:30~', text: '🚙 Caltrain or Uber → SF 귀환 (1시간)' },
+    { time: '저녁', text: '🦞 SF Embarcadero 씨푸드 저녁 · 내일 요세미티 출발 준비 (일찍 취침)' },
   ]},
   { date: '6/29 월', city: '샌프란시스코 → 요세미티', cityTag: 'SF→YOS', icon: '⛰️', items: [
     { time: '06:30-07:00', text: '🏨 Hyatt Regency Embarcadero 조식 후 출발 · 요세미티 1박짐만 챙기고 큰짐은 호텔 보관' },
@@ -406,7 +409,7 @@ const transportRoutes = {
 const sleepByNight = [
   { date: '6/26 금', a: 'SF · Hyatt Regency Embarcadero',     b: 'SF · Hyatt Regency Embarcadero',     aTag: 'SF',  bTag: 'SF',  action: 'now', same: true, note: '도착 당일 — 비행 피로 회복' },
   { date: '6/27 토', a: 'SF · Hyatt Regency Embarcadero',     b: 'SF · Hyatt Regency Embarcadero',     aTag: 'SF',  bTag: 'SF',  action: 'now', same: true, note: 'A: Alcatraz·Golden Gate·Giants 18:05 / B: 실리콘밸리·Giants 18:05' },
-  { date: '6/28 일', a: 'SF · Hyatt Regency Embarcadero',     b: 'SF · Hyatt Regency Embarcadero',     aTag: 'SF',  bTag: 'SF',  action: 'now', same: true, note: 'A: Alcatraz·Golden Gate / B: 🇰🇷 LA 항공 당일치기 SFO↔LAX (Match 73)' },
+  { date: '6/28 일', a: 'SF · Hyatt Regency Embarcadero',     b: 'SF · Hyatt Regency Embarcadero',     aTag: 'SF',  bTag: 'SF',  action: 'now', same: true, note: 'A: 💻 실리콘밸리 당일치기 (Stanford·Google·Apple Park) / B: 🇰🇷 LA 항공 당일치기 SFO↔LAX (Match 73)' },
   { date: '6/29 월', a: 'YOS · Curry Village',   b: 'YOS · Curry Village',   aTag: 'YOS', bTag: 'YOS', action: 'now', same: true, note: '⭐ A/B 공통 — 요세미티 1박 (무료취소 불가 · 가장 먼저 예약)' },
   { date: '6/30 화', a: 'SEA · Hyatt Regency',   b: 'SEA · Hyatt Regency',   aTag: 'SEA', bTag: 'SEA', action: 'now', same: true, note: '⭐ A/B 공통 — 같은 SFO→SEA 항공편 + 같은 Hyatt 1박 (월드컵 서징 ⚠️ 일찍)' },
   { date: '7/1 수',  a: 'LV · Paris Las Vegas',  b: 'LV · Paris Las Vegas',  aTag: 'LV',  bTag: 'LV',  action: 'now', same: true, note: 'A: 13:00 Lumen 경기 / B: SEA 관광 (Space Needle·Pike Place) → 같은 SEA→LAS 저녁 항공편' },

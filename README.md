@@ -236,8 +236,8 @@ npm run dev
 
 ```js
 const sleepByNight = [
-  { date: '6/26 금', a: 'SF · Palace Hotel', b: 'SF · Palace Hotel', same: true, action: 'now', note: '...' },
-  { date: '6/30 화', a: 'SEA · Hyatt',       b: 'SF · Palace Hotel', same: false, action: 'standby', note: '🔀 분기' },
+  { date: '6/26 금', a: 'SF · Hyatt Regency Embarcadero', b: 'SF · Hyatt Regency Embarcadero', same: true, action: 'now', note: '...' },
+  { date: '6/30 화', a: 'SEA · Hyatt',       b: 'SF · Hyatt Regency Embarcadero', same: false, action: 'standby', note: '🔀 분기' },
   ...
 ]
 ```

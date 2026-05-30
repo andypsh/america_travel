@@ -10,6 +10,7 @@ function krw(n) { return `₩${Math.round(n * KRW / 10000).toLocaleString()}만`
 // ── 아코디언 섹션 상태 ── (timeline만 펼침, 나머지 부록처럼 닫힘)
 const open = reactive({
   timeline:   true,   // 일정 — 최상단 + 펼침 (메인)
+  cost:       false,  // 💰 예상 비용
   activities: false,
   transport:  false,
   worldcup:   false,
@@ -18,6 +19,85 @@ const open = reactive({
   hotels:     false,
   booking:    false,
 })
+
+// ── 💰 예상 비용 (인당 · 3명 분담 기준) ──
+const costData = {
+  a: {
+    label: 'Plan A (SEA 한국전)',
+    hotel: [
+      { name: 'SF Hyatt Regency Embarcadero', detail: '3박', perPerson: 400000 },
+      { name: 'YOS 1박 2일 투어 (숙박+가이드 포함)', detail: '1박', perPerson: 600000 },
+      { name: 'SEA 호텔 (쉐라톤 그랜드)', detail: '1박', perPerson: 150000 },
+      { name: 'LV Caesars Palace Octavius (회사보조 후)', detail: '3박', perPerson: 300000 },
+    ],
+    flight: [
+      { name: 'OZ212/OZ211 ICN ↔ SFO 왕복', detail: '6/26·7/4', perPerson: 1800000 },
+      { name: 'SFO → SEA', detail: '6/30 저녁', perPerson: 250000 },
+      { name: 'SEA → LAS', detail: '7/1 저녁', perPerson: 180000 },
+      { name: 'LAS → SFO', detail: '7/4', perPerson: 200000 },
+    ],
+    ticket: [
+      { name: '🇰🇷 R32 한국전 티켓 (Lumen Field Match 82)', detail: '7/1', perPerson: 1500000 },
+    ],
+    activity: [
+      { name: '🏎 SpeedVegas 슈퍼카', detail: '람보·페라리·포르쉐', perPerson: 280000 },
+      { name: '⚾ Giants 경기 티켓', detail: '6/27', perPerson: 150000 },
+      { name: '🏝 Alcatraz 투어', detail: '6/27', perPerson: 70000 },
+      { name: '🚴 Golden Gate 자전거', detail: '6/27', perPerson: 60000 },
+      { name: '🏛 실리콘밸리 셀프 (Caltrain·식사)', detail: '6/28', perPerson: 80000 },
+      { name: '🍽 Bacchanal Buffet × 2회', detail: 'LV', perPerson: 220000 },
+      { name: '🎰 Caesars 카지노 베팅 (보수적)', detail: 'LV', perPerson: 280000 },
+      { name: '🌃 OMNIA Nightclub (입장+음료)', detail: 'LV 1회', perPerson: 140000 },
+      { name: '🌲 SEA 액티비티 (Space Needle 등)', detail: '6/30~7/1', perPerson: 70000 },
+      { name: '🛍 Forum Shops 쇼핑 (보수적)', detail: 'LV', perPerson: 200000 },
+      { name: '🍔 일반 식사·음료·우버', detail: '8박 9일', perPerson: 500000 },
+    ],
+  },
+  b: {
+    label: 'Plan B (LA 한국전)',
+    hotel: [
+      { name: 'SF Hyatt Regency Embarcadero', detail: '4박 (베이스 1박 연장)', perPerson: 530000 },
+      { name: 'YOS 1박 2일 투어 (숙박+가이드 포함)', detail: '1박', perPerson: 600000 },
+      { name: 'LV Caesars Palace Octavius (회사보조 후)', detail: '3박', perPerson: 300000 },
+    ],
+    flight: [
+      { name: 'OZ212/OZ211 ICN ↔ SFO 왕복', detail: '6/26·7/4', perPerson: 1800000 },
+      { name: 'SFO ↔ LAX 왕복 (LA 당일치기)', detail: '6/28', perPerson: 280000 },
+      { name: 'SFO → LAS', detail: '7/1', perPerson: 220000 },
+      { name: 'LAS → SFO', detail: '7/4', perPerson: 200000 },
+    ],
+    ticket: [
+      { name: '🇰🇷 R32 한국전 티켓 (SoFi Stadium Match 73)', detail: '6/28', perPerson: 1500000 },
+    ],
+    activity: [
+      { name: '🏎 SpeedVegas 슈퍼카', detail: '람보·페라리·포르쉐', perPerson: 280000 },
+      { name: '⚾ Giants 경기 티켓', detail: '6/27', perPerson: 150000 },
+      { name: '🏛 실리콘밸리 풀데이 (Stanford·Google·Apple)', detail: '6/27', perPerson: 80000 },
+      { name: '🍽 Bacchanal Buffet × 2회', detail: 'LV', perPerson: 220000 },
+      { name: '🎰 Caesars 카지노 베팅 (보수적)', detail: 'LV', perPerson: 280000 },
+      { name: '🌃 OMNIA Nightclub (입장+음료)', detail: 'LV 1회', perPerson: 140000 },
+      { name: '🛍 Forum Shops 쇼핑 (보수적)', detail: 'LV', perPerson: 200000 },
+      { name: '🍔 일반 식사·음료·우버', detail: '8박 9일', perPerson: 500000 },
+    ],
+  },
+}
+
+const currentCost = computed(() => costData[activePlan.value])
+const sumCategory = (arr) => arr.reduce((s, x) => s + x.perPerson, 0)
+const costTotals = computed(() => {
+  const c = currentCost.value
+  return {
+    hotel: sumCategory(c.hotel),
+    flight: sumCategory(c.flight),
+    ticket: sumCategory(c.ticket),
+    activity: sumCategory(c.activity),
+    total: sumCategory(c.hotel) + sumCategory(c.flight) + sumCategory(c.ticket) + sumCategory(c.activity),
+  }
+})
+function fmtKRW(n) {
+  if (n >= 10000) return (Math.round(n / 1000) / 10) + '만'
+  return n.toLocaleString()
+}
 
 // ── 항공편 ──
 const flights = [
@@ -513,6 +593,97 @@ const cityColors = {
     </div>
 
     <!-- ── 부록: 부가 정보 (디폴트 닫힘) ── -->
+
+    <!-- ── 💰 예상 비용 (인당 · 3명 분담 기준) ── -->
+    <div class="accordion card">
+      <div class="acc-header" @click="open.cost = !open.cost">
+        <span class="acc-icon">💰</span>
+        <span class="acc-title">예상 비용 (인당)</span>
+        <span class="acc-meta">{{ currentCost.label }} · 총 <strong style="color: var(--accent)">{{ fmtKRW(costTotals.total) }}원</strong> / 인 (3명 분담)</span>
+        <span class="acc-chevron" :class="{ rotated: open.cost }">›</span>
+      </div>
+      <div v-show="open.cost" class="acc-body cost-body">
+        <!-- 카테고리별 요약 -->
+        <div class="cost-summary">
+          <div class="cost-cat-card hotel">
+            <span class="cc-icon">🏨</span>
+            <span class="cc-label">숙박</span>
+            <span class="cc-amount">{{ fmtKRW(costTotals.hotel) }}만</span>
+          </div>
+          <div class="cost-cat-card flight">
+            <span class="cc-icon">✈️</span>
+            <span class="cc-label">항공</span>
+            <span class="cc-amount">{{ fmtKRW(costTotals.flight) }}만</span>
+          </div>
+          <div class="cost-cat-card ticket">
+            <span class="cc-icon">🎫</span>
+            <span class="cc-label">월드컵 티켓</span>
+            <span class="cc-amount">{{ fmtKRW(costTotals.ticket) }}만</span>
+          </div>
+          <div class="cost-cat-card activity">
+            <span class="cc-icon">🎯</span>
+            <span class="cc-label">액티비티+식비</span>
+            <span class="cc-amount">{{ fmtKRW(costTotals.activity) }}만</span>
+          </div>
+          <div class="cost-cat-card total">
+            <span class="cc-icon">💰</span>
+            <span class="cc-label">총 합계 (인당)</span>
+            <span class="cc-amount">{{ fmtKRW(costTotals.total) }}만</span>
+          </div>
+        </div>
+
+        <!-- 카테고리별 상세 -->
+        <div class="cost-section">
+          <h4 class="cost-h4">🏨 숙박 ({{ fmtKRW(costTotals.hotel) }}만)</h4>
+          <div class="cost-list">
+            <div v-for="(x, i) in currentCost.hotel" :key="'h'+i" class="cost-row">
+              <span class="cr-name">{{ x.name }}</span>
+              <span class="cr-detail">{{ x.detail }}</span>
+              <span class="cr-amount">{{ fmtKRW(x.perPerson) }}만</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="cost-section">
+          <h4 class="cost-h4">✈️ 항공 ({{ fmtKRW(costTotals.flight) }}만)</h4>
+          <div class="cost-list">
+            <div v-for="(x, i) in currentCost.flight" :key="'f'+i" class="cost-row">
+              <span class="cr-name">{{ x.name }}</span>
+              <span class="cr-detail">{{ x.detail }}</span>
+              <span class="cr-amount">{{ fmtKRW(x.perPerson) }}만</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="cost-section">
+          <h4 class="cost-h4">🎫 월드컵 티켓 ({{ fmtKRW(costTotals.ticket) }}만)</h4>
+          <div class="cost-list">
+            <div v-for="(x, i) in currentCost.ticket" :key="'t'+i" class="cost-row">
+              <span class="cr-name">{{ x.name }}</span>
+              <span class="cr-detail">{{ x.detail }}</span>
+              <span class="cr-amount">{{ fmtKRW(x.perPerson) }}만</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="cost-section">
+          <h4 class="cost-h4">🎯 액티비티+식비 ({{ fmtKRW(costTotals.activity) }}만)</h4>
+          <div class="cost-list">
+            <div v-for="(x, i) in currentCost.activity" :key="'a'+i" class="cost-row">
+              <span class="cr-name">{{ x.name }}</span>
+              <span class="cr-detail">{{ x.detail }}</span>
+              <span class="cr-amount">{{ fmtKRW(x.perPerson) }}만</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="cost-footnote">
+          ※ 인당 가격은 3명 분담 기준 (호텔·투어 등)<br>
+          ※ 항공권은 성수기 6/26~7/4 예상치 (예약 시점 변동 ±50만)<br>
+          ※ 카지노 베팅·쇼핑은 개인 스타일에 따라 변동 큼
+        </div>
+      </div>
+    </div>
 
     <!-- ── 🎯 액티비티 ── -->
     <div class="accordion card">
@@ -1092,6 +1263,71 @@ const cityColors = {
   border-radius: 8px;
   letter-spacing: .03em;
   flex-shrink: 0;
+}
+
+/* 💰 예상 비용 카드 */
+.cost-body { display: flex; flex-direction: column; gap: 1rem; padding: 1rem 0; }
+.cost-summary {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: .5rem;
+  padding: .5rem 0;
+}
+.cost-cat-card {
+  display: flex; flex-direction: column; align-items: center; gap: .25rem;
+  padding: .7rem .5rem;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  transition: var(--transition);
+}
+.cost-cat-card.hotel    { border-left: 3px solid #a855f7; }
+.cost-cat-card.flight   { border-left: 3px solid #0ea5e9; }
+.cost-cat-card.ticket   { border-left: 3px solid #dc2626; }
+.cost-cat-card.activity { border-left: 3px solid #f59e0b; }
+.cost-cat-card.total {
+  background: rgba(124,58,237,.1);
+  border: 2px solid var(--accent);
+  grid-column: span 1;
+}
+.cc-icon { font-size: 1.1rem; }
+.cc-label { font-size: .7rem; color: var(--text-muted); font-weight: 600; text-align: center; }
+.cc-amount { font-size: .95rem; font-weight: 800; color: var(--text); font-family: ui-monospace, monospace; }
+.cost-cat-card.total .cc-amount { color: var(--accent); font-size: 1.1rem; }
+
+.cost-section { display: flex; flex-direction: column; gap: .4rem; }
+.cost-h4 {
+  font-size: .8rem; font-weight: 700; color: var(--text);
+  padding-bottom: .35rem;
+  border-bottom: 1px solid var(--border-muted);
+  margin: 0;
+}
+.cost-list { display: flex; flex-direction: column; gap: .2rem; }
+.cost-row {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  gap: .5rem 1rem;
+  padding: .35rem .55rem;
+  background: var(--bg);
+  border-radius: 6px;
+  font-size: .73rem;
+  align-items: baseline;
+}
+.cr-name { color: var(--text); font-weight: 500; }
+.cr-detail { color: var(--text-dim); font-size: .68rem; font-style: italic; }
+.cr-amount {
+  color: var(--text); font-weight: 700;
+  font-family: ui-monospace, monospace;
+  white-space: nowrap;
+  min-width: 60px; text-align: right;
+}
+.cost-footnote {
+  font-size: .68rem; color: var(--text-dim);
+  padding: .55rem .7rem;
+  background: var(--bg-overlay);
+  border-radius: 8px;
+  line-height: 1.55;
+  border-left: 3px solid var(--border);
 }
 .bk-tag { padding: 2px 6px; border-radius: 4px; font-size: .65rem; font-weight: 700; flex-shrink: 0; }
 .bk-label { font-weight: 600; color: var(--text); min-width: 125px; }

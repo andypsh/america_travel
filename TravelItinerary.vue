@@ -29,7 +29,7 @@ const flights = [
 const giants = [
   { date: '6/26 금', time: '19:15', opponent: 'vs Atlanta Braves', note: '✈️ 도착 당일 — 장거리 비행 피로 회복 우선 → 관람 X' },
   { date: '6/27 토', time: '18:05', opponent: 'vs Atlanta Braves', note: '⭐ 이번 일정 유일 관람 경기 (A: 관광 후 / B: 실리콘밸리 후 합류)' },
-  { date: '6/28 일', time: '13:05', opponent: 'vs Atlanta Braves', note: 'A: Bay 경비행기·SF 관광 / B: 🇰🇷 LA 경기 — 둘 다 관람 X' },
+  { date: '6/28 일', time: '13:05', opponent: 'vs Atlanta Braves', note: 'A: Alcatraz·Golden Gate / B: 🇰🇷 LA 항공 당일치기 — 둘 다 관람 X' },
 ]
 
 // ── 월드컵 시나리오 (FIFA Annex C 원문 파싱 결과) ──
@@ -43,7 +43,7 @@ const annexC = { qualify: 330, total: 495, seattle: 314, foxborough: 16 }
 
 // ── Plan A: SF 3박 → YOS 1박 → SEA 1박 → LV 3박 → SFO (7/1 게임 전날 시애틀 숙박) ──
 const aHotels = [
-  { city: '샌프란시스코',    tag: 'SF',  nights: 3, dates: '6/26~6/29', economy: 190, mid: 230, note: 'Palace Hotel · 도착 + SF 관광 (Alcatraz · Bay 경비행기 등)' },
+  { city: '샌프란시스코',    tag: 'SF',  nights: 3, dates: '6/26~6/29', economy: 190, mid: 230, note: 'Palace Hotel · 도착 + SF 관광 (Alcatraz · Golden Gate 등)' },
   { city: 'Yosemite',       tag: 'YOS', nights: 1, dates: '6/29~6/30', economy: 200, mid: 350, note: '⭐ A/B 공통 · Curry Village · 6~12개월 전 예약 필수 · recreation.gov / travelyosemite.com' },
   { city: '시애틀',          tag: 'SEA', nights: 1, dates: '6/30~7/1', economy: 280, mid: 400, note: 'Hyatt Regency · ⚠️ 월드컵 서징 · 경기 전날 입성 → 다음날 여유 (요세미티 오전만 보고 일찍 출발)' },
   { city: '라스베이거스',     tag: 'LV',  nights: 3, dates: '7/1~7/4',  economy: 140, mid: 240, note: 'Paris LV (24h 체크인) · 평일 요금 · 7/4 저녁 SFO' },
@@ -59,12 +59,12 @@ const aDays = [
     { time: '15:00~', text: '🚴 Golden Gate Bridge 자전거 라이딩 · Sausalito 페리' },
     { time: '18:05', text: '⚾ Giants vs Braves @ Oracle Park (저녁 경기)', baseball: true },
   ]},
-  { date: '6/28 일', city: '샌프란시스코', cityTag: 'SF', icon: '✈️', items: [
-    { time: '06:30~', text: '🚙 Palace Hotel → PAO (Palo Alto Airport) 이동 (40분)' },
-    { time: '07:00-09:00', text: '✈️ SF Bay 경비행기 투어 — Golden Gate 상공 · Bay Bridge · Alcatraz 절경', bold: true },
-    { time: '09:30~', text: '🚙 PAO → SF 귀환' },
-    { time: '점심', text: 'Fisherman\'s Wharf 클램차우더 · Pier 39' },
-    { time: '오후', text: '🏛 Painted Ladies · Mission District 산책' },
+  { date: '6/28 일', city: '샌프란시스코', cityTag: 'SF', icon: '🌉', items: [
+    { time: '09:00', text: '🍳 Palace Hotel 조식 · 여유로운 출발' },
+    { time: '11:00', text: '⛴ Alcatraz Cruises — Pier 33 출발 (사전 예약 필수)', bold: true },
+    { time: '11:45-14:30', text: '🏝 Alcatraz Island 투어 (탈옥 역사 · 가이드 투어 · Bay View)' },
+    { time: '15:00~', text: '🚴 Golden Gate Bridge 자전거 라이딩 (Blazing Saddles 렌탈)' },
+    { time: '17:00~', text: '⛴ Sausalito 페리 → SF 귀환' },
     { time: '저녁', text: '🦞 씨푸드 · 내일 요세미티 출발 준비 (일찍 취침)' },
   ]},
   { date: '6/29 월', city: '샌프란시스코 → 요세미티', cityTag: 'SF→YOS', icon: '⛰️', items: [
@@ -118,7 +118,7 @@ const aDays = [
 
 // ── Plan B: SF 3박 → YOS 1박 → SEA 1박 → LV 3박 → SFO (A와 호텔·항공편 100% 동일) ──
 const laHotels = [
-  { city: '샌프란시스코', tag: 'SF',  nights: 3, dates: '6/26~6/29', economy: 190, mid: 230, note: 'Palace Hotel · 도착 + SF/실리콘밸리/LA 경기' },
+  { city: '샌프란시스코', tag: 'SF',  nights: 3, dates: '6/26~6/29', economy: 190, mid: 230, note: 'Palace Hotel · 도착 + 6/28 LA 항공 당일치기(SFO↔LAX) 포함' },
   { city: 'Yosemite',    tag: 'YOS', nights: 1, dates: '6/29~6/30', economy: 200, mid: 350, note: '⭐ A/B 공통 · Curry Village · LA 경기 후 회복일' },
   { city: '시애틀',       tag: 'SEA', nights: 1, dates: '6/30~7/1', economy: 280, mid: 400, note: '⭐ A/B 공통 — Hyatt Regency · A: 경기 전날 입성 / B: SEA 관광 (Space Needle·Chihuly)' },
   { city: '라스베이거스', tag: 'LV',  nights: 3, dates: '7/1~7/4',  economy: 140, mid: 240, note: 'Paris LV · 평일 요금 · 7/4 저녁 SFO' },
@@ -137,16 +137,16 @@ const laDays = [
     { time: '16:30~', text: '🚙 SF 귀환' },
     { time: '18:05', text: '⚾ Giants vs Braves @ Oracle Park', baseball: true },
   ]},
-  { date: '6/28 일', city: '🛩 경비행기 SF ↔ LA', cityTag: 'SF↔LA', icon: '🇰🇷', highlight: true, items: [
-    { time: '07:00', text: '🛩️ PAO/SQL 출발 — 렌탈 경비행기 (Cessna 182 / SR22) · Giants 13:05 ❌ 충돌·포기' },
-    { time: '~09:15', text: '🛬 HHR (Hawthorne Muni) 착륙 · TFR 발동 전 여유 있게 착지 ✅' },
-    { time: '09:30~', text: '🛴 K Line 또는 킥보드로 SoFi (1.8mi · 15~40분)' },
-    { time: '10:30~', text: '🏟 SoFi Stadium 입장 · 한국 응원단 합류' },
+  { date: '6/28 일', city: 'KR ✈️ 항공 SF ↔ LA 당일치기', cityTag: 'SF↔LA', icon: '🇰🇷', highlight: true, items: [
+    { time: '05:30~', text: '🚙 Palace Hotel → SFO 이동 (Uber, 25~40분)' },
+    { time: '07:00', text: '✈️ SFO → LAX (Southwest/Delta 직항 · 1h 30m) · Giants 13:05 ❌ 충돌·포기', bold: true },
+    { time: '~08:30', text: '🛬 LAX 도착 · Uber/Lyft로 SoFi Stadium 이동 (~30분, $25~40)' },
+    { time: '~09:30', text: '🏟 SoFi Stadium 입장 · 한국 응원단 합류' },
     { time: '12:00 PT', text: '🏟 한국(조A 2위) vs 조B 2위 — SoFi Stadium (Match 73)', bold: true },
-    { time: '~15:30', text: '경기 종료 · HHR 귀환 대기 (TFR 17:00까지 활성)' },
-    { time: '~16:00', text: '🥤 인근 카페/바에서 경기 복기 🍻 · TFR 해제 대기' },
-    { time: '17:00~', text: '🛩️ HHR 출발 → PAO 귀환 (~2h 15m)' },
-    { time: '~19:30', text: '🏨 SF Palace Hotel 귀환 · 저녁 식사' },
+    { time: '~15:30', text: '🥤 경기 종료 · 인근에서 가볍게 경기 복기 🍻' },
+    { time: '~16:30', text: '🚙 Uber로 LAX 이동 (surge 가능, 40~60분 여유)' },
+    { time: '~18:30', text: '✈️ LAX → SFO 직항 (1h 30m)' },
+    { time: '~20:00', text: '🛬 SFO 도착 · Uber로 Palace 귀환 · 늦은 저녁' },
   ]},
   { date: '6/29 월', city: '샌프란시스코 → 요세미티', cityTag: 'SF→YOS', icon: '⛰️', items: [
     { time: '06:30-07:00', text: '🏨 호텔 조식 후 출발 · 요세미티 1박짐만 챙기고 큰짐은 호텔 보관' },
@@ -277,13 +277,6 @@ const transportRoutes = {
         { mode: '🚴 자전거 렌탈', detail: 'Blazing Saddles @ Fisherman\'s Wharf', time: '편도 45분 라이딩', cost: '$35~50/일', tip: '⭐추천 — Sausalito까지 라이딩 후 페리 귀환 ($15)' },
       ]
     },
-    { from: 'Palace Hotel', to: 'Palo Alto Airport (PAO) — 경비행기', distance: '32mi · 51km', icon: '🛩',
-      options: [
-        { mode: '🚆 Caltrain + Uber', detail: '4th & King → Palo Alto Caltrain · Uber 10분', time: '1h + 10분', cost: '$11.25 + $15 = ~$26', tip: '아침 6:30 출발이면 첫차 시간 확인 (보통 6:00 첫차)' },
-        { mode: '🚕 Uber 직행', detail: 'UberX · 새벽 운행 OK', time: '40~55분', cost: '$80~120', tip: '⭐ 새벽 6:30 출발이면 이게 편함 · 3인 분할 ~$33' },
-        { mode: '🚗 렌트카', detail: 'Hertz Union Square 지점', time: '40~50분', cost: '$60/일 + 주차', tip: '귀환 후 반납 번거로움 — 비추' },
-      ]
-    },
     { from: 'Palace Hotel', to: 'Stanford Campus (Plan B 6/30)', distance: '32mi · 51km', icon: '🏛',
       options: [
         { mode: '🚆 Caltrain', detail: '4th & King → Palo Alto · 도보 10분 캠퍼스', time: '1h 10분', cost: '$11.25/인', tip: '⭐추천 — 주말 30분 간격 · Palo Alto 역 내림' },
@@ -360,19 +353,17 @@ const transportRoutes = {
     },
   ],
   LA: [
-    { from: 'Hawthorne Muni (HHR) 공항', to: 'SoFi Stadium (Plan B 6/28)', distance: '1.8mi · 2.9km', icon: '🏟',
+    { from: 'LAX 공항', to: 'SoFi Stadium (Plan B 6/28 아침)', distance: '4mi · 6.4km', icon: '🏟',
       options: [
-        { mode: '🚇 LA Metro K Line', detail: 'Downtown Inglewood 역 → 도보 10분 (스타디움 동측)', time: '15~25분 (대기 + 탑승 + 도보)', cost: '$1.75/인 (TAP 카드)', tip: '⭐추천 — 한국 응원단도 K Line 많이 이용' },
-        { mode: '🛴 Lime/Bird Scooter', detail: '앱으로 잠금 해제 · 직선거리', time: '12~18분', cost: '$5~8', tip: '시간 압박 시 좋음 · 헬멧 없음 주의' },
-        { mode: '🚕 Uber', detail: '직행 (Inglewood 공항 픽업)', time: '8~15분', cost: '$10~18', tip: '경기 임박엔 surge 가능' },
-        { mode: '🚶 도보', detail: '직선 1.8mi · 평지', time: '30~40분', cost: '무료', tip: '여유 있으면 도보도 OK · 분위기 즐김' },
+        { mode: '🚕 Uber/Lyft', detail: 'LAX-it 라이드쉐어 셔틀 후 픽업 (LAX 규정)', time: '25~45분 (LAX-it 셔틀 포함)', cost: '$25~40', tip: '⭐추천 — 짐 가볍고 시간 압박 시' },
+        { mode: '🚇 LA Metro C Line + K Line', detail: 'LAX FlyAway 셔틀 → Aviation/LAX 역 → K Line 환승', time: '50~70분', cost: '$1.75 (LA Metro) + 셔틀 $9.75', tip: '경험 좋아하면 · 짐 없을 때만 추천' },
+        { mode: '🚕 Taxi', detail: '미터기 요금', time: '20~35분', cost: '$40~55', tip: 'LA 교통 막힘 — 미터 빠르게 올라감' },
       ]
     },
-    { from: 'SoFi Stadium', to: 'HHR 공항 (귀환)', distance: '1.8mi · 2.9km', icon: '🛩',
+    { from: 'SoFi Stadium', to: 'LAX (경기 종료 후 SFO 복귀)', distance: '4mi · 6.4km', icon: '✈️',
       options: [
-        { mode: '🛴 Scooter', detail: 'Lime/Bird', time: '12~18분', cost: '$5~8', tip: '경기 후 우버 surge — 스쿠터가 빠를 수도' },
-        { mode: '🚇 K Line', detail: 'Westchester/Veterans 역', time: '20~30분', cost: '$1.75/인', tip: '경기 후 만원 · 인내심' },
-        { mode: '🚕 Uber', detail: 'surge 심함', time: '15~30분', cost: '$15~35 (surge)', tip: '⏰ TFR 17:00까지 활성 → 16시 이전 복귀 권장' },
+        { mode: '🚕 Uber/Lyft', detail: 'surge 매우 심함 · 5분 멀리 걸어가서 호출 권장', time: '30~60분 (경기 직후)', cost: '$30~70 (surge 2~3x)', tip: '⚠️ 경기 끝나면 7만 명이 동시에 호출 — 인내심 + 30분 도보 후 호출 추천' },
+        { mode: '🚇 K Line → FlyAway', detail: 'Westchester/Veterans → Aviation/LAX → LAX 셔틀', time: '60~80분', cost: '$1.75 + $9.75 = $11.50', tip: '비행기 출발 18:30 기준 16:00 전엔 출발해야 안전' },
       ]
     },
   ],
@@ -386,6 +377,13 @@ const transportRoutes = {
     { from: 'SEA', to: 'LAS (Plan A 7/1)', distance: '961mi · 1,547km', icon: '✈️',
       options: [
         { mode: '✈️ Alaska / Delta', detail: '직항', time: '2시간 30분', cost: '$140~220 (편도)', tip: '경기 후 저녁 비행 — 19시대 항공편 많음' },
+      ]
+    },
+    { from: 'SFO', to: 'LAX (Plan B 6/28 한국전 당일치기)', distance: '337mi · 543km', icon: '✈️',
+      options: [
+        { mode: '✈️ Southwest', detail: '직항 매시간 · 짐 2개 무료', time: '1시간 30분', cost: '$80~140 (편도)', tip: '⭐ 새벽 6~7시 출발 · 18~19시 복귀편 다수 · 왕복 $160~280' },
+        { mode: '✈️ Alaska/Delta', detail: '직항', time: '1시간 30분', cost: '$100~180', tip: '왕복 6/28 당일 · 마일리지 활용 가능' },
+        { mode: '✈️ United', detail: '직항', time: '1시간 30분', cost: '$110~200', tip: '얼리버드 예약 ($150 미만 가능)' },
       ]
     },
     { from: 'SFO', to: 'LAS (Plan B 7/1)', distance: '417mi · 671km', icon: '✈️',
@@ -408,7 +406,7 @@ const transportRoutes = {
 const sleepByNight = [
   { date: '6/26 금', a: 'SF · Palace Hotel',     b: 'SF · Palace Hotel',     aTag: 'SF',  bTag: 'SF',  action: 'now', same: true, note: '도착 당일 — 비행 피로 회복' },
   { date: '6/27 토', a: 'SF · Palace Hotel',     b: 'SF · Palace Hotel',     aTag: 'SF',  bTag: 'SF',  action: 'now', same: true, note: 'A: Alcatraz·Golden Gate·Giants 18:05 / B: 실리콘밸리·Giants 18:05' },
-  { date: '6/28 일', a: 'SF · Palace Hotel',     b: 'SF · Palace Hotel',     aTag: 'SF',  bTag: 'SF',  action: 'now', same: true, note: 'A: Bay 경비행기·SF 관광 / B: 🇰🇷 LA 경비행기 당일치기 (Match 73)' },
+  { date: '6/28 일', a: 'SF · Palace Hotel',     b: 'SF · Palace Hotel',     aTag: 'SF',  bTag: 'SF',  action: 'now', same: true, note: 'A: Alcatraz·Golden Gate / B: 🇰🇷 LA 항공 당일치기 SFO↔LAX (Match 73)' },
   { date: '6/29 월', a: 'YOS · Curry Village',   b: 'YOS · Curry Village',   aTag: 'YOS', bTag: 'YOS', action: 'now', same: true, note: '⭐ A/B 공통 — 요세미티 1박 (무료취소 불가 · 가장 먼저 예약)' },
   { date: '6/30 화', a: 'SEA · Hyatt Regency',   b: 'SEA · Hyatt Regency',   aTag: 'SEA', bTag: 'SEA', action: 'now', same: true, note: '⭐ A/B 공통 — 같은 SFO→SEA 항공편 + 같은 Hyatt 1박 (월드컵 서징 ⚠️ 일찍)' },
   { date: '7/1 수',  a: 'LV · Paris Las Vegas',  b: 'LV · Paris Las Vegas',  aTag: 'LV',  bTag: 'LV',  action: 'now', same: true, note: 'A: 13:00 Lumen 경기 / B: SEA 관광 (Space Needle·Pike Place) → 같은 SEA→LAS 저녁 항공편' },
@@ -434,7 +432,7 @@ const decisions = [
     cancel: ['(없음 — 호텔·항공편 변경 X · 활동만 분기: 7/1 Lumen 경기)'] },
   { result: '조2위 진출 (Plan B 확정)', planTag: 'B', color: '#e11d48',
     keep:   ['SF 3박 (6/26~6/29)', 'Yosemite 1박 (6/29~6/30)', 'SEA Hyatt 1박 (6/30~7/1)', 'LV Paris 3박 (7/1~7/4)'],
-    cancel: ['(없음 — 호텔·항공편 변경 X · 활동만 분기: 6/28 LA 경비행기 / 7/1 SEA 관광)'] },
+    cancel: ['(없음 — 호텔·항공편 변경 X · 활동만 분기: 6/28 LA 항공 당일치기 / 7/1 SEA 관광)'] },
 ]
 
 // ── Computed ──
@@ -461,7 +459,7 @@ const cityColors = {
       </button>
       <button class="plan-btn plan-b" :class="{ active: activePlan === 'b' }" @click="activePlan = 'b'">
         🇰🇷 Plan B — LA 한국 R32 + LV <span class="plan-badge red">조2위</span>
-        <span class="plan-sub">SF(3박, 🛩 6/28 LA 경비행기) + ⛰YOS 1박 + SEA(1박 관광) + LV(3박) · Match 73 SoFi 6/28 · ⭐ A와 동일 예약</span>
+        <span class="plan-sub">SF(3박, ✈️ 6/28 LA 항공 당일치기) + ⛰YOS 1박 + SEA(1박 관광) + LV(3박) · Match 73 SoFi 6/28 · ⭐ A와 동일 예약</span>
       </button>
     </div>
 

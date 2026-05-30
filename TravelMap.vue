@@ -47,7 +47,7 @@ const POIS = {
     { kind: 'lodging',  name: 'Palace Hotel (베이스)',   lat: 37.7884, lng: -122.4017, icon: '🏨',
       booking: 'now', bookingPlan: 'AB', bookingNights: '3박',
       detail: 'Union Square · A/B 공통 3박 (6/26~6/29)' },
-    { kind: 'activity', name: 'Palo Alto Airport (PAO)', lat: 37.4611, lng: -122.1150, icon: '🛩️', day: '6/28',       detail: '경비행기 출발 · A: Bay 투어 / B: LA 왕복' },
+    { kind: 'activity', name: 'SFO (Plan B 6/28 LA 당일치기 출발)', lat: 37.6213, lng: -122.3790, icon: '✈️', day: '6/28', detail: 'Southwest/Delta 직항 · SFO→LAX 1h 30m' },
   ],
   YOS: [
     { kind: 'sight',   name: 'Yosemite Valley',       lat: 37.7456, lng: -119.5936, icon: '⛰️', day: '6/29', detail: 'Valley 순환 · Bridalveil Fall · El Capitan (A/B 공통)' },
@@ -84,7 +84,7 @@ const POIS = {
   ],
   LA: [
     { kind: 'stadium',  name: 'SoFi Stadium 🇰🇷',            lat: 33.9534, lng: -118.3387, icon: '⚽', day: '6/28 12:00 PT', detail: 'R32 Match 73 — 한국(조A 2위) vs 조B 2위 · Plan B 핵심', highlight: true },
-    { kind: 'activity', name: 'Hawthorne Municipal (HHR)',  lat: 33.9223, lng: -118.3352, icon: '🛬', day: '6/28',           detail: 'PAO에서 경비행기 도착 · 도보 거리 SoFi' },
+    { kind: 'activity', name: 'LAX 공항',                   lat: 33.9416, lng: -118.4085, icon: '🛬', day: '6/28',           detail: 'SFO에서 직항 도착 · Uber로 SoFi 25~45분' },
   ],
   SV: [
     { kind: 'sight', name: 'Stanford Campus',           lat: 37.4275, lng: -122.1697, icon: '🏛', day: '6/27 오전 (B)', detail: 'Hoover Tower · Oval · 기념품' },
@@ -102,7 +102,7 @@ const planA = {
   legs: [
     { city: 'SF',  date: '6/26 금', label: '도착',                          icon: '✈️', desc: 'OZ212 SFO 도착 · Palace Hotel · 비행 피로 회복' },
     { city: 'SF',  date: '6/27 토', label: 'Alcatraz·Golden Gate·Giants', icon: '🌉', desc: '알카트라즈 · 자전거 라이딩 · 저녁 Giants 18:05' },
-    { city: 'SF',  date: '6/28 일', label: 'Bay 경비행기 + SF 관광',       icon: '🛩', desc: 'PAO 경비행기 Bay 투어 · Fisherman\'s Wharf · Pier 39' },
+    { city: 'SF',  date: '6/28 일', label: 'Alcatraz · Golden Gate',       icon: '🌉', desc: 'Pier 33 Alcatraz · Golden Gate 자전거 · Sausalito 페리' },
     { city: 'YOS', date: '6/29 월', label: '요세미티 1박 (A/B 공통)',       icon: '⛰️', desc: 'SF→Yosemite 3.5h · Valley 투어' },
     { city: 'SEA', date: '6/30 화', label: '요세미티 오전 → SEA 저녁 입성',  icon: '✈️', desc: '오전 짧은 하이킹 · 11:00 SF 출발 · 16:30 SFO→SEA · Hyatt Regency 1박' },
     { city: 'SEA', date: '7/1 수',  label: '🇰🇷 R32 Match 82 + LV 야간 이동', icon: '⚽', desc: '여유로운 아침 · Space Needle · 13:00 Lumen 경기 · 저녁 SEA→LAS', highlight: true },
@@ -119,7 +119,7 @@ const planB = {
   legs: [
     { city: 'SF',  date: '6/26 금', label: '도착',                          icon: '✈️', desc: 'OZ212 SFO 도착 · 비행 피로 회복' },
     { city: 'SV',  date: '6/27 토', label: '실리콘밸리 + Giants',            icon: '💻', desc: 'Stanford · Google · Apple Park · 저녁 Giants 18:05' },
-    { city: 'LA',  date: '6/28 일', label: '🇰🇷 LA 당일치기 (경비행기)',     icon: '🛩', desc: 'PAO→HHR 경비행기 · SoFi Match 73 · 당일 SF 복귀', highlight: true },
+    { city: 'LA',  date: '6/28 일', label: '🇰🇷 LA 항공 당일치기',           icon: '✈️', desc: 'SFO→LAX 직항 1h 30m · SoFi Match 73 · 당일 SF 복귀', highlight: true },
     { city: 'YOS', date: '6/29 월', label: '요세미티 1박 (A/B 공통)',        icon: '⛰️', desc: 'SF→Yosemite · Valley 투어 · LA 경기 회복' },
     { city: 'SEA', date: '6/30 화', label: '요세미티 오전 → SEA (A와 공통)', icon: '✈️', desc: '오전 짧은 하이킹 · 11:00 SF 출발 · 16:30 SFO→SEA · Hyatt 1박' },
     { city: 'SEA', date: '7/1 수',  label: 'SEA 관광 → LV 이동',             icon: '🌲', desc: 'Space Needle · Pike Place · 저녁 SEA→LAS (A와 공통 항공편)' },
@@ -303,7 +303,7 @@ watch(filters, () => { draw() }, { deep: true })
       </button>
       <button class="plan-btn plan-b" :class="{ active: activePlan === 'b' }" @click="activePlan = 'b'">
         🇰🇷 Plan B — LA 한국전 + LV
-        <span class="plan-sub">SF → YOS → SF → 🛩 LA(SoFi) → SV → LV → 귀국</span>
+        <span class="plan-sub">SF → YOS → SF → ✈️ LA(SoFi) → SV → LV → 귀국</span>
       </button>
     </div>
 

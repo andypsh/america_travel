@@ -50,7 +50,7 @@ const costData = {
       { name: '🌃 OMNIA Nightclub (입장+음료)', detail: 'LV 1회', perPerson: 140000 },
       { name: '🌲 SEA 액티비티 (Space Needle 등)', detail: '6/30~7/1', perPerson: 70000 },
       { name: '🛍 Forum Shops 쇼핑 (보수적)', detail: 'LV', perPerson: 200000 },
-      { name: '🍔 일반 식사·음료·우버', detail: '8박 9일', perPerson: 500000 },
+      { name: '🍔 일반 식사·음료·우버', detail: '8박 9일 (팁·세금 포함)', perPerson: 800000 },
     ],
   },
   b: {
@@ -77,7 +77,7 @@ const costData = {
       { name: '🎰 Caesars 카지노 베팅 (보수적)', detail: 'LV', perPerson: 280000 },
       { name: '🌃 OMNIA Nightclub (입장+음료)', detail: 'LV 1회', perPerson: 140000 },
       { name: '🛍 Forum Shops 쇼핑 (보수적)', detail: 'LV', perPerson: 200000 },
-      { name: '🍔 일반 식사·음료·우버', detail: '8박 9일', perPerson: 500000 },
+      { name: '🍔 일반 식사·음료·우버', detail: '8박 9일 (팁·세금 포함)', perPerson: 800000 },
     ],
   },
 }

@@ -22,10 +22,10 @@ const KINDS = {
 }
 
 // ── 예약 전략 (지도 상단 박스 + 호텔 popup에 표시) ──
-// Plan A/B가 호텔·항공편 100% 동일하게 통합되면서 분기(standby) 박스는 제거 — 전부 즉시 예약 8박
-// 후보 호텔은 오투어 (otour.cjonstyle.com) 검색 결과 기반 (성인 2명 기준 가격, 1박 평균)
+// Plan A/B 공통 7박은 환불불가로 잡고, 분기 1박(6/30~7/1)만 무료취소 양다리
 const BOOKING = {
-  totalNote: '✨ Plan A/B 호텔·항공편 100% 동일 — 분기 없음 · 한국전 티켓만 분기 결정 (6/24 한국 순위 확정 후)',
+  totalNote: '🔀 Plan A/B 공통 7박 = 즉시 예약 · 분기 1박 (6/30~7/1) = 무료취소 양다리 → 6/24 한국 순위 확정 후 결정',
+  decisionAt: '6/24 (한국 조별리그 마지막 경기 후 — 16강 진출 순위 확정)',
   siteUrl: 'https://otour.cjonstyle.com/pages/overseas/hotel/main',
   now: [
     { id: 'yos', hotel: 'Yosemite · Curry Village', tag: 'YOS', nights: 1, dates: '6/29 → 6/30', priority: 1,
@@ -45,17 +45,7 @@ const BOOKING = {
         { name: '인터컨티넨탈 SF',              stars: 4.5, perNight: 388184, total: 1164553, note: 'SOMA 인피니티 풀 (검토 대상)' },
       ],
     },
-    { id: 'sea', hotel: 'SEA · Downtown', tag: 'SEA', nights: 1, dates: '6/30 → 7/1', priority: 3,
-      action: '지금 예약', site: '오투어', note: 'Lumen Field 도보권 (1~1.5km) — 경기 당일 이동 최소화',
-      candidates: [
-        { name: '쉐라톤 그랜드 시애틀',         stars: 4.5, perNight: 460711, total: 460711, note: '6th Ave · Lumen 1.2km · Pike Place 도보' },
-        { name: '하얏트 엣 올리브 8',           stars: 4,   perNight: 473199, total: 473199, note: '⭐ 가성비 · 8th Ave · 친환경 호텔' },
-        { name: '그랜드 하얏트 시애틀',         stars: 4.5, perNight: 536468, total: 536468, note: 'Pine St · 컨벤션 인접' },
-        { name: '코스트 시애틀 다운타운 (구 힐튼)', stars: 4, perNight: 545434, total: 545434, note: '6th Ave · 가격 안정적' },
-        { name: '롯데 호텔 시애틀',             stars: 5,   perNight: 871603, total: 871603, note: '5th Ave · 한국계 럭셔리' },
-      ],
-    },
-    { id: 'lv', hotel: 'LV · The Strip', tag: 'LV', nights: 3, dates: '7/1 → 7/4', priority: 4,
+    { id: 'lv', hotel: 'LV · The Strip', tag: 'LV', nights: 3, dates: '7/1 → 7/4', priority: 3,
       action: '지금 예약', site: '오투어', note: 'The Strip 평일 요금 · 7/1 야간 도착 → 24시간 체크인 가능 호텔 권장',
       candidates: [
         { name: '룩소 호텔 & 카지노',           stars: 3.5, perNight: 161373, total: 484119,  note: '⭐ 가성비 끝판 · 이집트 테마' },
@@ -66,6 +56,22 @@ const BOOKING = {
         { name: '만달레이 베이',                stars: 4.5, perNight: 365673, total: 1097019, note: 'South Strip · 풀장 강함' },
         { name: '벨라지오',                    stars: 5,   perNight: 706976, total: 2120928, note: '럭셔리 · 분수쇼 직결' },
         { name: '시저스 팰리스',                stars: 4.5, perNight: 745875, total: 2237625, note: '럭셔리 · Forum Shops' },
+      ],
+    },
+  ],
+  standby: [
+    { id: 'sea-a', hotel: 'SEA 호텔 (Plan A 전용)', tag: 'SEA', nights: 1, dates: '6/30 → 7/1', plan: 'A',
+      site: '오투어 (무료취소 요금)', when: '한국 조3위 확정 → 시애틀 R32 (Lumen Field Match 82)',
+      candidates: [
+        { name: '쉐라톤 그랜드 시애틀',         stars: 4.5, perNight: 460711, total: 460711, note: '⭐ Lumen 1.2km · 가성비 + 위치' },
+        { name: '롯데 호텔 시애틀',             stars: 5,   perNight: 871603, total: 871603, note: '🇰🇷 한국계 럭셔리 · Lumen 1.0km · 한국어 가능' },
+        { name: '그랜드 하얏트 시애틀',         stars: 4.5, perNight: 536468, total: 536468, note: 'Pine St · Convention Center 직결' },
+      ],
+    },
+    { id: 'sf-b-ext', hotel: 'SF JW 메리어트 1박 연장 (Plan B 전용)', tag: 'SF', nights: 1, dates: '6/30 → 7/1', plan: 'B',
+      site: '오투어 (무료취소 요금) · 별도 1박 예약', when: '한국 조2위 확정 → LA R32 + SF 베이스 유지',
+      candidates: [
+        { name: 'JW 메리어트 SF 유니언 스퀘어', stars: 4.5, perNight: 415453, total: 415453, note: '✅ 기존 예약과 동일 호텔 · 같은 객실로 연속 예약 가능' },
       ],
     },
   ],
@@ -96,9 +102,9 @@ const POIS = {
     { kind: 'stadium',  name: 'Lumen Field 🇰🇷',              lat: 47.5952, lng: -122.3316, icon: '⚽', day: '7/1 13:00 PT', detail: 'R32 Match 82 — 한국 vs 16강 약자 · Plan A 핵심', highlight: true },
     { kind: 'sight',    name: 'Pike Place Market',           lat: 47.6097, lng: -122.3422, icon: '🐟', day: '6/30 / 7/1', detail: '저녁 + 경기 당일 아침 커피' },
     { kind: 'sight',    name: 'Space Needle',                lat: 47.6205, lng: -122.3493, icon: '🗼', day: '7/1 오전',   detail: 'Seattle Center 전망대' },
-    { kind: 'lodging',  name: 'Hyatt Regency Seattle',       lat: 47.6113, lng: -122.3329, icon: '🏨', day: '6/30~7/1',
-      booking: 'now', bookingPlan: 'AB', bookingNights: '1박',
-      detail: 'A/B 공통 1박 · downtown · A: 7/1 경기 전날 입성 / B: SEA 관광 (Space Needle·Pike Place)' },
+    { kind: 'lodging',  name: 'SEA 호텔 (Plan A 전용)',       lat: 47.6113, lng: -122.3329, icon: '🏨', day: '6/30~7/1',
+      booking: 'standby', bookingPlan: 'A', bookingNights: '1박',
+      detail: '⏳ Plan A 전용 1박 · 무료취소로 예약 → 6/24 한국 순위 확정 후 결정 · 조3위면 KEEP · 후보: 쉐라톤 그랜드(46만) / 롯데(87만) / 그랜드 하얏트(54만)' },
     { kind: 'activity', name: 'Cal Anderson Park 픽업 사커',  lat: 47.6184, lng: -122.3196, icon: '⚽', day: '6/30 저녁',  detail: '한국 응원단 · 미국 픽업게임 혼합' },
     { kind: 'activity', name: 'Blade & Timber 도끼던지기',    lat: 47.6166, lng: -122.3217, icon: '🪓', detail: 'Capitol Hill · 18레인 · 맥주 가능' },
   ],
@@ -156,8 +162,8 @@ const planB = {
     { city: 'SV',  date: '6/27 토', label: '실리콘밸리 + Giants',            icon: '💻', desc: 'Stanford · Google · Apple Park · 저녁 Giants 18:05' },
     { city: 'LA',  date: '6/28 일', label: '🇰🇷 LA 항공 당일치기',           icon: '✈️', desc: 'SFO→LAX 직항 1h 30m · SoFi Match 73 · 당일 SF 복귀', highlight: true },
     { city: 'YOS', date: '6/29 월', label: '요세미티 1박 (A/B 공통)',        icon: '⛰️', desc: 'SF→Yosemite · Valley 투어 · LA 경기 회복' },
-    { city: 'SEA', date: '6/30 화', label: '요세미티 오전 → SEA (A와 공통)', icon: '✈️', desc: '오전 짧은 하이킹 · 11:00 SF 출발 · 16:30 SFO→SEA · Hyatt 1박' },
-    { city: 'SEA', date: '7/1 수',  label: 'SEA 관광 → LV 이동',             icon: '🌲', desc: 'Space Needle · Pike Place · 저녁 SEA→LAS (A와 공통 항공편)' },
+    { city: 'SF',  date: '6/30 화', label: '요세미티 → SF 복귀 (베이스 1박 연장)', icon: '🌉', desc: '오전 하이킹 후 SF로 직행 · JW 메리어트 1박 연장 (총 4박)' },
+    { city: 'LV',  date: '7/1 수',  label: 'SFO → LAS 이동',                 icon: '✈️', desc: 'SFO→LAS 직항 · The Strip 야경 · LV 체크인' },
     { city: 'LV',  date: '7/2 목',  label: '라스베이거스',                  icon: '🎰', desc: 'Fremont · SpeedVegas · 쇼' },
     { city: 'LV',  date: '7/3 금',  label: '라스베이거스',                  icon: '🎯', desc: '후버댐 · iFly · 마지막 카지노' },
     { city: 'LV',  date: '7/4 토',  label: 'LV → SFO → 귀국',               icon: '🏠', desc: 'LAS→SFO · OZ211 인천行' },
@@ -372,8 +378,8 @@ watch(filters, () => { draw() }, { deep: true })
         <div class="booking-callout">{{ BOOKING.totalNote }}</div>
         <div class="booking-phase">
           <div class="phase-label phase-now">
-            <span class="phase-num">✓</span>
-            <span>지금 바로 예약 — A/B 100% 공통 ({{ totalNightsNow }}박 · 분기 없음)</span>
+            <span class="phase-num">1</span>
+            <span>지금 바로 예약 — A/B 공통 ({{ totalNightsNow }}박 · 변동 0%)</span>
           </div>
           <div class="booking-grid">
             <div v-for="b in BOOKING.now" :key="b.id" class="booking-item now" :class="{ priority: b.priority === 1, confirmed: b.picked }">
@@ -396,6 +402,41 @@ watch(filters, () => { draw() }, { deep: true })
                     <span class="bi-cand-stars">{{ '★'.repeat(Math.floor(c.stars)) }}{{ c.stars % 1 ? '½' : '' }}</span>
                     <span class="bi-cand-name">{{ c.name }}</span>
                     <span class="bi-cand-price"><b>{{ formatKRW(c.perNight) }}</b>/박<span v-if="b.nights > 1" class="bi-cand-total">· {{ b.nights }}박 {{ formatKRW(c.total) }}</span></span>
+                    <span v-if="c.note" class="bi-cand-note">{{ c.note }}</span>
+                  </div>
+                </div>
+              </div>
+              <div class="bi-site">→ {{ b.site }}</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 2단계: 동시 대기 (분기) -->
+        <div v-if="BOOKING.standby" class="booking-phase">
+          <div class="phase-label phase-standby">
+            <span class="phase-num">2</span>
+            <span>동시 대기 — 둘 다 무료취소로 예약 → {{ BOOKING.decisionAt }} 후 하나 취소</span>
+          </div>
+          <div class="booking-grid">
+            <div v-for="b in BOOKING.standby" :key="b.id" class="booking-item standby" :class="`plan-${b.plan.toLowerCase()}`">
+              <div class="bi-head">
+                <span class="bi-tag" :data-tag="b.tag">{{ b.tag }}</span>
+                <span class="bi-plan">Plan {{ b.plan }} 전용</span>
+              </div>
+              <div class="bi-hotel">{{ b.hotel }}</div>
+              <div class="bi-dates"><b>{{ b.dates }}</b> · {{ b.nights }}박</div>
+              <div class="bi-when">📌 {{ b.when }}</div>
+              <div v-if="b.candidates" class="bi-candidates">
+                <div class="bi-cand-head">
+                  <span>🏨 후보 호텔 ({{ b.candidates.length }}개)</span>
+                  <a :href="BOOKING.siteUrl" target="_blank" rel="noopener" class="bi-cand-link">오투어 ↗</a>
+                </div>
+                <div class="bi-cand-list">
+                  <div v-for="(c, i) in b.candidates" :key="i" class="bi-cand-row"
+                       :class="{ best: c.note && c.note.startsWith('⭐') }">
+                    <span class="bi-cand-stars">{{ '★'.repeat(Math.floor(c.stars)) }}{{ c.stars % 1 ? '½' : '' }}</span>
+                    <span class="bi-cand-name">{{ c.name }}</span>
+                    <span class="bi-cand-price"><b>{{ formatKRW(c.perNight) }}</b>/박</span>
                     <span v-if="c.note" class="bi-cand-note">{{ c.note }}</span>
                   </div>
                 </div>

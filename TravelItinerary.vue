@@ -297,8 +297,8 @@ const activities = {
       desc: '주말 오전 Soccer Field 6~7면 상시 픽업게임 · 그냥 가면 끼워줌 · 월드컵 시즌 특히 활발 · 미국인·라틴계 혼합 팀', tip: 'Playo 앱으로 사전 게임 조인 가능 · 클릿 없이 런닝화도 OK · 물 꼭 챙기기' },
   ],
   LV: [
-    { emoji: '🏎️', name: 'SpeedVegas 슈퍼카 레이싱', type: '액티브', price: '$99~299/인', duration: '1~2h',
-      desc: '람보르기니·페라리·포르쉐 실제 서킷 드라이빙 · 전문 강사 동승', tip: '스트립 남쪽 15분 · 사전 예약 필수 · 국제면허 필요' },
+    { emoji: '🏎️', name: 'SpeedVegas 슈퍼카 레이싱', type: '액티브', price: '$399~599/인 (5랩)', duration: '1~2h',
+      desc: 'Huracán/488 GTB $399 · F8/STO $499~599 · 강사 동승 + Porsche SUV 디스커버리 랩 2회 무료', tip: '스트립 남쪽 15분 · 사전 예약 필수 · 멀티카 추가시 차량당 $100 할인' },
     { emoji: '🎰', name: 'Caesars 카지노 (빅휠·블랙잭·바카라·룰렛)', type: '관람·베팅', price: '베팅액 자유', duration: '자유',
       desc: 'LV 최대급 카지노 9.6만 sqft · 빅휠·룰렛·블랙잭·바카라·포커·1,300+ 슬롯', tip: '호텔 내 24h · 신분증 필수' },
     { emoji: '⚽', name: 'Caesars Sportsbook (월드컵 R32/R16 라이브 베팅)', type: '관람·베팅', price: '베팅액 자유', duration: '자유',

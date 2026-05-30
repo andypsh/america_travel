@@ -46,7 +46,7 @@ const aHotels = [
   { city: '샌프란시스코',    tag: 'SF',  nights: 3, dates: '6/26~6/29', economy: 190, mid: 230, note: '✅ Hyatt Regency Embarcadero (예약 완료) · BART 직결 · 도착 + Alcatraz·Golden Gate·Giants(6/27) + 실리콘밸리 당일치기(6/28)' },
   { city: 'Yosemite',       tag: 'YOS', nights: 1, dates: '6/29~6/30', economy: 200, mid: 350, note: '⭐ A/B 공통 · Curry Village · 6~12개월 전 예약 필수 · recreation.gov / travelyosemite.com' },
   { city: '시애틀',          tag: 'SEA', nights: 1, dates: '6/30~7/1', economy: 280, mid: 400, note: 'Hyatt Regency · ⚠️ 월드컵 서징 · 경기 전날 입성 → 다음날 여유 (요세미티 오전만 보고 일찍 출발)' },
-  { city: '라스베이거스',     tag: 'LV',  nights: 3, dates: '7/1~7/4',  economy: 140, mid: 240, note: 'Paris LV (24h 체크인) · 평일 요금 · 7/4 저녁 SFO' },
+  { city: '라스베이거스',     tag: 'LV',  nights: 3, dates: '7/1~7/4',  economy: 140, mid: 240, note: 'Caesars Palace (24h 체크인) · 평일 요금 · 7/4 저녁 SFO' },
 ]
 const aDays = [
   { date: '6/26 금', city: '샌프란시스코', cityTag: 'SF', icon: '✈️', items: [
@@ -97,7 +97,7 @@ const aDays = [
     { time: '~16:00', text: '🎉 경기 후 응원 · 야경 기념촬영 · Lumen 주변 축제 분위기' },
     { time: '16:30-17:00', text: '🚙 Lumen Field → SEA 공항 이동' },
     { time: '17:30~', text: '✈️ SEA → LAS 야간 국내선 (약 2.5시간)' },
-    { time: '~20:00', text: '🎰 라스베이거스 도착 · 심야 체크인 (Paris Las Vegas 24h) · The Strip 야경' },
+    { time: '~20:00', text: '🎰 라스베이거스 도착 · 심야 체크인 (Caesars Palace 24h) · The Strip 야경' },
   ]},
   { date: '7/2 목', city: '라스베이거스', cityTag: 'LV', icon: '🎰', items: [
     { time: '오전', text: '늦잠 · 호텔 풀장 · 브런치 (전날 경기 피로 회복)' },
@@ -124,7 +124,7 @@ const laHotels = [
   { city: '샌프란시스코', tag: 'SF',  nights: 3, dates: '6/26~6/29', economy: 190, mid: 230, note: '✅ Hyatt Regency Embarcadero (예약 완료) · BART 직결 · 도착 + 6/28 LA 항공 당일치기(SFO↔LAX) 포함' },
   { city: 'Yosemite',    tag: 'YOS', nights: 1, dates: '6/29~6/30', economy: 200, mid: 350, note: '⭐ A/B 공통 · Curry Village · LA 경기 후 회복일' },
   { city: '시애틀',       tag: 'SEA', nights: 1, dates: '6/30~7/1', economy: 280, mid: 400, note: '⭐ A/B 공통 — Hyatt Regency · A: 경기 전날 입성 / B: SEA 관광 (Space Needle·Chihuly)' },
-  { city: '라스베이거스', tag: 'LV',  nights: 3, dates: '7/1~7/4',  economy: 140, mid: 240, note: 'Paris LV · 평일 요금 · 7/4 저녁 SFO' },
+  { city: '라스베이거스', tag: 'LV',  nights: 3, dates: '7/1~7/4',  economy: 140, mid: 240, note: 'Caesars Palace · 평일 요금 · 7/4 저녁 SFO' },
 ]
 const laDays = [
   { date: '6/26 금', city: '샌프란시스코', cityTag: 'SF', icon: '✈️', items: [
@@ -175,7 +175,7 @@ const laDays = [
     { time: '오후', text: '🌉 Kerry Park 전망 · Capitol Hill 카페거리 · Olympic Sculpture Park (선택)' },
     { time: '16:30-17:00', text: '🚙 호텔 체크아웃 · Uber로 SEA 공항' },
     { time: '17:30~', text: '✈️ SEA → LAS 야간 국내선 (약 2.5시간) ⭐ A와 공통 항공편' },
-    { time: '~20:00', text: '🎰 라스베이거스 도착 · 심야 체크인 (Paris Las Vegas 24h) · The Strip 야경' },
+    { time: '~20:00', text: '🎰 라스베이거스 도착 · 심야 체크인 (Caesars Palace 24h) · The Strip 야경' },
   ]},
   { date: '7/2 목', city: '라스베이거스', cityTag: 'LV', icon: '🎰', items: [
     { time: '오전', text: 'Fremont Street Experience (구시가지 · 집라인)' },
@@ -330,7 +330,7 @@ const transportRoutes = {
     },
   ],
   LV: [
-    { from: 'LAS 공항 (Harry Reid Intl)', to: 'Paris Las Vegas (Strip 중심)', distance: '3mi · 5km', icon: '🎰',
+    { from: 'LAS 공항 (Harry Reid Intl)', to: 'Caesars Palace (Strip 중심)', distance: '3mi · 5km', icon: '🎰',
       options: [
         { mode: '🚕 Uber/Lyft', detail: 'Terminal 3 ride-share zone (3층)', time: '15~20분', cost: '$15~25 (Plan A 심야엔 surge $25~35)', tip: '⭐ Strip 호텔 직행 OK · Plan A 22시 도착이면 surge 주의' },
         { mode: '🚕 Taxi', detail: 'Strip 호텔 정찰 요금', time: '15~20분', cost: '$25~35 (flat rate)', tip: '미터기 안 켜고 정찰가로 가달라 요청' },
@@ -347,7 +347,7 @@ const transportRoutes = {
         { mode: '🚌 Fremont까지 Deuce', detail: 'Strip → Fremont Street (4mi)', time: '40~50분', cost: '$8/하루', tip: '저녁 분수쇼 후 Fremont는 Uber도 OK ($15~20)' },
       ]
     },
-    { from: 'Paris Las Vegas', to: 'LAS 공항 (7/4 귀국)', distance: '3mi · 5km', icon: '✈️',
+    { from: 'Caesars Palace', to: 'LAS 공항 (7/4 귀국)', distance: '3mi · 5km', icon: '✈️',
       options: [
         { mode: '🚕 Uber', detail: '터미널 출발 zone', time: '15~25분 (7/4 독립기념일 혼잡)', cost: '$20~35', tip: '⚠️ 7/4 공항 혼잡 — 출발 3시간 전 떠나기' },
         { mode: '🚕 Taxi', detail: 'Strip 호텔 → 공항 flat', time: '15~25분', cost: '$25~35', tip: 'flat rate라 막혀도 추가비 없음' },
@@ -411,9 +411,9 @@ const sleepByNight = [
   { date: '6/28 일', a: 'SF · Hyatt Regency Embarcadero',     b: 'SF · Hyatt Regency Embarcadero',     aTag: 'SF',  bTag: 'SF',  action: 'now', same: true, note: 'A: 💻 실리콘밸리 당일치기 (Stanford·Google·Apple Park) / B: 🇰🇷 LA 항공 당일치기 SFO↔LAX (Match 73)' },
   { date: '6/29 월', a: 'YOS · Curry Village',   b: 'YOS · Curry Village',   aTag: 'YOS', bTag: 'YOS', action: 'now', same: true, note: '⭐ A/B 공통 — 요세미티 1박 (무료취소 불가 · 가장 먼저 예약)' },
   { date: '6/30 화', a: 'SEA · Hyatt Regency',   b: 'SEA · Hyatt Regency',   aTag: 'SEA', bTag: 'SEA', action: 'now', same: true, note: '⭐ A/B 공통 — 같은 SFO→SEA 항공편 + 같은 Hyatt 1박 (월드컵 서징 ⚠️ 일찍)' },
-  { date: '7/1 수',  a: 'LV · Paris Las Vegas',  b: 'LV · Paris Las Vegas',  aTag: 'LV',  bTag: 'LV',  action: 'now', same: true, note: 'A: 13:00 Lumen 경기 / B: SEA 관광 (Space Needle·Pike Place) → 같은 SEA→LAS 저녁 항공편' },
-  { date: '7/2 목',  a: 'LV · Paris Las Vegas',  b: 'LV · Paris Las Vegas',  aTag: 'LV',  bTag: 'LV',  action: 'now', same: true, note: '' },
-  { date: '7/3 금',  a: 'LV · Paris Las Vegas',  b: 'LV · Paris Las Vegas',  aTag: 'LV',  bTag: 'LV',  action: 'now', same: true, note: '7/4 아침 체크아웃' },
+  { date: '7/1 수',  a: 'LV · Caesars Palace',  b: 'LV · Caesars Palace',  aTag: 'LV',  bTag: 'LV',  action: 'now', same: true, note: 'A: 13:00 Lumen 경기 / B: SEA 관광 (Space Needle·Pike Place) → 같은 SEA→LAS 저녁 항공편' },
+  { date: '7/2 목',  a: 'LV · Caesars Palace',  b: 'LV · Caesars Palace',  aTag: 'LV',  bTag: 'LV',  action: 'now', same: true, note: '' },
+  { date: '7/3 금',  a: 'LV · Caesars Palace',  b: 'LV · Caesars Palace',  aTag: 'LV',  bTag: 'LV',  action: 'now', same: true, note: '7/4 아침 체크아웃' },
 ]
 
 const bookingItems = [
@@ -424,8 +424,8 @@ const bookingItems = [
     note: '⭐ A/B 공통 — 무료취소 불가 → A·B 어느 쪽이든 사용 · ⚠️ 6~12개월 전 예약 필수 · recreation.gov / travelyosemite.com · 6월 폭포 시즌 만실' },
   { id: 'sea-hyatt', label: 'SEA Hyatt Regency (1박)', tag: 'SEA', dates: '6/30 → 7/1', nights: 1, plans: ['A','B'], type: 'now',
     note: '⭐ A/B 공통 — A: 경기 전날 입성 / B: 7/1 SEA 관광 (Space Needle·Pike Place) · downtown Hyatt · ⚠️ 월드컵 서징 ⚠️ 일찍 예약' },
-  { id: 'lv-base',  label: 'LV Paris Las Vegas (3박)', tag: 'LV', dates: '7/1 → 7/4', nights: 3, plans: ['A','B'], type: 'now',
-    note: '⭐ A/B 공통 — 24h 프런트 (야간 도착 대응) · 평일 요금 · 7/4 저녁 SFO' },
+  { id: 'lv-base',  label: '✅ LV Caesars Palace — Octavius Pool View, 2 Queens (예약 완료)', tag: 'LV', dates: '7/1 → 7/4', nights: 3, plans: ['A','B'], type: 'now', confirmed: true,
+    note: '✅ 예약 완료 · 3570 Las Vegas Blvd S · Octavius Tower 신관(2012) · Pool View · 2 Queen Beds + Rollaway 요청 · OMNIA·Venus Pool·Forum Shops 직속 · 분수쇼 도보 3분 · 24h 프런트' },
 ]
 
 const decisions = [

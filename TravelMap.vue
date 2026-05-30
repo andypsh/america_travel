@@ -21,6 +21,22 @@ const KINDS = {
   lodging:  { label: '숙소',     color: '#a855f7', size: 24 },
 }
 
+// ── 예약 전략 (지도 상단 박스 + 호텔 popup에 표시) ──
+// Plan A/B가 호텔·항공편 100% 동일하게 통합되면서 분기(standby) 박스는 제거 — 전부 즉시 예약 8박
+const BOOKING = {
+  totalNote: '✨ Plan A/B 호텔·항공편 100% 동일 — 분기 없음 · 한국전 티켓만 분기 결정 (6/24 한국 순위 확정 후)',
+  now: [
+    { id: 'yos', hotel: 'Yosemite · Curry Village', tag: 'YOS', nights: 1, dates: '6/29 → 6/30', priority: 1,
+      action: '⭐ 최우선', site: 'recreation.gov / travelyosemite.com', note: '무료취소 불가 · 6~12개월 전 매진 → 가장 먼저' },
+    { id: 'sf-base', hotel: 'SF · Palace Hotel', tag: 'SF', nights: 3, dates: '6/26 → 6/29', priority: 2,
+      action: '지금 예약', site: 'booking.com / hotels.com', note: 'Union Square · 도착 + SF 관광 베이스' },
+    { id: 'sea', hotel: 'SEA · Hyatt Regency', tag: 'SEA', nights: 1, dates: '6/30 → 7/1', priority: 3,
+      action: '지금 예약', site: 'hyatt.com', note: 'downtown · A는 경기 전날 입성 / B는 SEA 관광' },
+    { id: 'lv', hotel: 'LV · Paris Las Vegas', tag: 'LV', nights: 3, dates: '7/1 → 7/4', priority: 4,
+      action: '지금 예약', site: 'caesars.com / booking.com', note: '평일 요금 · 24h 체크인 (7/1 야간 도착)' },
+  ],
+}
+
 // ── POI: 도시별 ──
 const POIS = {
   SF: [
@@ -28,25 +44,33 @@ const POIS = {
     { kind: 'sight',    name: 'Alcatraz Island',         lat: 37.8267, lng: -122.4230, icon: '🏝',  day: '6/27 (A)',  detail: 'Pier 33 페리 · 사전 예약 필수' },
     { kind: 'sight',    name: 'Golden Gate Bridge',      lat: 37.8199, lng: -122.4783, icon: '🌉', day: '6/27 (A)',  detail: '자전거 라이딩 → Sausalito 페리' },
     { kind: 'sight',    name: "Fisherman's Wharf",       lat: 37.8080, lng: -122.4177, icon: '🦀', detail: 'Pier 39 · 자전거 렌탈 출발' },
-    { kind: 'lodging',  name: 'Palace Hotel (베이스)',   lat: 37.7884, lng: -122.4017, icon: '🏨', detail: 'Union Square · A/B 공통 4박 (6/26~6/29, 6/30~7/1)' },
+    { kind: 'lodging',  name: 'Palace Hotel (베이스)',   lat: 37.7884, lng: -122.4017, icon: '🏨',
+      booking: 'now', bookingPlan: 'AB', bookingNights: '3박',
+      detail: 'Union Square · A/B 공통 3박 (6/26~6/29)' },
     { kind: 'activity', name: 'Palo Alto Airport (PAO)', lat: 37.4611, lng: -122.1150, icon: '🛩️', day: '6/28',       detail: '경비행기 출발 · A: Bay 투어 / B: LA 왕복' },
   ],
   YOS: [
     { kind: 'sight',   name: 'Yosemite Valley',       lat: 37.7456, lng: -119.5936, icon: '⛰️', day: '6/29', detail: 'Valley 순환 · Bridalveil Fall · El Capitan (A/B 공통)' },
     { kind: 'sight',   name: 'Tunnel View',           lat: 37.7156, lng: -119.6779, icon: '👁',  day: '6/30', detail: '아침 하이킹 출발점 · 파노라마 포토스팟' },
     { kind: 'sight',   name: 'Glacier Point',         lat: 37.7281, lng: -119.5740, icon: '🏔', day: '6/30', detail: '오후 파노라마 · 마지막 자연 감상' },
-    { kind: 'lodging', name: 'Curry Village (1박)',   lat: 37.7375, lng: -119.5736, icon: '🏕',  day: '6/29~30', detail: '⭐ A/B 공통 1박 · 무료취소 불가 → 공통 예약' },
+    { kind: 'lodging', name: 'Curry Village (1박)',   lat: 37.7375, lng: -119.5736, icon: '🏕',  day: '6/29~30',
+      booking: 'now', bookingPlan: 'AB', bookingNights: '1박 · ⭐ 최우선',
+      detail: '⭐ A/B 공통 1박 · 무료취소 불가 → 가장 먼저 예약 · recreation.gov' },
   ],
   SEA: [
     { kind: 'stadium',  name: 'Lumen Field 🇰🇷',              lat: 47.5952, lng: -122.3316, icon: '⚽', day: '7/1 13:00 PT', detail: 'R32 Match 82 — 한국 vs 16강 약자 · Plan A 핵심', highlight: true },
     { kind: 'sight',    name: 'Pike Place Market',           lat: 47.6097, lng: -122.3422, icon: '🐟', day: '6/30 / 7/1', detail: '저녁 + 경기 당일 아침 커피' },
     { kind: 'sight',    name: 'Space Needle',                lat: 47.6205, lng: -122.3493, icon: '🗼', day: '7/1 오전',   detail: 'Seattle Center 전망대' },
-    { kind: 'lodging',  name: 'Hyatt Regency Seattle',       lat: 47.6113, lng: -122.3329, icon: '🏨', day: '6/30~7/1',   detail: 'Plan A 1박 · downtown' },
+    { kind: 'lodging',  name: 'Hyatt Regency Seattle',       lat: 47.6113, lng: -122.3329, icon: '🏨', day: '6/30~7/1',
+      booking: 'now', bookingPlan: 'AB', bookingNights: '1박',
+      detail: 'A/B 공통 1박 · downtown · A: 7/1 경기 전날 입성 / B: SEA 관광 (Space Needle·Pike Place)' },
     { kind: 'activity', name: 'Cal Anderson Park 픽업 사커',  lat: 47.6184, lng: -122.3196, icon: '⚽', day: '6/30 저녁',  detail: '한국 응원단 · 미국 픽업게임 혼합' },
     { kind: 'activity', name: 'Blade & Timber 도끼던지기',    lat: 47.6166, lng: -122.3217, icon: '🪓', detail: 'Capitol Hill · 18레인 · 맥주 가능' },
   ],
   LV: [
-    { kind: 'lodging',  name: 'Paris Las Vegas',            lat: 36.1119, lng: -115.1717, icon: '🏨', day: '7/1~7/4', detail: '3박 · The Strip 한복판 · 24h 체크인' },
+    { kind: 'lodging',  name: 'Paris Las Vegas',            lat: 36.1119, lng: -115.1717, icon: '🏨', day: '7/1~7/4',
+      booking: 'now', bookingPlan: 'AB', bookingNights: '3박',
+      detail: 'A/B 공통 3박 · The Strip 한복판 · 24h 체크인 (7/1 야간 도착)' },
     { kind: 'sight',    name: 'Bellagio 분수쇼',             lat: 36.1126, lng: -115.1767, icon: '💦', day: '7/2 저녁', detail: 'The Strip 야경의 정수' },
     { kind: 'sight',    name: 'Fremont Street Experience',  lat: 36.1707, lng: -115.1432, icon: '🎡', day: '7/2 오후', detail: '구시가지 · 집라인' },
     { kind: 'sight',    name: 'Caesars · Forum Shops',      lat: 36.1163, lng: -115.1748, icon: '🛍', detail: '쇼핑 · 카지노' },
@@ -109,6 +133,10 @@ const PLANS = { a: planA, b: planB }
 const activePlan = ref('a')
 const plan = computed(() => PLANS[activePlan.value])
 
+// 예약 전략 박스 펼침 상태
+const bookingOpen = ref(true)
+const totalNightsNow = BOOKING.now.reduce((s, b) => s + b.nights, 0)
+
 // 도시별 그룹 (활성 플랜에서 방문하는 도시만)
 const visitedCities = computed(() => {
   const map = new Map()
@@ -166,10 +194,13 @@ function buildCityIcon(label, count, color) {
 function buildPoiIcon(p) {
   const k = KINDS[p.kind]
   const sz = k.size
+  // 호텔 standby 핀은 점선 테두리로 차별화 (분기되는 호텔)
+  const isStandby = p.kind === 'lodging' && p.booking === 'standby'
+  const borderStyle = isStandby ? 'border:2px dashed #fff;' : 'border:2px solid #fff;'
   const ring = p.highlight
     ? `box-shadow: 0 0 0 4px ${k.color}55, 0 0 0 8px ${k.color}22, 0 2px 6px rgba(0,0,0,.4);`
     : `box-shadow: 0 2px 4px rgba(0,0,0,.35);`
-  const html = `<div class="poi-pin" style="background:${k.color};width:${sz}px;height:${sz}px;${ring}">
+  const html = `<div class="poi-pin" style="background:${k.color};width:${sz}px;height:${sz}px;${borderStyle}${ring}">
     <span class="poi-emoji" style="font-size:${Math.round(sz*0.55)}px">${p.icon}</span>
   </div>`
   return L.divIcon({ html, className: 'poi-pin-wrap', iconSize: [sz, sz], iconAnchor: [sz/2, sz/2] })
@@ -194,10 +225,21 @@ function draw() {
       zIndexOffset: poi.highlight ? 900 : (poi.kind === 'stadium' ? 800 : 100),
     }).addTo(mapInstance)
     const dayLine = poi.day ? `<div style="color:${KINDS[poi.kind].color};font-weight:600;font-size:.75rem">${poi.day}</div>` : ''
-    m.bindPopup(`<div style="min-width:200px">
+    // 호텔의 경우 예약 액션 뱃지
+    let bookingBadge = ''
+    if (poi.kind === 'lodging' && poi.booking) {
+      const isNow = poi.booking === 'now'
+      const planLabel = poi.bookingPlan === 'AB' ? 'A/B 공통' : `Plan ${poi.bookingPlan} 전용`
+      const bg = isNow ? '#16a34a' : '#ea580c'
+      const label = isNow ? '✅ 지금 예약' : '⏳ 동시 대기 (6/24 결정)'
+      bookingBadge = `<div style="display:inline-block;margin-top:4px;padding:3px 8px;border-radius:10px;background:${bg};color:#fff;font-size:.7rem;font-weight:700;">${label}</div>
+        <div style="margin-top:3px;font-size:.7rem;color:#666"><b>${planLabel}</b> · ${poi.bookingNights || ''}</div>`
+    }
+    m.bindPopup(`<div style="min-width:220px">
       <b>${poi.icon} ${poi.name}</b>
       ${dayLine}
-      <div style="font-size:.78rem;margin-top:3px;color:#444">${poi.detail || ''}</div>
+      ${bookingBadge}
+      <div style="font-size:.78rem;margin-top:5px;color:#444">${poi.detail || ''}</div>
       <div style="font-size:.7rem;color:#888;margin-top:4px">📍 ${CITIES[poi.city].name}</div>
     </div>`)
     layers.push(m)
@@ -264,6 +306,40 @@ watch(filters, () => { draw() }, { deep: true })
         <span class="plan-sub">SF → YOS → SF → 🛩 LA(SoFi) → SV → LV → 귀국</span>
       </button>
     </div>
+
+    <!-- 🏨 숙소 예약 전략 -->
+    <section class="booking-card">
+      <header class="booking-head" @click="bookingOpen = !bookingOpen">
+        <span class="booking-icon">🏨</span>
+        <span class="booking-title">숙소 예약 전략</span>
+        <span class="booking-summary">
+          <span class="bs-now">즉시 {{ totalNightsNow }}박 (A/B 공통)</span>
+          <span class="bs-tag-ok">분기 없음</span>
+        </span>
+        <span class="booking-chevron" :class="{ rotated: bookingOpen }">›</span>
+      </header>
+      <div v-show="bookingOpen" class="booking-body">
+        <div class="booking-callout">{{ BOOKING.totalNote }}</div>
+        <div class="booking-phase">
+          <div class="phase-label phase-now">
+            <span class="phase-num">✓</span>
+            <span>지금 바로 예약 — A/B 100% 공통 ({{ totalNightsNow }}박 · 분기 없음)</span>
+          </div>
+          <div class="booking-grid">
+            <div v-for="b in BOOKING.now" :key="b.id" class="booking-item now" :class="{ priority: b.priority === 1 }">
+              <div class="bi-head">
+                <span class="bi-tag" :data-tag="b.tag">{{ b.tag }}</span>
+                <span class="bi-action">{{ b.action }}</span>
+              </div>
+              <div class="bi-hotel">{{ b.hotel }}</div>
+              <div class="bi-dates"><b>{{ b.dates }}</b> · {{ b.nights }}박</div>
+              <div class="bi-note">{{ b.note }}</div>
+              <div class="bi-site">→ {{ b.site }}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
 
     <!-- 필터 + 도시 ──-->
     <div class="filter-row">
@@ -369,6 +445,106 @@ watch(filters, () => { draw() }, { deep: true })
 .plan-btn.plan-a.active { background: rgba(124, 58, 237, 0.12); border-color: #7c3aed; color: #c4b5fd; }
 .plan-btn.plan-b.active { background: rgba(225, 29, 72, 0.12); border-color: #e11d48; color: #fca5a5; }
 .plan-sub { font-size: .72rem; font-weight: 500; color: var(--text-muted); }
+
+/* 🏨 예약 전략 박스 */
+.booking-card {
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+}
+.booking-head {
+  display: flex; align-items: center; gap: .6rem;
+  padding: .7rem 1rem;
+  cursor: pointer;
+  transition: var(--transition);
+  user-select: none;
+}
+.booking-head:hover { background: var(--bg-overlay); }
+.booking-icon { font-size: 1.1rem; }
+.booking-title { font-weight: 700; font-size: .92rem; color: var(--text); }
+.booking-summary { display: inline-flex; gap: .4rem; align-items: center; margin-left: .5rem; font-size: .78rem; }
+.bs-now { color: #16a34a; font-weight: 700; background: rgba(22,163,74,.12); padding: 2px 8px; border-radius: 10px; }
+.bs-tag-ok { color: #14b8a6; font-weight: 700; font-size: .72rem; background: rgba(20,184,166,.12); padding: 2px 8px; border-radius: 10px; }
+.bs-sep { color: var(--text-dim); font-weight: 600; }
+.booking-callout {
+  background: rgba(20,184,166,.08);
+  border: 1px solid rgba(20,184,166,.3);
+  color: #0d9488;
+  padding: .55rem .8rem;
+  border-radius: 8px;
+  font-size: .78rem;
+  font-weight: 600;
+}
+.booking-chevron {
+  margin-left: auto; font-size: 1.3rem; color: var(--text-muted);
+  transition: transform .2s; transform: rotate(0deg);
+}
+.booking-chevron.rotated { transform: rotate(90deg); }
+
+.booking-body {
+  padding: .25rem 1rem 1rem;
+  display: flex; flex-direction: column; gap: .9rem;
+  border-top: 1px solid var(--border-muted);
+}
+.booking-phase { display: flex; flex-direction: column; gap: .5rem; }
+.phase-label {
+  display: inline-flex; align-items: center; gap: .5rem;
+  font-size: .78rem; font-weight: 700;
+  padding: 5px 10px; border-radius: 8px;
+  align-self: flex-start;
+}
+.phase-num {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 18px; height: 18px; border-radius: 50%;
+  background: currentColor; color: #fff !important;
+  font-size: .7rem; font-weight: 800;
+}
+.phase-num::after { content: ''; }
+.phase-now { background: rgba(22,163,74,.14); color: #16a34a; border: 1px solid rgba(22,163,74,.35); }
+.phase-now .phase-num { background: #16a34a; }
+.phase-standby { background: rgba(234,88,12,.12); color: #ea580c; border: 1px solid rgba(234,88,12,.35); }
+.phase-standby .phase-num { background: #ea580c; }
+
+.booking-grid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: .6rem;
+}
+.booking-item {
+  padding: .7rem .85rem; border-radius: 10px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  display: flex; flex-direction: column; gap: .25rem;
+  transition: var(--transition);
+}
+.booking-item.now { border-left: 3px solid #16a34a; }
+.booking-item.standby { border-left: 3px solid #ea580c; border-style: solid solid solid solid; background: rgba(234,88,12,.04); }
+.booking-item.priority { box-shadow: 0 0 0 2px rgba(234,179,8,.35); border-color: #eab308; }
+.booking-item.plan-a { background: rgba(124,58,237,.06); }
+.booking-item.plan-b { background: rgba(225,29,72,.06); }
+.bi-head { display: flex; align-items: center; gap: .4rem; margin-bottom: .15rem; }
+.bi-tag {
+  display: inline-block; font-size: .62rem; font-weight: 800; letter-spacing: .04em;
+  padding: 2px 7px; border-radius: 6px;
+  background: var(--bg-overlay); color: var(--text);
+  border: 1px solid var(--border);
+}
+.bi-tag[data-tag="SF"]  { background: rgba(14,165,233,.15); color: #0ea5e9; border-color: rgba(14,165,233,.4); }
+.bi-tag[data-tag="YOS"] { background: rgba(34,197,94,.15); color: #22c55e; border-color: rgba(34,197,94,.4); }
+.bi-tag[data-tag="SEA"] { background: rgba(124,58,237,.15); color: #7c3aed; border-color: rgba(124,58,237,.4); }
+.bi-tag[data-tag="LV"]  { background: rgba(245,158,11,.18); color: #d97706; border-color: rgba(245,158,11,.4); }
+.bi-action { font-size: .7rem; font-weight: 700; color: #16a34a; margin-left: auto; }
+.bi-plan { font-size: .7rem; font-weight: 700; color: #ea580c; margin-left: auto; }
+.booking-item.plan-a .bi-plan { color: #7c3aed; }
+.booking-item.plan-b .bi-plan { color: #e11d48; }
+.bi-hotel { font-size: .88rem; font-weight: 700; color: var(--text); }
+.bi-dates { font-size: .76rem; color: var(--text-muted); font-family: ui-monospace,monospace; }
+.bi-dates b { color: var(--text); }
+.bi-note, .bi-when { font-size: .72rem; color: var(--text-muted); line-height: 1.45; }
+.bi-when { color: #ea580c; font-weight: 600; }
+.booking-item.plan-a .bi-when { color: #7c3aed; }
+.booking-item.plan-b .bi-when { color: #e11d48; }
+.bi-site { font-size: .68rem; color: var(--text-dim); margin-top: 2px; font-style: italic; }
 
 /* 필터 영역 */
 .filter-row {

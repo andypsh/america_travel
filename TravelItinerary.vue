@@ -123,8 +123,8 @@ const annexC = { qualify: 330, total: 495, seattle: 314, foxborough: 16 }
 
 // ── Plan A: SF 3박 → YOS 1박 → SEA 1박 → LV 3박 → SFO (7/1 게임 전날 시애틀 숙박) ──
 const aHotels = [
-  { city: '샌프란시스코',    tag: 'SF',  nights: 3, dates: '6/26~6/29', economy: 190, mid: 230, note: '✅ Hyatt Regency Embarcadero (예약 완료) · BART 직결 · 도착 + Alcatraz·Golden Gate·Giants(6/27) + 실리콘밸리 당일치기(6/28)' },
-  { city: 'Yosemite',       tag: 'YOS', nights: 1, dates: '6/29~6/30', economy: 200, mid: 350, note: '⭐ A/B 공통 · Curry Village · 6~12개월 전 예약 필수 · recreation.gov / travelyosemite.com' },
+  { city: '샌프란시스코',    tag: 'SF',  nights: 3, dates: '6/26~6/29', economy: 190, mid: 230, note: '✅ Hyatt Regency Embarcadero · 정가 1실 3박 1,200k원 → CJ 콘도지원 후 실부담 인당 ~212k원 (한국 결제 149k + 현지 fees $46) · BART Embarcadero 역 직결' },
+  { city: 'Yosemite',       tag: 'YOS', nights: 1, dates: '6/29~6/30', economy: 530, mid: 530, note: '⭐ A/B 공통 · 마이리얼트립 1박2일 투어 730,000원/인 · SF 픽업·드롭 + Curry Village 숙박 + 가이드 + 저녁 BBQ 포함 (렌트카·입장료 별도 필요 X)' },
   { city: '시애틀',          tag: 'SEA', nights: 1, dates: '6/30~7/1', economy: 280, mid: 400, note: 'Hyatt Regency · ⚠️ 월드컵 서징 · 경기 전날 입성 → 다음날 여유 (요세미티 오전만 보고 일찍 출발)' },
   { city: '라스베이거스',     tag: 'LV',  nights: 3, dates: '7/1~7/4',  economy: 140, mid: 240, note: 'Caesars Palace (24h 체크인) · 평일 요금 · 7/4 저녁 SFO' },
 ]
@@ -201,8 +201,8 @@ const aDays = [
 
 // ── Plan B: SF 3박 → YOS 1박 → SEA 1박 → LV 3박 → SFO (A와 호텔·항공편 100% 동일) ──
 const laHotels = [
-  { city: '샌프란시스코', tag: 'SF',  nights: 3, dates: '6/26~6/29', economy: 190, mid: 230, note: '✅ Hyatt Regency Embarcadero (예약 완료) · BART 직결 · 도착 + 6/28 LA 항공 당일치기(SFO↔LAX) 포함' },
-  { city: 'Yosemite',    tag: 'YOS', nights: 1, dates: '6/29~6/30', economy: 200, mid: 350, note: '⭐ A/B 공통 · Curry Village · LA 경기 후 회복일' },
+  { city: '샌프란시스코', tag: 'SF',  nights: 3, dates: '6/26~6/29', economy: 190, mid: 230, note: '✅ Hyatt Regency Embarcadero · 정가 1실 3박 1,200k원 → CJ 콘도지원 후 실부담 인당 ~212k원 · 6/28 LA 항공 당일치기(SFO↔LAX) 포함' },
+  { city: 'Yosemite',    tag: 'YOS', nights: 1, dates: '6/29~6/30', economy: 530, mid: 530, note: '⭐ A/B 공통 · 마이리얼트립 1박2일 투어 730,000원/인 · SF 픽업·드롭 + Curry Village 숙박 + 가이드 + 저녁 BBQ 포함' },
   { city: '시애틀',       tag: 'SEA', nights: 1, dates: '6/30~7/1', economy: 280, mid: 400, note: '⭐ A/B 공통 — Hyatt Regency · A: 경기 전날 입성 / B: SEA 관광 (Space Needle·Chihuly)' },
   { city: '라스베이거스', tag: 'LV',  nights: 3, dates: '7/1~7/4',  economy: 140, mid: 240, note: 'Caesars Palace · 평일 요금 · 7/4 저녁 SFO' },
 ]
@@ -299,6 +299,8 @@ const activities = {
   LV: [
     { emoji: '🏎️', name: 'SpeedVegas 슈퍼카 레이싱', type: '액티브', price: '$399~599/인 (5랩)', duration: '1~2h',
       desc: 'Huracán/488 GTB $399 · F8/STO $499~599 · 강사 동승 + Porsche SUV 디스커버리 랩 2회 무료', tip: '스트립 남쪽 15분 · 사전 예약 필수 · 멀티카 추가시 차량당 $100 할인' },
+    { emoji: '🏁', name: 'Vegas Superkarts (SpeedVegas 부지)', type: '액티브', price: '$35~85/인', duration: '8~30분',
+      desc: '1레이스 $35 · 2레이스 $65 ⭐ · 3레이스 $85 · Sodikart RT10 (270cc Honda · 최대 80km/h) · 1,600ft 야외 트랙', tip: 'SpeedVegas 같은 부지 · 14세 이상 · 키 140cm+ · 슈퍼카 후 가성비 묶기 좋음' },
     { emoji: '🎰', name: 'Caesars 카지노 (빅휠·블랙잭·바카라·룰렛)', type: '관람·베팅', price: '베팅액 자유', duration: '자유',
       desc: 'LV 최대급 카지노 9.6만 sqft · 빅휠·룰렛·블랙잭·바카라·포커·1,300+ 슬롯', tip: '호텔 내 24h · 신분증 필수' },
     { emoji: '⚽', name: 'Caesars Sportsbook (월드컵 R32/R16 라이브 베팅)', type: '관람·베팅', price: '베팅액 자유', duration: '자유',
@@ -493,7 +495,7 @@ const sleepByNight = [
   { date: '6/26 금', a: 'SF · Hyatt Regency Embarcadero',     b: 'SF · Hyatt Regency Embarcadero',     aTag: 'SF',  bTag: 'SF',  action: 'now', same: true, note: '도착 당일 — 비행 피로 회복' },
   { date: '6/27 토', a: 'SF · Hyatt Regency Embarcadero',     b: 'SF · Hyatt Regency Embarcadero',     aTag: 'SF',  bTag: 'SF',  action: 'now', same: true, note: 'A: Alcatraz·Golden Gate·Giants 18:05 / B: 실리콘밸리·Giants 18:05' },
   { date: '6/28 일', a: 'SF · Hyatt Regency Embarcadero',     b: 'SF · Hyatt Regency Embarcadero',     aTag: 'SF',  bTag: 'SF',  action: 'now', same: true, note: 'A: 💻 실리콘밸리 당일치기 (Stanford·Google·Apple Park) / B: 🇰🇷 LA 항공 당일치기 SFO↔LAX (Match 73)' },
-  { date: '6/29 월', a: 'YOS · Curry Village',   b: 'YOS · Curry Village',   aTag: 'YOS', bTag: 'YOS', action: 'now', same: true, note: '⭐ A/B 공통 — 요세미티 1박 (무료취소 불가 · 가장 먼저 예약)' },
+  { date: '6/29 월', a: 'YOS · Curry Village (투어)', b: 'YOS · Curry Village (투어)', aTag: 'YOS', bTag: 'YOS', action: 'now', same: true, note: '⭐ 마이리얼트립 1박2일 투어 730k/인 (SF픽업+숙박+가이드+BBQ 포함)' },
   { date: '6/30 화', a: 'SEA · Hyatt Regency',   b: 'SEA · Hyatt Regency',   aTag: 'SEA', bTag: 'SEA', action: 'now', same: true, note: '⭐ A/B 공통 — 같은 SFO→SEA 항공편 + 같은 Hyatt 1박 (월드컵 서징 ⚠️ 일찍)' },
   { date: '7/1 수',  a: 'LV · Caesars Palace',  b: 'LV · Caesars Palace',  aTag: 'LV',  bTag: 'LV',  action: 'now', same: true, note: 'A: 13:00 Lumen 경기 / B: SEA 관광 (Space Needle·Pike Place) → 같은 SEA→LAS 저녁 항공편' },
   { date: '7/2 목',  a: 'LV · Caesars Palace',  b: 'LV · Caesars Palace',  aTag: 'LV',  bTag: 'LV',  action: 'now', same: true, note: '' },
@@ -503,9 +505,9 @@ const sleepByNight = [
 const bookingItems = [
   // ── 모든 예약 A/B 공통 — 6/24 결과 무관하게 동일 예약 (standby 없음) ──
   { id: 'sf-base',  label: '✅ SF Hyatt Regency Embarcadero — 3박 (예약 완료)', tag: 'SF',  dates: '6/26 → 6/29', nights: 3, plans: ['A','B'], type: 'now', confirmed: true,
-    note: '✅ 예약 완료 · 5 Embarcadero Center · BART Embarcadero 역 직결 (도보 1분) · Financial District 안전 · 도착부터 요세미티 출발 전까지 연속 3박' },
-  { id: 'yosemite', label: 'Yosemite Curry Village (1박)', tag: 'YOS', dates: '6/29 → 6/30', nights: 1, plans: ['A','B'], type: 'now',
-    note: '⭐ A/B 공통 — 무료취소 불가 → A·B 어느 쪽이든 사용 · ⚠️ 6~12개월 전 예약 필수 · recreation.gov / travelyosemite.com · 6월 폭포 시즌 만실' },
+    note: '✅ 예약 완료 · 정가 1실 3박 1,200k원 → CJ 콘도지원 후 실부담 인당 ~212k원 (한국 결제 149k + 현지 fees $46) · 5 Embarcadero Center · BART 직결' },
+  { id: 'yosemite', label: '✅ Yosemite 1박2일 투어 (마이리얼트립)', tag: 'YOS', dates: '6/29 → 6/30', nights: 1, plans: ['A','B'], type: 'now', confirmed: true,
+    note: '⭐ 마이리얼트립 요셈투어 1박2일 · 730,000원/인 · 3인 = 2,190,000원 · SF 픽업·드롭 + Curry Village 숙박 + 가이드 + 저녁 BBQ + 아침 포함 · 렌트카·입장료·예약 모두 불필요' },
   { id: 'sea-hyatt', label: 'SEA Hyatt Regency (1박)', tag: 'SEA', dates: '6/30 → 7/1', nights: 1, plans: ['A','B'], type: 'now',
     note: '⭐ A/B 공통 — A: 경기 전날 입성 / B: 7/1 SEA 관광 (Space Needle·Pike Place) · downtown Hyatt · ⚠️ 월드컵 서징 ⚠️ 일찍 예약' },
   { id: 'lv-base',  label: '✅ LV Caesars Palace — Octavius Pool View, 2 Queens (예약 완료)', tag: 'LV', dates: '7/1 → 7/4', nights: 3, plans: ['A','B'], type: 'now', confirmed: true,

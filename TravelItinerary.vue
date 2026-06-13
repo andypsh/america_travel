@@ -728,23 +728,6 @@ const tripStats = computed(() => {
       </div>
       <div v-show="open.timeline" class="acc-body timeline-body-v2">
 
-        <!-- 여행 통계 헤로 -->
-        <div v-if="tripStats" class="trip-hero">
-          <div class="trip-hero-top">
-            <div class="trip-hero-plan">
-              <span class="trip-hero-plan-label">현재 일정</span>
-              <span class="trip-hero-plan-value">Plan {{ activePlan.toUpperCase() }}</span>
-            </div>
-            <div class="trip-hero-route">{{ tripStats.startDate }} <span class="hero-arrow">→</span> {{ tripStats.endDate }}</div>
-          </div>
-          <div class="trip-hero-stats">
-            <div class="hero-stat"><div class="hs-val">{{ tripStats.days }}</div><div class="hs-lbl">총 일수</div></div>
-            <div class="hero-stat"><div class="hs-val">{{ tripStats.cities }}</div><div class="hs-lbl">방문 도시</div></div>
-            <div class="hero-stat"><div class="hs-val">{{ tripStats.transitDays }}</div><div class="hs-lbl">이동일</div></div>
-            <div class="hero-stat hero-stat-highlight"><div class="hs-val">{{ tripStats.highlights }}</div><div class="hs-lbl">⚽ 경기일</div></div>
-          </div>
-        </div>
-
         <!-- 일자별 카드 -->
         <div class="timeline-v2">
           <div v-for="(day, idx) in enrichedDays" :key="activePlan + idx" class="day-card-v2" :class="{ 'is-highlight': day.highlight, 'is-transit': day.isCityChange }">

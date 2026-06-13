@@ -70,10 +70,12 @@ const costData = {
       { name: '🇰🇷 R32 한국전 티켓 (SoFi Stadium Match 73)', detail: '6/28', perPerson: 1500000 },
     ],
     activity: [
-      { name: '🏎 SpeedVegas 슈퍼카', detail: '람보·페라리·포르쉐', perPerson: 280000 },
+      { name: '🔒 Alcatraz 투어', detail: '6/27 오전 (Pier 33)', perPerson: 70000 },
+      { name: '🚴 Golden Gate 자전거', detail: '6/27 오후', perPerson: 60000 },
       { name: '⚾ Giants 경기 티켓 (외야 가장 싼 자리)', detail: '6/27 vs Braves 18:05', perPerson: 50000 },
-      { name: '🏛 실리콘밸리 풀데이 (Stanford·Google·Apple)', detail: '6/27', perPerson: 80000 },
-      { name: '🍽 Bacchanal Buffet × 2회', detail: 'LV', perPerson: 220000 },
+      { name: '🏛 실리콘밸리 풀데이 (Stanford·Google·Apple)', detail: '7/1 오전~오후', perPerson: 80000 },
+      { name: '🏎 SpeedVegas 슈퍼카', detail: '7/2 LV 오후 · 람보·페라리·포르쉐', perPerson: 280000 },
+      { name: '🍽 Bacchanal Buffet @ Caesars × 2회', detail: 'LV (7/2 저녁 포함)', perPerson: 220000 },
       { name: '🎰 Caesars 카지노 베팅 (보수적)', detail: 'LV', perPerson: 280000 },
       { name: '🌃 OMNIA Nightclub (입장+음료)', detail: 'LV 1회', perPerson: 140000 },
       { name: '🛍 Forum Shops 쇼핑 (보수적)', detail: 'LV', perPerson: 200000 },
@@ -108,7 +110,7 @@ const flights = [
 // ── Giants ──
 const giants = [
   { date: '6/26 금', time: '19:15', opponent: 'vs Atlanta Braves', note: '✈️ 도착 당일 — 장거리 비행 피로 회복 우선 → 관람 X' },
-  { date: '6/27 토', time: '18:05', opponent: 'vs Atlanta Braves', note: '⭐ 이번 일정 유일 관람 경기 (A: 실리콘밸리 후 합류 / B: 관광 후)' },
+  { date: '6/27 토', time: '18:05', opponent: 'vs Atlanta Braves', note: '⭐ 이번 일정 유일 관람 경기 — A/B 공통 (🔒 Alcatraz·Golden Gate 후 저녁 합류)' },
   { date: '6/28 일', time: '13:05', opponent: 'vs Atlanta Braves', note: 'A: 🇰🇷 LA 항공 당일치기 (Match 73) / B: 💻 실리콘밸리 (Stanford·Google·Apple) — 둘 다 관람 X' },
 ]
 
@@ -211,14 +213,11 @@ const laDays = [
     { time: '~14:30', text: 'OZ212 SFO 도착 — 호텔 체크인' },
     { time: '저녁', text: '🍜 Ferry Building 푸드홀 가벼운 저녁 (Hog Island Oysters, Slanted Door 등) · 시차 적응 · 일찍 취침 (Giants 19:15 ❌ 패스)' },
   ]},
-  { date: '6/27 토', city: '실리콘밸리', cityTag: 'SV', icon: '💻', items: [
-    { time: '09:30~', text: '🚂 Caltrain 또는 🚙 Uber → Stanford Campus (Palo Alto, 1시간)' },
-    { time: '10:00-12:00', text: '🏛 Stanford 캠퍼스 산책 · Hoover Tower · Oval' },
-    { time: '12:00-13:00', text: '🔵 Google Visitor Center (예약 필수, 무료) · Sunnyvale' },
-    { time: '13:00-14:00', text: '🍜 Palo Alto / Mountain View 점심' },
-    { time: '14:30~', text: '🍎 Apple Park Visitor Center · Computer History Museum' },
-    { time: '16:30~', text: '🚙 SF 귀환' },
-    { time: '18:05', text: '⚾ Giants vs Braves @ Oracle Park', baseball: true },
+  { date: '6/27 토', city: '샌프란시스코', cityTag: 'SF', icon: '🏝', items: [
+    { time: '오전', text: '⛴ Alcatraz Cruises — Pier 33 출발 (사전 예약 필수)' },
+    { time: '11:45~14:30', text: '🔒 Alcatraz Island 투어 (옛 연방 감옥 · 탈옥 역사 · 가이드 오디오 투어 · Bay View)', bold: true },
+    { time: '15:00~17:30', text: '🚴 Golden Gate Bridge 자전거 라이딩 · Sausalito 페리 귀환 (Blazing Saddles 렌탈 $35~50)' },
+    { time: '18:05', text: '⚾ Giants vs Braves @ Oracle Park (저녁 경기 · 도보 10분)', baseball: true },
   ]},
   { date: '6/28 일', city: 'KR ✈️ 항공 SF ↔ LA 당일치기', cityTag: 'SF↔LA', icon: '🇰🇷', highlight: true, items: [
     { time: '05:30~', text: '🚙 Hyatt Regency Embarcadero → SFO 이동 (Uber, 25~40분)' },
@@ -246,23 +245,26 @@ const laDays = [
     { time: '오후', text: '🚴 가벼운 Embarcadero 산책 · Ferry Building 둘러보기' },
     { time: '저녁', text: '🦞 Embarcadero 마지막 SF 저녁 (Hog Island Oysters · Slanted Door) · LV 출발 준비' },
   ]},
-  { date: '7/1 수', city: '샌프란시스코 → 라스베이거스', cityTag: 'SF→LV', icon: '✈️', items: [
-    { time: '오전', text: '🥞 Hyatt 조식 · 체크아웃 · Ferry Building 마지막 쇼핑' },
-    { time: '점심', text: '🍜 SF 마지막 점심 (인앤아웃·차이나타운·Mission)' },
-    { time: '~13:00', text: '🚙 BART/Uber → SFO 공항 이동' },
-    { time: '15:00~', text: '✈️ SFO → LAS 국내선 (Southwest/Alaska 직항 1h 30m)' },
-    { time: '~17:00', text: '🛬 라스베이거스 도착 · Uber로 Caesars Palace 체크인' },
-    { time: '저녁', text: '🎰 The Strip 야경 · Bellagio 분수쇼 · Caesars 카지노 오리엔테이션 · ⚽ Sportsbook 월드컵 R32 라이브' },
+  { date: '7/1 수', city: '실리콘밸리 → 라스베이거스', cityTag: 'SV→LV', icon: '💻', items: [
+    { time: '08:00', text: '🍳 Hyatt 조식 · 체크아웃 · 큰짐 호텔 보관' },
+    { time: '09:00~', text: '🚂 Caltrain (4th & King) → Palo Alto (1시간) or 🚙 Uber 50분' },
+    { time: '10:00~12:00', text: '🏛 Stanford University 캠퍼스 — Hoover Tower · Main Quad · Memorial Church · 기념품샵', bold: true },
+    { time: '12:00~13:00', text: '🍜 Palo Alto / Mountain View 점심 (인도·중식·한식 풍부)' },
+    { time: '13:00~14:00', text: '🔵 Google Visitor Center (Mountain View) · 안드로이드 동상 · Visitor Experience', bold: true },
+    { time: '14:00~15:00', text: '🍎 Apple Park Visitor Center (Cupertino) · 옥상 카페 · Apple 굿즈' },
+    { time: '15:00~', text: '🚙 Uber → SF Hyatt 짐 픽업 → SFO 공항 (총 1.5시간)' },
+    { time: '17:30~', text: '✈️ SFO → LAS 국내선 (Southwest/Alaska 직항 1h 30m)' },
+    { time: '~20:00', text: '🛬 라스베이거스 도착 · Uber로 Caesars Palace 체크인 · The Strip 야경 · Bellagio 분수쇼' },
   ]},
-  { date: '7/2 목', city: '라스베이거스', cityTag: 'LV', icon: '🎰', items: [
-    { time: '오전', text: '😴 늦잠 · Caesars 풀장 (Garden of the Gods) · 브런치' },
-    { time: '오후', text: '🎡 Fremont Street Experience · LED 쇼 · 우버 13분' },
-    { time: '저녁', text: '💦 Bellagio 분수쇼 (도보 3분) · 🎰 Caesars 카지노 빅휠·룰렛 · ⚽ Sportsbook 월드컵 R16' },
+  { date: '7/2 목', city: '라스베이거스', cityTag: 'LV', icon: '🏎', items: [
+    { time: '오전', text: '😴 늦잠 · Caesars 풀장 (Garden of the Gods) · 브런치 (전날 비행·SV 강행 회복)' },
+    { time: '오후', text: '🏎 SpeedVegas 슈퍼카 레이싱 (람보르기니·페라리·포르쉐 · 강사 동승 · 국제면허 필수)', bold: true },
+    { time: '저녁', text: '🍽 Bacchanal 뷔페 @ Caesars Palace (LV 1위 뷔페 · 일본·중식·한식·미식) · 🎰 Caesars 카지노 빅휠·블랙잭', bold: true },
   ]},
-  { date: '7/3 금', city: '라스베이거스', cityTag: 'LV', icon: '🏎', items: [
-    { time: '오전', text: '🏎 SpeedVegas 슈퍼카 레이싱 (람보·페라리·포르쉐, 국제면허 필수)', bold: true },
-    { time: '오후', text: '🛍 Forum Shops 쇼핑 (Caesars 직결) · 호텔 카지노' },
-    { time: '저녁', text: '🍽 Bacchanal 뷔페 (LV 1위) · 🎰 Caesars 카지노 · 🌃 OMNIA Nightclub (선택)' },
+  { date: '7/3 금', city: '라스베이거스', cityTag: 'LV', icon: '🎰', items: [
+    { time: '오전', text: '🏗 후버댐 투어 (왕복 ~3시간) or Caesars 풀장 휴식' },
+    { time: '오후', text: '🛍 Forum Shops 쇼핑 (Caesars 직결) · ⚽ Sportsbook 월드컵 R16 라이브' },
+    { time: '저녁', text: '🎰 Caesars 카지노 마무리 · 💦 Bellagio 분수쇼 · 🌃 OMNIA Nightclub (선택)' },
   ]},
   { date: '7/4 토', city: '라스베이거스 → SFO 귀국', cityTag: 'LV→SFO', icon: '🏠',
     note: '미국 독립기념일 — 공항 혼잡 예상, 오후 일찍 이동',
@@ -490,11 +492,11 @@ const transportRoutes = {
 // ── 일자별 잠자리 (A/B 100% 동일 — 호텔·항공편 모두 공유) ──
 const sleepByNight = [
   { date: '6/26 금', a: 'SF · Hyatt Regency Embarcadero',     b: 'SF · Hyatt Regency Embarcadero',     aTag: 'SF',  bTag: 'SF',  action: 'now', same: true, note: '도착 당일 — 비행 피로 회복' },
-  { date: '6/27 토', a: 'SF · Hyatt Regency Embarcadero',     b: 'SF · Hyatt Regency Embarcadero',     aTag: 'SF',  bTag: 'SF',  action: 'now', same: true, note: 'A: 실리콘밸리·Giants 18:05 / B: Alcatraz·Golden Gate·Giants 18:05' },
+  { date: '6/27 토', a: 'SF · Hyatt Regency Embarcadero',     b: 'SF · Hyatt Regency Embarcadero',     aTag: 'SF',  bTag: 'SF',  action: 'now', same: true, note: '⭐ A/B 공통 — 🔒 Alcatraz · 🚴 Golden Gate · ⚾ Giants 18:05' },
   { date: '6/28 일', a: 'SF · Hyatt Regency Embarcadero',     b: 'SF · Hyatt Regency Embarcadero',     aTag: 'SF',  bTag: 'SF',  action: 'now', same: true, note: 'A: 🇰🇷 LA 항공 당일치기 SFO↔LAX (Match 73) / B: 💻 실리콘밸리 당일치기 (Stanford·Google·Apple Park)' },
   { date: '6/29 월', a: 'YOS · Curry Village (투어)', b: 'YOS · Curry Village (투어)', aTag: 'YOS', bTag: 'YOS', action: 'now', same: true, note: '⭐ 마이리얼트립 1박2일 투어 730k/인 (SF픽업+숙박+가이드+BBQ 포함)' },
   { date: '6/30 화', a: 'SF · Hyatt Regency Embarcadero (1박 연장)', b: 'SEA · Hyatt Regency',   aTag: 'SF',  bTag: 'SEA', action: 'now', same: false, note: 'A(LA 확정): 시애틀 X · SF 1박 연장 → 7/1 LV 직항 / B(시애틀 백업): SFO→SEA 비행 + Hyatt 1박 (월드컵 서징 ⚠️)' },
-  { date: '7/1 수',  a: 'LV · Caesars Palace',  b: 'LV · Caesars Palace',  aTag: 'LV',  bTag: 'LV',  action: 'now', same: true, note: 'A: SFO → LAS 직항 (시애틀 X) / B: 13:00 Lumen 경기 → SEA→LAS 저녁 항공편' },
+  { date: '7/1 수',  a: 'LV · Caesars Palace',  b: 'LV · Caesars Palace',  aTag: 'LV',  bTag: 'LV',  action: 'now', same: true, note: 'A: 💻 실리콘밸리(Stanford·Google·Apple) → SFO→LAS 저녁 / B: 13:00 Lumen 경기 → SEA→LAS 저녁' },
   { date: '7/2 목',  a: 'LV · Caesars Palace',  b: 'LV · Caesars Palace',  aTag: 'LV',  bTag: 'LV',  action: 'now', same: true, note: '' },
   { date: '7/3 금',  a: 'LV · Caesars Palace',  b: 'LV · Caesars Palace',  aTag: 'LV',  bTag: 'LV',  action: 'now', same: true, note: '7/4 아침 체크아웃' },
 ]

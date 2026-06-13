@@ -26,7 +26,7 @@ const costData = {
     label: 'Plan B (SEA 한국전 · 조3위 백업)',
     hotel: [
       { name: 'SF Hyatt Regency Embarcadero (카페테리아 적용 후)', detail: '3박 객실 ≈ 54만 + 현지 $180 · 3명 분담', perPerson: 263000 },
-      { name: 'YOS 1박 2일 투어 (숙박+가이드 포함)', detail: '1박', perPerson: 730000 },
+      { name: 'YOS 1박2일 투어 (요셈투어·마이리얼트립)', detail: '778,770원 + $50 서비스 + $100 비거주자 + 점심 별도', perPerson: 1011000 },
       { name: 'SEA 호텔 (쉐라톤 그랜드)', detail: '1박', perPerson: 150000 },
       { name: 'LV Caesars Palace Octavius (회사보조 후)', detail: '3박', perPerson: 300000 },
     ],
@@ -57,7 +57,7 @@ const costData = {
     label: 'Plan A (LA 한국전 · 조2위 ✅확정)',
     hotel: [
       { name: 'SF Hyatt Regency Embarcadero (카페테리아 적용 후)', detail: '4박 객실 ≈ 72만 + 현지 $240 · 3명 분담', perPerson: 350000 },
-      { name: 'YOS 1박 2일 투어 (숙박+가이드 포함)', detail: '1박', perPerson: 730000 },
+      { name: 'YOS 1박2일 투어 (요셈투어·마이리얼트립)', detail: '778,770원 + $50 서비스 + $100 비거주자 + 점심 별도', perPerson: 1011000 },
       { name: 'LV Caesars Palace Octavius (회사보조 후)', detail: '3박', perPerson: 300000 },
     ],
     flight: [
@@ -126,7 +126,7 @@ const annexC = { qualify: 330, total: 495, seattle: 314, foxborough: 16 }
 // ── Plan A: SF 3박 → YOS 1박 → SEA 1박 → LV 3박 → SFO (7/1 게임 전날 시애틀 숙박) ──
 const aHotels = [
   { city: '샌프란시스코',    tag: 'SF',  nights: 3, dates: '6/26~6/29', economy: 190, mid: 230, note: '✅ Hyatt Regency Embarcadero · 정가 1실 3박 1,200k원 → CJ 콘도지원 후 실부담 인당 ~212k원 (한국 결제 149k + 현지 fees $46) · BART Embarcadero 역 직결' },
-  { city: 'Yosemite',       tag: 'YOS', nights: 1, dates: '6/29~6/30', economy: 530, mid: 530, perPerson: true, note: '⭐ A/B 공통 · 마이리얼트립 1박2일 투어 730,000원/인 · SF 픽업·드롭 + Curry Village 숙박 + 가이드 + 저녁 BBQ 포함 (렌트카·입장료 별도 필요 X)' },
+  { city: 'Yosemite',       tag: 'YOS', nights: 1, dates: '6/29~6/30', economy: 700, mid: 700, perPerson: true, note: '⭐ 마이리얼트립 [요셈투어 1박2일] 778,770원/인 + $50 서비스 + $100 비거주자(2026~) + 점심 별도 = 약 101만원/인 · 힐튼 유니온스퀘어 8:00 AM 픽업 · 팬션 숙박 · 스테이크 저녁 · 아침식사 포함 · 공원 입장료·베이브릿지 통행료 포함 · 평점 5.0/5.0 (후기 1,616개) · 최소 5명 출발' },
   { city: '시애틀',          tag: 'SEA', nights: 1, dates: '6/30~7/1', economy: 280, mid: 400, note: 'Hyatt Regency · ⚠️ 월드컵 서징 · Plan B(백업) 경기 전날 입성 / Plan A(확정) SEA 관광 1박 (Space Needle·Pike Place)' },
   { city: '라스베이거스',     tag: 'LV',  nights: 3, dates: '7/1~7/4',  economy: 140, mid: 240, note: 'Caesars Palace (24h 체크인) · 평일 요금 · 7/4 저녁 SFO' },
 ]
@@ -154,22 +154,24 @@ const aDays = [
     { time: '17:30~', text: '🚙 Caltrain or Uber → SF 귀환 (1시간)' },
     { time: '저녁', text: '🦞 SF Embarcadero 씨푸드 저녁 · 내일 요세미티 출발 준비 (일찍 취침)' },
   ]},
-  { date: '6/29 월', city: '샌프란시스코 → 요세미티', cityTag: 'SF→YOS', icon: '⛰️', items: [
-    { time: '06:30-07:00', text: '🏨 Hyatt Regency Embarcadero 조식 후 출발 · 요세미티 1박짐만 챙기고 큰짐은 호텔 보관' },
-    { time: '08:00~', text: '🚙 SF → Yosemite 드라이브 (3.5시간) · Hwy 120 scenic route' },
-    { time: '~12:00', text: '🏕 Yosemite 도착 · Curry Village 체크인' },
-    { time: '13:00~16:00', text: '⛰ 오후 투어 — Yosemite Valley 순환 · Bridalveil Fall · El Capitan 전망' },
-    { time: '17:00~', text: '🍽 저녁 식사 · 야간 폭포 야경 (6월 카스케이딩 최고)' },
+  { date: '6/29 월', city: '샌프란시스코 → 요세미티 (요셈투어 1박2일)', cityTag: 'SF→YOS', icon: '🚐', items: [
+    { time: '06:30', text: '🏨 Hyatt Regency Embarcadero 조식 · 요세미티 1박짐만 챙기고 큰짐은 호텔 보관' },
+    { time: '07:30', text: '🚖 Uber → 힐튼 유니온스퀘어 (5분, $8~12) · 요셈투어 미팅' },
+    { time: '08:00', text: '🚐 마이리얼트립 [요셈투어 1박2일] 픽업 (Hilton Union Square 출발) · 대형 밴 · 한국어 가이드', bold: true },
+    { time: '~12:00', text: '🏞 Yosemite 도착 · 가이드 인솔 시작' },
+    { time: '오후', text: '⛰ Yosemite Valley 명소 — Tunnel View · Bridalveil Fall · El Capitan 전망' },
+    { time: '저녁', text: '🥩 스테이크 저녁식사 (고급 등심 + 소시지 + 샐러드 + 과일 · 투어 포함) · 팬션 체크인' },
   ]},
-  { date: '6/30 화', city: '요세미티 → 샌프란시스코 → 시애틀', cityTag: 'YOS→SEA', icon: '⛰️', items: [
-    { time: '07:00', text: '🌅 아침 조식 · 일출 감상 (El Capitan / Cathedral Rocks)' },
-    { time: '08:00~10:30', text: '🥾 짧은 하이킹 (Tunnel View · Bridalveil Fall) · Glacier Point는 패스' },
-    { time: '11:00', text: '🚙 Yosemite → SF 귀환 드라이브 (3.5시간) · 차내 점심' },
-    { time: '~14:30', text: '🏨 SF Hyatt Regency Embarcadero 도착 (보관 짐 정리) · 빠르게 짐 챙김' },
-    { time: '15:00', text: '🚙 SFO 공항 이동' },
-    { time: '16:30~', text: '✈️ SFO → SEA 국내선 (Alaska/Delta 직항 2h 30m)' },
-    { time: '~19:00', text: '🛬 SEA 도착 · Uber로 Hyatt Regency Seattle (downtown)' },
-    { time: '저녁', text: '🍽 Pike Place Market 저녁 · Ivar\'s Acres of Clams 씨푸드 · 일찍 휴식' },
+  { date: '6/30 화', city: '요세미티 → SF → 시애틀 (심야)', cityTag: 'YOS→SEA', icon: '✈️', items: [
+    { time: '07:00', text: '🌅 팬션 조식 · 일출 감상 (El Capitan / Cathedral Rocks)' },
+    { time: '08:00~12:00', text: '🥾 가이드 인솔 하이킹·관광 (Tunnel View · Bridalveil Fall · Glacier Point)' },
+    { time: '점심', text: '🥪 가이드 추천 점심 (별도)' },
+    { time: '13:00~', text: '🚐 요셈투어 SF 복귀 드라이브' },
+    { time: '~19:00', text: '🛬 힐튼 유니온스퀘어 도착 (요셈투어 드롭)', bold: true },
+    { time: '19:30', text: '🚖 SFO 공항 이동 (Uber 25분)' },
+    { time: '21:00~22:00', text: '✈️ SFO → SEA 야간 직항 (Alaska/Delta 막차 · 2h 30m)', bold: true },
+    { time: '~24:00', text: '🛬 SEA 도착 · Uber로 Hyatt Regency Seattle 심야 체크인 (24h 프런트)' },
+    { time: '늦은 밤', text: '🛌 즉시 취침 · 내일 13:00 Lumen 경기 (조3위 진출 시)' },
   ]},
   { date: '7/1 수', city: '🇰🇷 시애틀 R32 → 라스베이거스', cityTag: 'SEA→LV', icon: '⚽', highlight: true, items: [
     { time: '09:00', text: '☀️ 늦잠 · 호텔 조식 · 어제 강행 회복' },
@@ -206,7 +208,7 @@ const aDays = [
 // ── Plan A (확정): SF 3박 → YOS 1박 (마이리얼트립) → SF 1박 (복귀) → LV 3박 → SFO · 시애틀 X ──
 const laHotels = [
   { city: '샌프란시스코', tag: 'SF',  nights: 3, dates: '6/26~6/29', economy: 190, mid: 230, note: '✅ Hyatt Regency Embarcadero · 정가 1실 3박 1,200k원 → CJ 콘도지원 후 실부담 인당 ~212k원 · 6/28 LA 항공 당일치기(SFO↔LAX) 포함' },
-  { city: 'Yosemite',    tag: 'YOS', nights: 1, dates: '6/29~6/30', economy: 530, mid: 530, perPerson: true, note: '⭐ 마이리얼트립 1박2일 투어 730,000원/인 · SF 픽업·드롭 + Curry Village 숙박 + 가이드 + 저녁 BBQ 포함 (렌트카·예약·입장료 모두 불필요)' },
+  { city: 'Yosemite',    tag: 'YOS', nights: 1, dates: '6/29~6/30', economy: 700, mid: 700, perPerson: true, note: '⭐ 마이리얼트립 [요셈투어 1박2일] 778,770원/인 + $50 서비스 + $100 비거주자(2026~) + 점심 별도 = 약 101만원/인 · 힐튼 유니온스퀘어 8:00 AM 픽업 · 팬션 숙박 + 스테이크 저녁 + 아침 + 입장료·통행료 포함 · 평점 5.0 (1,616개) · 최소 5명 출발' },
   { city: '샌프란시스코', tag: 'SF',  nights: 1, dates: '6/30~7/1', economy: 190, mid: 230, note: 'Hyatt Regency Embarcadero 1박 연장 · 마이리얼트립 SF 드롭 후 1박 휴식 · 7/1 LV 비행' },
   { city: '라스베이거스', tag: 'LV',  nights: 3, dates: '7/1~7/4',  economy: 140, mid: 240, note: 'Caesars Palace · 평일 요금 · 7/4 저녁 SFO' },
 ]
@@ -234,20 +236,22 @@ const laDays = [
     { time: '~18:30', text: '✈️ LAX → SFO 직항 (1h 30m)' },
     { time: '~20:00', text: '🛬 SFO 도착 · BART/Uber로 Hyatt Regency Embarcadero 귀환 · 늦은 저녁' },
   ]},
-  { date: '6/29 월', city: '샌프란시스코 → 요세미티', cityTag: 'SF→YOS', icon: '⛰️', items: [
-    { time: '06:30-07:00', text: '🏨 호텔 조식 후 출발 · 요세미티 1박짐만 챙기고 큰짐은 호텔 보관' },
-    { time: '08:00~', text: '🚙 SF → Yosemite 드라이브 (3.5시간) · Hwy 120 scenic route' },
-    { time: '~12:00', text: '🏕 Yosemite 도착 · Curry Village 체크인' },
-    { time: '13:00~16:00', text: '⛰ 오후 투어 — Yosemite Valley · Bridalveil Fall · El Capitan' },
-    { time: '17:00~', text: '🍽 저녁 식사 · 야간 폭포 야경 · LA 경기 회복' },
+  { date: '6/29 월', city: '샌프란시스코 → 요세미티 (요셈투어 1박2일)', cityTag: 'SF→YOS', icon: '🚐', items: [
+    { time: '06:30', text: '🏨 호텔 조식 · 요세미티 1박짐만 챙기고 큰짐은 호텔 보관' },
+    { time: '07:30', text: '🚖 Uber → 힐튼 유니온스퀘어 (5분, $8~12) · 요셈투어 미팅' },
+    { time: '08:00', text: '🚐 마이리얼트립 [요셈투어 1박2일] 픽업 (Hilton Union Square 출발) · 대형 밴 · 한국어 가이드', bold: true },
+    { time: '~12:00', text: '🏞 Yosemite 도착 · 가이드 인솔 시작' },
+    { time: '오후', text: '⛰ Yosemite Valley 명소 — Tunnel View · Bridalveil Fall · El Capitan 전망 · LA 경기 회복' },
+    { time: '저녁', text: '🥩 스테이크 저녁식사 (투어 포함) · 팬션 체크인' },
   ]},
-  { date: '6/30 화', city: '요세미티 → 샌프란시스코', cityTag: 'YOS→SF', icon: '⛰️', items: [
-    { time: '07:00', text: '🌅 Curry Village 조식 · 일출 감상 (El Capitan / Cathedral Rocks)' },
-    { time: '08:00~10:30', text: '🥾 짧은 하이킹 (Tunnel View · Bridalveil Fall · Mirror Lake)' },
-    { time: '11:00', text: '🚐 마이리얼트립 셔틀 → SF 귀환 드라이브 (3.5시간) · 차내 점심' },
-    { time: '~15:00', text: '🏨 SF Hyatt Regency Embarcadero 1박 연장 체크인 · 보관 짐 정리 · 휴식' },
-    { time: '오후', text: '🚴 가벼운 Embarcadero 산책 · Ferry Building 둘러보기' },
-    { time: '저녁', text: '🦞 Embarcadero 마지막 SF 저녁 (Hog Island Oysters · Slanted Door) · LV 출발 준비' },
+  { date: '6/30 화', city: '요세미티 → 샌프란시스코', cityTag: 'YOS→SF', icon: '🚐', items: [
+    { time: '07:00', text: '🌅 팬션 조식 · 일출 감상 (El Capitan / Cathedral Rocks)' },
+    { time: '08:00~12:00', text: '🥾 가이드 인솔 하이킹·관광 (Tunnel View · Bridalveil Fall · Glacier Point 등 풀 일정)' },
+    { time: '점심', text: '🥪 가이드 추천 점심 (별도 $10~20)' },
+    { time: '13:00~', text: '🚐 요셈투어 SF 복귀 드라이브 (~3.5시간 + 휴게소)' },
+    { time: '~19:00', text: '🛬 힐튼 유니온스퀘어 도착 (요셈투어 드롭)', bold: true },
+    { time: '19:30', text: '🚖 Uber → Hyatt Regency Embarcadero 복귀 (5분) · 보관 짐 정리 · 1박 연장 체크인' },
+    { time: '늦은 저녁', text: '🦞 Embarcadero 늦은 저녁 (Hog Island Oysters · Slanted Door 등) · 휴식 · 내일 SV 출발 준비' },
   ]},
   { date: '7/1 수', city: '실리콘밸리 → 라스베이거스', cityTag: 'SV→LV', icon: '💻', items: [
     { time: '08:00', text: '🍳 Hyatt 조식 · 체크아웃 · 큰짐 호텔 보관' },
@@ -508,7 +512,7 @@ const sleepByNight = [
   { date: '6/26 금', a: 'SF · Hyatt Regency Embarcadero',     b: 'SF · Hyatt Regency Embarcadero',     aTag: 'SF',  bTag: 'SF',  action: 'now', same: true, note: '도착 당일 — 비행 피로 회복' },
   { date: '6/27 토', a: 'SF · Hyatt Regency Embarcadero',     b: 'SF · Hyatt Regency Embarcadero',     aTag: 'SF',  bTag: 'SF',  action: 'now', same: true, note: '⭐ A/B 공통 — 🚋 케이블카 Powell-Hyde · 🔒 Alcatraz · 🚴 Golden Gate · ⚾ Giants 18:05' },
   { date: '6/28 일', a: 'SF · Hyatt Regency Embarcadero',     b: 'SF · Hyatt Regency Embarcadero',     aTag: 'SF',  bTag: 'SF',  action: 'now', same: true, note: 'A: 🇰🇷 LA 항공 당일치기 SFO↔LAX (Match 73) / B: 💻 실리콘밸리 당일치기 (Stanford·Google·Apple Park)' },
-  { date: '6/29 월', a: 'YOS · Curry Village (투어)', b: 'YOS · Curry Village (투어)', aTag: 'YOS', bTag: 'YOS', action: 'now', same: true, note: '⭐ 마이리얼트립 1박2일 투어 730k/인 (SF픽업+숙박+가이드+BBQ 포함)' },
+  { date: '6/29 월', a: 'YOS · 요셈투어 팬션 (마이리얼트립)', b: 'YOS · 요셈투어 팬션 (마이리얼트립)', aTag: 'YOS', bTag: 'YOS', action: 'now', same: true, note: '⭐ 요셈투어 1박2일 · 약 101만원/인 (본가 778k + $50 서비스 + $100 비거주자 + 점심) · 힐튼 유니온스퀘어 8:00 AM 픽업 · 평점 5.0 (1,616개)' },
   { date: '6/30 화', a: 'SF · Hyatt Regency Embarcadero (1박 연장)', b: 'SEA · Hyatt Regency',   aTag: 'SF',  bTag: 'SEA', action: 'now', same: false, note: 'A(LA 확정): 시애틀 X · SF 1박 연장 → 7/1 LV 직항 / B(시애틀 백업): SFO→SEA 비행 + Hyatt 1박 (월드컵 서징 ⚠️)' },
   { date: '7/1 수',  a: 'LV · Caesars Palace',  b: 'LV · Caesars Palace',  aTag: 'LV',  bTag: 'LV',  action: 'now', same: true, note: 'A: 💻 실리콘밸리(Stanford·Google·Apple) → SFO→LAS 저녁 / B: 13:00 Lumen 경기 → SEA→LAS 저녁' },
   { date: '7/2 목',  a: 'LV · Caesars Palace',  b: 'LV · Caesars Palace',  aTag: 'LV',  bTag: 'LV',  action: 'now', same: true, note: '' },
@@ -519,8 +523,8 @@ const bookingItems = [
   // ── 모든 예약 A/B 공통 — 6/24 결과 무관하게 동일 예약 (standby 없음) ──
   { id: 'sf-base',  label: '✅ SF Hyatt Regency Embarcadero — 3박 (예약 완료)', tag: 'SF',  dates: '6/26 → 6/29', nights: 3, plans: ['A','B'], type: 'now', confirmed: true,
     note: '✅ 예약 완료 · 정가 1실 3박 1,200k원 → CJ 콘도지원 후 실부담 인당 ~212k원 (한국 결제 149k + 현지 fees $46) · 5 Embarcadero Center · BART 직결' },
-  { id: 'yosemite', label: '✅ Yosemite 1박2일 투어 (마이리얼트립)', tag: 'YOS', dates: '6/29 → 6/30', nights: 1, plans: ['A','B'], type: 'now', confirmed: true,
-    note: '⭐ 마이리얼트립 요셈투어 1박2일 · 730,000원/인 · 3인 = 2,190,000원 · SF 픽업·드롭 + Curry Village 숙박 + 가이드 + 저녁 BBQ + 아침 포함 · 렌트카·입장료·예약 모두 불필요' },
+  { id: 'yosemite', label: '✅ Yosemite 1박2일 투어 (요셈투어 · 마이리얼트립)', tag: 'YOS', dates: '6/29 → 6/30', nights: 1, plans: ['A','B'], type: 'now', confirmed: true,
+    note: '⭐ 마이리얼트립 [요셈투어 1박2일] 778,770원/인 + $50 서비스 + $100 비거주자(2026~) + 점심 별도 = 약 1,011,000원/인 · 3인 = 약 3,033,000원 · 힐튼 유니온스퀘어 8:00 AM 픽업 → 다음날 19:00 SF 드롭 · 팬션 숙박 + 스테이크 저녁 + 아침 + 공원 입장료 + 베이브릿지 통행료 · 평점 5.0/5.0 (후기 1,616개) · 최소 5명 출발 (그룹 합류) · 30일 전 전액 환불' },
   { id: 'sf-extend', label: 'SF Hyatt Regency Embarcadero — 1박 연장 (Plan A 전용)', tag: 'SF', dates: '6/30 → 7/1', nights: 1, plans: ['A'], type: 'now',
     note: '⭐ Plan A(LA 확정) 전용 · 마이리얼트립 요세미티 투어 SF 드롭 후 1박 → 7/1 SFO→LAS 직항 · 같은 호텔 4박째 (체크인 연장 가능)' },
   { id: 'sea-hyatt', label: 'SEA Hyatt Regency (1박) — Plan B 전용', tag: 'SEA', dates: '6/30 → 7/1', nights: 1, plans: ['B'], type: 'standby',

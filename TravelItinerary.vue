@@ -629,6 +629,67 @@ const cityColors = {
   'LV→SEA': '#10b981', 'SEA': '#0ea5e9', 'SEA→SF': '#6366f1', 'SEA→LV': '#f59e0b', 'SEA→SFO': '#64748b', 'LV→SFO': '#64748b', 'SV': '#059669', 'SFO': '#64748b',
   'YOS': '#22c55e', 'YOS→SF': '#f59e0b', 'SF→YOS': '#16a34a',
 }
+
+// ── 시간대 자동 분류 (한눈에 보이게 그룹화) ──
+function parseHour(timeStr) {
+  if (!timeStr) return -1
+  const s = String(timeStr)
+  if (s.includes('새벽')) return 4
+  if (s.includes('아침') || s.includes('오전')) return 9
+  if (s.includes('점심') || s.includes('낮')) return 12
+  if (s.includes('오후')) return 15
+  if (s.includes('저녁')) return 19
+  if (s.includes('밤')) return 22
+  const m = s.match(/(\d{1,2})\s*[:시]/)
+  if (m) return parseInt(m[1], 10)
+  return -1
+}
+const timeBuckets = [
+  { key: 'dawn',    label: '새벽',  range: [0, 6],   icon: '🌙', tint: '#6366f1' },
+  { key: 'morning', label: '오전',  range: [6, 12],  icon: '🌅', tint: '#f59e0b' },
+  { key: 'noon',    label: '점심',  range: [12, 14], icon: '🍱', tint: '#10b981' },
+  { key: 'afternoon', label: '오후', range: [14, 18], icon: '☀️', tint: '#06b6d4' },
+  { key: 'evening', label: '저녁',  range: [18, 22], icon: '🌆', tint: '#e11d48' },
+  { key: 'night',   label: '밤',   range: [22, 25], icon: '🌃', tint: '#7c3aed' },
+]
+function bucketFor(hour) {
+  if (hour < 0) return timeBuckets[1]
+  return timeBuckets.find(b => hour >= b.range[0] && hour < b.range[1]) || timeBuckets[5]
+}
+const enrichedDays = computed(() => {
+  return currentDays.value.map((day, idx) => {
+    const buckets = {}
+    timeBuckets.forEach(b => { buckets[b.key] = { ...b, items: [] } })
+    day.items.forEach(item => {
+      const h = parseHour(item.time)
+      const b = bucketFor(h)
+      buckets[b.key].items.push(item)
+    })
+    const dateMatch = day.date.match(/(\d+\/\d+)\s*(.+)/)
+    return {
+      ...day,
+      dayNum: idx + 1,
+      dateOnly: dateMatch ? dateMatch[1] : day.date,
+      weekday: dateMatch ? dateMatch[2] : '',
+      isCityChange: day.cityTag.includes('→') || day.cityTag.includes('↔'),
+      activeBuckets: timeBuckets.map(b => buckets[b.key]).filter(b => b.items.length > 0),
+    }
+  })
+})
+const tripStats = computed(() => {
+  const days = currentDays.value
+  if (!days.length) return null
+  const cities = new Set()
+  days.forEach(d => { d.cityTag.split(/→|↔/).forEach(c => cities.add(c.trim())) })
+  return {
+    days: days.length,
+    cities: cities.size,
+    transitDays: days.filter(d => d.cityTag.includes('→') || d.cityTag.includes('↔')).length,
+    highlights: days.filter(d => d.highlight).length,
+    startDate: days[0].date,
+    endDate: days[days.length - 1].date,
+  }
+})
 </script>
 
 <template>
@@ -654,36 +715,94 @@ const cityColors = {
         <span class="acc-meta">6/26(금) ~ 7/4(토) · {{ currentDays.length }}일</span>
         <span class="acc-chevron" :class="{ rotated: open.timeline }">›</span>
       </div>
-      <div v-show="open.timeline" class="acc-body timeline-body">
-        <div v-for="(day, idx) in currentDays" :key="activePlan + idx" class="day-row" :class="{ highlight: day.highlight }">
-          <div class="day-left">
-            <div class="day-date">{{ day.date }}</div>
-            <span class="city-tag" :style="{ background: (cityColors[day.cityTag]||'#334155')+'22', color: cityColors[day.cityTag]||'#94a3b8', borderColor: (cityColors[day.cityTag]||'#334155')+'55' }">{{ day.cityTag }}</span>
-          </div>
-          <div class="day-connector">
-            <div class="connector-dot" :class="{ highlight: day.highlight }"></div>
-            <div v-if="idx < currentDays.length - 1" class="connector-line"></div>
-          </div>
-          <div class="day-card">
-            <div class="day-header">
-              <span class="day-icon">{{ day.icon }}</span>
-              <span class="day-city">{{ day.city }}</span>
-              <span v-if="day.rvDay" class="rv-day-badge">🚐 캠핑카</span>
-              <span v-if="day.highlight && activePlan === 'b'" class="highlight-badge">⚽ R32</span>
-              <span v-if="day.highlight && activePlan === 'a'" class="highlight-badge la-badge">🇰🇷 한국 R32</span>
+      <div v-show="open.timeline" class="acc-body timeline-body-v2">
+
+        <!-- 여행 통계 헤로 -->
+        <div v-if="tripStats" class="trip-hero">
+          <div class="trip-hero-top">
+            <div class="trip-hero-plan">
+              <span class="trip-hero-plan-label">현재 일정</span>
+              <span class="trip-hero-plan-value">Plan {{ activePlan.toUpperCase() }}</span>
             </div>
-            <div v-if="day.note" class="day-note">⚠️ {{ day.note }}</div>
-            <div v-if="day.standby" class="day-standby">
+            <div class="trip-hero-route">{{ tripStats.startDate }} <span class="hero-arrow">→</span> {{ tripStats.endDate }}</div>
+          </div>
+          <div class="trip-hero-stats">
+            <div class="hero-stat"><div class="hs-val">{{ tripStats.days }}</div><div class="hs-lbl">총 일수</div></div>
+            <div class="hero-stat"><div class="hs-val">{{ tripStats.cities }}</div><div class="hs-lbl">방문 도시</div></div>
+            <div class="hero-stat"><div class="hs-val">{{ tripStats.transitDays }}</div><div class="hs-lbl">이동일</div></div>
+            <div class="hero-stat hero-stat-highlight"><div class="hs-val">{{ tripStats.highlights }}</div><div class="hs-lbl">⚽ 경기일</div></div>
+          </div>
+        </div>
+
+        <!-- 일자별 카드 -->
+        <div class="timeline-v2">
+          <div v-for="(day, idx) in enrichedDays" :key="activePlan + idx" class="day-card-v2" :class="{ 'is-highlight': day.highlight, 'is-transit': day.isCityChange }">
+
+            <!-- 날짜 카드 헤더 -->
+            <div class="day-head-v2" :style="{ '--city-color': cityColors[day.cityTag] || '#64748b' }">
+              <div class="day-head-left">
+                <div class="day-num-pill">
+                  <span class="dnp-label">DAY</span>
+                  <span class="dnp-val">{{ day.dayNum }}</span>
+                </div>
+                <div class="day-date-block">
+                  <div class="day-date-main">{{ day.dateOnly }}</div>
+                  <div class="day-weekday">{{ day.weekday }}</div>
+                </div>
+              </div>
+              <div class="day-head-mid">
+                <div class="day-icon-v2">{{ day.icon }}</div>
+                <div class="day-city-block">
+                  <div class="day-city-v2">{{ day.city }}</div>
+                  <div class="day-city-tag-row">
+                    <span class="city-chip-v2" :style="{ background: (cityColors[day.cityTag]||'#334155')+'22', color: cityColors[day.cityTag]||'#94a3b8', borderColor: (cityColors[day.cityTag]||'#334155')+'55' }">{{ day.cityTag }}</span>
+                    <span v-if="day.isCityChange" class="transit-chip">✈️ 이동</span>
+                    <span v-if="day.rvDay" class="rv-day-badge">🚐 캠핑카</span>
+                  </div>
+                </div>
+              </div>
+              <div class="day-head-right">
+                <span v-if="day.highlight && activePlan === 'b'" class="highlight-pill-v2">⚽ R32 경기일</span>
+                <span v-if="day.highlight && activePlan === 'a'" class="highlight-pill-v2 la-pill">🇰🇷 한국 R32</span>
+              </div>
+            </div>
+
+            <!-- 주의 / 대기 메시지 -->
+            <div v-if="day.note" class="day-warning">
+              <span class="warn-icon">⚠️</span>
+              <span class="warn-text">{{ day.note }}</span>
+            </div>
+            <div v-if="day.standby" class="day-standby-v2">
               <span class="standby-label">{{ day.standby.label }}</span>
               <span class="standby-text">{{ day.standby.text }}</span>
               <span class="standby-cancel">취소 기한: {{ day.standby.cancelBy }}</span>
             </div>
-            <ul class="schedule-list">
-              <li v-for="(item, i) in day.items" :key="i" class="schedule-item">
-                <span class="sch-time">{{ item.time }}</span>
-                <span class="sch-text" :class="{ bold: item.bold, baseball: item.baseball }">{{ item.text }}</span>
-              </li>
-            </ul>
+
+            <!-- 시간대별 슬롯 -->
+            <div class="day-body-v2">
+              <div v-for="bucket in day.activeBuckets" :key="bucket.key" class="time-bucket">
+                <div class="bucket-rail" :style="{ background: bucket.tint }"></div>
+                <div class="bucket-content">
+                  <div class="bucket-label-row">
+                    <span class="bucket-icon" :style="{ background: bucket.tint+'22', color: bucket.tint }">{{ bucket.icon }}</span>
+                    <span class="bucket-label">{{ bucket.label }}</span>
+                  </div>
+                  <div class="bucket-items">
+                    <div v-for="(item, i) in bucket.items" :key="i" class="sched-card" :class="{ 'is-bold': item.bold, 'is-baseball': item.baseball }">
+                      <div class="sched-time-pill" :style="{ borderColor: bucket.tint+'66', color: bucket.tint }">{{ item.time }}</div>
+                      <div class="sched-text-v2">{{ item.text }}</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- 다음날 연결선 -->
+            <div v-if="idx < enrichedDays.length - 1" class="day-connector-v2">
+              <div class="conn-line"></div>
+              <div class="conn-dot"></div>
+              <div class="conn-line"></div>
+            </div>
           </div>
         </div>
       </div>
@@ -1597,34 +1716,220 @@ const cityColors = {
 .dc-cancel { color: #dc2626; text-decoration: line-through; opacity: .7; }
 .booking-tip { font-size: .7rem; color: var(--text-dim); background: var(--bg-overlay); padding: 6px 10px; border-radius: 7px; }
 
-/* ── Timeline ── */
-.timeline-body { padding-top: .25rem; }
-.day-row { display: grid; grid-template-columns: 88px 26px 1fr; gap: 0 .65rem; align-items: stretch; min-height: 76px; }
-.day-left { display: flex; flex-direction: column; align-items: flex-end; padding-top: .8rem; gap: .3rem; }
-.day-date { font-size: .9rem; font-weight: 700; color: var(--text); white-space: nowrap; }
-.city-tag { font-size: .6rem; font-weight: 700; padding: 2px 5px; border-radius: 5px; border: 1px solid; white-space: nowrap; }
-.day-connector { display: flex; flex-direction: column; align-items: center; padding-top: .95rem; }
-.connector-dot { width: 9px; height: 9px; border-radius: 50%; background: var(--border); border: 2px solid var(--bg-elevated); flex-shrink: 0; z-index: 1; }
-.connector-dot.highlight { background: var(--accent); box-shadow: 0 0 0 3px var(--accent-bg); }
-.connector-line { flex: 1; width: 2px; background: var(--border-muted); margin-top: 3px; }
-.day-card { margin: .35rem 0; padding: .8rem 1rem; background: var(--bg-elevated); border: 1px solid var(--border); border-radius: var(--radius-lg); }
-.day-row.highlight .day-card { border-color: var(--accent); background: var(--accent-bg); }
-.day-header { display: flex; align-items: center; gap: .45rem; margin-bottom: .5rem; }
-.day-icon { font-size: .95rem; }
-.day-city { font-size: 1rem; font-weight: 700; color: var(--text); }
-.highlight-badge { font-size: .6rem; font-weight: 700; background: var(--accent); color: #fff; padding: 2px 7px; border-radius: 7px; margin-left: auto; }
-.la-badge { background: #e11d48; }
-.day-standby { display: flex; flex-direction: column; gap: .18rem; background: rgba(234,179,8,.08); border: 1px solid rgba(234,179,8,.3); border-radius: 5px; padding: 5px 9px; margin-bottom: .5rem; }
-.standby-label { font-size: .62rem; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; color: #ca8a04; }
-.standby-text   { font-size: .72rem; color: var(--text-muted); }
-.standby-cancel { font-size: .68rem; color: #ca8a04; font-weight: 600; }
-.day-note { font-size: .72rem; color: var(--orange); background: rgba(230,126,34,.1); border-radius: 5px; padding: 4px 8px; margin-bottom: .5rem; }
-.schedule-list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: .3rem; }
-.schedule-item { display: flex; gap: .7rem; font-size: .88rem; align-items: baseline; }
-.sch-time { font-family: ui-monospace,monospace; font-size: .8rem; font-weight: 600; color: var(--text-dim); min-width: 72px; flex-shrink: 0; }
-.sch-text { color: var(--text); line-height: 1.5; font-weight: 500; }
-.sch-text.bold { color: var(--text); font-weight: 600; }
-.sch-text.baseball { color: #f97316; font-weight: 500; }
+/* ── Timeline v2 (모던 여행앱 — 라이트 카드 · 한눈에 보이는 UI) ── */
+.timeline-body-v2 { padding: .5rem .15rem 1rem; display: flex; flex-direction: column; gap: 1rem; background: #f1f5f9; border-radius: 12px; }
+
+/* 헤로 — Plan 색상 그라데이션 */
+.trip-hero {
+  background: linear-gradient(135deg, #2563eb 0%, #7c3aed 100%);
+  border: none; border-radius: 16px;
+  padding: 1.2rem 1.3rem;
+  display: flex; flex-direction: column; gap: .95rem;
+  box-shadow: 0 8px 24px -8px rgba(37,99,235,.45);
+  color: #fff;
+  margin: 0 .35rem;
+}
+.trip-hero-top { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: .5rem; }
+.trip-hero-plan { display: flex; flex-direction: column; gap: .15rem; }
+.trip-hero-plan-label { font-size: .65rem; color: rgba(255,255,255,.75); text-transform: uppercase; letter-spacing: .12em; font-weight: 700; }
+.trip-hero-plan-value { font-size: 1.4rem; font-weight: 900; color: #fff; letter-spacing: -.02em; }
+.trip-hero-route { font-size: .85rem; color: rgba(255,255,255,.95); font-family: ui-monospace,monospace; font-weight: 700; }
+.hero-arrow { color: #fbbf24; margin: 0 .3rem; font-weight: 800; }
+.trip-hero-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: .55rem; }
+.hero-stat {
+  background: rgba(255,255,255,.18);
+  border: 1px solid rgba(255,255,255,.25);
+  backdrop-filter: blur(8px);
+  border-radius: 12px;
+  padding: .7rem .5rem; text-align: center;
+  display: flex; flex-direction: column; gap: .15rem;
+}
+.hero-stat-highlight { background: #fbbf24; border-color: #fbbf24; box-shadow: 0 4px 12px -4px rgba(251,191,36,.5); }
+.hs-val { font-size: 1.55rem; font-weight: 900; color: #fff; letter-spacing: -.03em; line-height: 1; }
+.hero-stat-highlight .hs-val { color: #1e293b; }
+.hs-lbl { font-size: .68rem; color: rgba(255,255,255,.85); font-weight: 700; letter-spacing: .02em; }
+.hero-stat-highlight .hs-lbl { color: #1e293b; }
+
+/* Day Card */
+.timeline-v2 { display: flex; flex-direction: column; gap: 0; padding: 0 .35rem; }
+.day-card-v2 {
+  position: relative;
+  background: #fff;
+  border: 1px solid #cbd5e1;
+  border-radius: 14px;
+  overflow: hidden;
+  transition: border-color .2s, box-shadow .2s;
+  box-shadow: 0 1px 3px rgba(15,23,42,.06), 0 1px 2px rgba(15,23,42,.04);
+}
+.day-card-v2:hover { border-color: #2563eb; box-shadow: 0 4px 12px -2px rgba(37,99,235,.15); }
+.day-card-v2.is-highlight {
+  border: 2px solid #ef4444;
+  background: linear-gradient(180deg, #fef2f2 0%, #fff 40%);
+  box-shadow: 0 8px 24px -6px rgba(239,68,68,.25);
+}
+.day-card-v2 + .day-card-v2 { margin-top: .65rem; }
+
+/* Day Head */
+.day-head-v2 {
+  display: grid; grid-template-columns: auto 1fr auto;
+  gap: 1rem; align-items: center;
+  padding: 1.1rem 1.2rem 1rem;
+  border-bottom: 2px solid #e2e8f0;
+  position: relative;
+  background: linear-gradient(180deg, #fafbfc 0%, #fff 100%);
+}
+.day-head-v2::before {
+  content: ''; position: absolute; left: 0; top: 0; bottom: 0;
+  width: 6px; background: var(--city-color, #64748b);
+}
+.day-head-left { display: flex; align-items: center; gap: .8rem; padding-left: .3rem; }
+.day-num-pill {
+  display: flex; flex-direction: column; align-items: center;
+  background: var(--city-color, #64748b); color: #fff;
+  border-radius: 12px; padding: .4rem .6rem;
+  min-width: 48px; line-height: 1;
+  box-shadow: 0 4px 10px -3px var(--city-color, #64748b);
+}
+.dnp-label { font-size: .58rem; font-weight: 800; letter-spacing: .12em; opacity: .9; }
+.dnp-val { font-size: 1.5rem; font-weight: 900; margin-top: 3px; }
+.day-date-block { display: flex; flex-direction: column; gap: .15rem; }
+.day-date-main { font-size: 1.2rem; font-weight: 900; color: #0f172a; letter-spacing: -.02em; line-height: 1.1; }
+.day-weekday { font-size: .8rem; color: #64748b; font-weight: 700; }
+
+.day-head-mid { display: flex; align-items: center; gap: .7rem; min-width: 0; }
+.day-icon-v2 { font-size: 1.75rem; flex-shrink: 0; }
+.day-city-block { display: flex; flex-direction: column; gap: .3rem; min-width: 0; }
+.day-city-v2 { font-size: 1.02rem; font-weight: 800; color: #0f172a; line-height: 1.3; }
+.day-city-tag-row { display: flex; gap: .3rem; flex-wrap: wrap; }
+.city-chip-v2 { font-size: .6rem; font-weight: 700; padding: 2px 7px; border-radius: 5px; border: 1px solid; white-space: nowrap; }
+.transit-chip {
+  font-size: .58rem; font-weight: 700;
+  padding: 2px 6px; border-radius: 5px;
+  background: rgba(37,99,235,.1); color: #2563eb;
+  border: 1px solid rgba(37,99,235,.3);
+}
+.rv-day-badge {
+  font-size: .58rem; font-weight: 700;
+  padding: 2px 6px; border-radius: 5px;
+  background: rgba(124,58,237,.12); color: #7c3aed;
+  border: 1px solid rgba(124,58,237,.3);
+}
+
+.day-head-right { display: flex; flex-direction: column; gap: .3rem; align-items: flex-end; }
+.highlight-pill-v2 {
+  font-size: .68rem; font-weight: 800; letter-spacing: .03em;
+  background: #2563eb; color: #fff;
+  padding: 6px 11px; border-radius: 20px;
+  box-shadow: 0 3px 10px -2px #2563eb;
+  white-space: nowrap;
+}
+.la-pill { background: #e11d48; box-shadow: 0 3px 10px -2px #e11d48; }
+
+/* 알림 */
+.day-warning {
+  margin: .7rem 1rem 0;
+  background: #fff7ed;
+  border: 1px solid #fdba74;
+  border-radius: 9px;
+  padding: .6rem .8rem;
+  display: flex; gap: .55rem; align-items: flex-start;
+}
+.warn-icon { font-size: .9rem; flex-shrink: 0; }
+.warn-text { font-size: .78rem; color: #c2410c; font-weight: 600; line-height: 1.4; }
+
+.day-standby-v2 {
+  margin: .7rem 1rem 0;
+  display: flex; flex-direction: column; gap: .2rem;
+  background: #fefce8;
+  border: 1px solid #fcd34d;
+  border-radius: 8px;
+  padding: .55rem .8rem;
+}
+.day-standby-v2 .standby-label { font-size: .62rem; font-weight: 800; text-transform: uppercase; letter-spacing: .05em; color: #b45309; }
+.day-standby-v2 .standby-text { font-size: .77rem; color: #334155; font-weight: 500; }
+.day-standby-v2 .standby-cancel { font-size: .7rem; color: #b45309; font-weight: 700; }
+
+/* Day Body — Time Buckets */
+.day-body-v2 { padding: 1rem 1.1rem 1.15rem; display: flex; flex-direction: column; gap: .8rem; }
+.time-bucket { display: flex; gap: .7rem; align-items: stretch; }
+.bucket-rail {
+  width: 3px; border-radius: 3px;
+  flex-shrink: 0; opacity: .55;
+}
+.bucket-content { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: .45rem; }
+.bucket-label-row { display: flex; align-items: center; gap: .5rem; padding-bottom: .2rem; }
+.bucket-icon {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 26px; height: 26px; border-radius: 8px; font-size: .88rem;
+}
+.bucket-label {
+  font-size: .82rem; font-weight: 800; color: #0f172a;
+  letter-spacing: .02em;
+}
+.bucket-items { display: flex; flex-direction: column; gap: .4rem; }
+.sched-card {
+  display: flex; gap: .7rem; align-items: center;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  padding: .6rem .8rem;
+  transition: border-color .15s, background .15s, transform .1s, box-shadow .15s;
+}
+.sched-card:hover { border-color: #2563eb; background: #fff; box-shadow: 0 2px 8px -2px rgba(37,99,235,.1); transform: translateX(2px); }
+.sched-card.is-bold {
+  background: #fef3c7;
+  border-color: #f59e0b;
+  border-left: 4px solid #f59e0b;
+}
+.sched-card.is-baseball { border-color: #f97316; background: #fff7ed; border-left: 4px solid #f97316; }
+.sched-time-pill {
+  font-family: ui-monospace, "SF Mono", monospace;
+  font-size: .73rem; font-weight: 800;
+  padding: 5px 10px; border-radius: 8px;
+  border: 1.5px solid; background: #fff;
+  white-space: nowrap; flex-shrink: 0;
+  min-width: 72px; text-align: center;
+  letter-spacing: -.02em;
+}
+.sched-text-v2 {
+  font-size: .88rem; color: #0f172a;
+  line-height: 1.5; flex: 1; min-width: 0;
+  word-break: break-word; font-weight: 500;
+}
+.sched-card.is-bold .sched-text-v2 { color: #78350f; font-weight: 800; font-size: .92rem; }
+.sched-card.is-baseball .sched-text-v2 { color: #9a3412; font-weight: 700; }
+
+/* Day Connector (점 연결) */
+.day-connector-v2 {
+  display: flex; flex-direction: column; align-items: center;
+  margin: 0 auto; padding: 0;
+  position: relative; height: 24px;
+}
+.conn-line { width: 2px; flex: 1; background: #cbd5e1; }
+.conn-dot { width: 7px; height: 7px; border-radius: 50%; background: #94a3b8; margin: 2px 0; }
+
+/* 모바일 반응형 — APP 배포 대비 */
+@media (max-width: 768px) {
+  .trip-hero { margin: 0 .15rem; padding: 1.05rem 1rem; }
+  .trip-hero-stats { grid-template-columns: repeat(2, 1fr); gap: .5rem; }
+  .timeline-v2 { padding: 0 .15rem; }
+  .day-head-v2 { grid-template-columns: auto 1fr; gap: .65rem; padding: .9rem 1rem .8rem; }
+  .day-head-right { grid-column: 1 / -1; flex-direction: row; align-items: center; justify-content: flex-end; padding-top: .2rem; }
+}
+@media (max-width: 480px) {
+  .day-num-pill { min-width: 42px; padding: .3rem .45rem; }
+  .dnp-val { font-size: 1.2rem; }
+  .day-date-main { font-size: 1rem; }
+  .day-icon-v2 { font-size: 1.4rem; }
+  .day-city-v2 { font-size: .9rem; }
+  .day-body-v2 { padding: .8rem .85rem 1rem; }
+  .sched-text-v2 { font-size: .8rem; }
+  .sched-card.is-bold .sched-text-v2 { font-size: .84rem; }
+  .sched-time-pill { font-size: .65rem; min-width: 60px; padding: 3px 6px; }
+  .bucket-label { font-size: .74rem; }
+  .hs-val { font-size: 1.35rem; }
+  .trip-hero-plan-value { font-size: 1.2rem; }
+}
 
 /* ── Activities ── */
 .act-city-tabs {

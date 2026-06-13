@@ -23,7 +23,7 @@ const open = reactive({
 // ── 💰 예상 비용 (인당 · 3명 분담 기준) ──
 const costData = {
   a: {
-    label: 'Plan A (SEA 한국전)',
+    label: 'Plan B (SEA 한국전 · 조3위 백업)',
     hotel: [
       { name: 'SF Hyatt Regency Embarcadero (카페테리아 적용 후)', detail: '3박 객실 ≈ 54만 + 현지 $180 · 3명 분담', perPerson: 263000 },
       { name: 'YOS 1박 2일 투어 (숙박+가이드 포함)', detail: '1박', perPerson: 730000 },
@@ -54,7 +54,7 @@ const costData = {
     ],
   },
   b: {
-    label: 'Plan B (LA 한국전)',
+    label: 'Plan A (LA 한국전 · 조2위 ✅확정)',
     hotel: [
       { name: 'SF Hyatt Regency Embarcadero (카페테리아 적용 후)', detail: '4박 객실 ≈ 72만 + 현지 $240 · 3명 분담', perPerson: 350000 },
       { name: 'YOS 1박 2일 투어 (숙박+가이드 포함)', detail: '1박', perPerson: 730000 },
@@ -82,7 +82,7 @@ const costData = {
   },
 }
 
-const currentCost = computed(() => costData[activePlan.value])
+const currentCost = computed(() => costData[activePlan.value === 'a' ? 'b' : 'a'])
 const sumCategory = (arr) => arr.reduce((s, x) => s + x.perPerson, 0)
 const costTotals = computed(() => {
   const c = currentCost.value
@@ -108,15 +108,15 @@ const flights = [
 // ── Giants ──
 const giants = [
   { date: '6/26 금', time: '19:15', opponent: 'vs Atlanta Braves', note: '✈️ 도착 당일 — 장거리 비행 피로 회복 우선 → 관람 X' },
-  { date: '6/27 토', time: '18:05', opponent: 'vs Atlanta Braves', note: '⭐ 이번 일정 유일 관람 경기 (A: 관광 후 / B: 실리콘밸리 후 합류)' },
-  { date: '6/28 일', time: '13:05', opponent: 'vs Atlanta Braves', note: 'A: Alcatraz·Golden Gate / B: 🇰🇷 LA 항공 당일치기 — 둘 다 관람 X' },
+  { date: '6/27 토', time: '18:05', opponent: 'vs Atlanta Braves', note: '⭐ 이번 일정 유일 관람 경기 (A: 실리콘밸리 후 합류 / B: 관광 후)' },
+  { date: '6/28 일', time: '13:05', opponent: 'vs Atlanta Braves', note: 'A: 🇰🇷 LA 항공 당일치기 / B: Alcatraz·Golden Gate — 둘 다 관람 X' },
 ]
 
 // ── 월드컵 시나리오 (FIFA Annex C 원문 파싱 결과) ──
 const wcRows = [
   { rank: '조 1위', match: 'M79', date: '6/30 14:00 PT', venue: 'Estadio Azteca, 멕시코시티', plan: null,  ok: false, note: '❌ 여행 중 방문 불가' },
-  { rank: '조 2위', match: 'M73', date: '6/28 12:00 PT', venue: 'SoFi Stadium, Inglewood (LA)', plan: 'B', ok: true, note: '→ Plan B' },
-  { rank: '조 3위', match: 'M82', date: '7/1 13:00 PT',  venue: 'Lumen Field, Seattle',         plan: 'A', ok: true, note: '→ Plan A' },
+  { rank: '조 2위', match: 'M73', date: '6/28 12:00 PT', venue: 'SoFi Stadium, Inglewood (LA)', plan: 'A', ok: true, note: '✅ 체코전 승리 → 확정 시나리오 · Plan A' },
+  { rank: '조 3위', match: 'M82', date: '7/1 13:00 PT',  venue: 'Lumen Field, Seattle',         plan: 'B', ok: true, note: '🔄 백업 · Plan B' },
 ]
 // Annex C 파싱 결과 (FIFA 공식 PDF)
 const annexC = { qualify: 330, total: 495, seattle: 314, foxborough: 16 }
@@ -125,7 +125,7 @@ const annexC = { qualify: 330, total: 495, seattle: 314, foxborough: 16 }
 const aHotels = [
   { city: '샌프란시스코',    tag: 'SF',  nights: 3, dates: '6/26~6/29', economy: 190, mid: 230, note: '✅ Hyatt Regency Embarcadero · 정가 1실 3박 1,200k원 → CJ 콘도지원 후 실부담 인당 ~212k원 (한국 결제 149k + 현지 fees $46) · BART Embarcadero 역 직결' },
   { city: 'Yosemite',       tag: 'YOS', nights: 1, dates: '6/29~6/30', economy: 530, mid: 530, perPerson: true, note: '⭐ A/B 공통 · 마이리얼트립 1박2일 투어 730,000원/인 · SF 픽업·드롭 + Curry Village 숙박 + 가이드 + 저녁 BBQ 포함 (렌트카·입장료 별도 필요 X)' },
-  { city: '시애틀',          tag: 'SEA', nights: 1, dates: '6/30~7/1', economy: 280, mid: 400, note: 'Hyatt Regency · ⚠️ 월드컵 서징 · 경기 전날 입성 → 다음날 여유 (요세미티 오전만 보고 일찍 출발)' },
+  { city: '시애틀',          tag: 'SEA', nights: 1, dates: '6/30~7/1', economy: 280, mid: 400, note: 'Hyatt Regency · ⚠️ 월드컵 서징 · Plan B(백업) 경기 전날 입성 / Plan A(확정) SEA 관광 1박 (Space Needle·Pike Place)' },
   { city: '라스베이거스',     tag: 'LV',  nights: 3, dates: '7/1~7/4',  economy: 140, mid: 240, note: 'Caesars Palace (24h 체크인) · 평일 요금 · 7/4 저녁 SFO' },
 ]
 const aDays = [
@@ -203,7 +203,7 @@ const aDays = [
 const laHotels = [
   { city: '샌프란시스코', tag: 'SF',  nights: 3, dates: '6/26~6/29', economy: 190, mid: 230, note: '✅ Hyatt Regency Embarcadero · 정가 1실 3박 1,200k원 → CJ 콘도지원 후 실부담 인당 ~212k원 · 6/28 LA 항공 당일치기(SFO↔LAX) 포함' },
   { city: 'Yosemite',    tag: 'YOS', nights: 1, dates: '6/29~6/30', economy: 530, mid: 530, perPerson: true, note: '⭐ A/B 공통 · 마이리얼트립 1박2일 투어 730,000원/인 · SF 픽업·드롭 + Curry Village 숙박 + 가이드 + 저녁 BBQ 포함' },
-  { city: '시애틀',       tag: 'SEA', nights: 1, dates: '6/30~7/1', economy: 280, mid: 400, note: '⭐ A/B 공통 — Hyatt Regency · A: 경기 전날 입성 / B: SEA 관광 (Space Needle·Chihuly)' },
+  { city: '시애틀',       tag: 'SEA', nights: 1, dates: '6/30~7/1', economy: 280, mid: 400, note: '⭐ A/B 공통 — Hyatt Regency · A: SEA 관광 (Space Needle·Chihuly) / B: 경기 전날 입성' },
   { city: '라스베이거스', tag: 'LV',  nights: 3, dates: '7/1~7/4',  economy: 140, mid: 240, note: 'Caesars Palace · 평일 요금 · 7/4 저녁 SFO' },
 ]
 const laDays = [
@@ -441,7 +441,7 @@ const transportRoutes = {
     },
   ],
   LA: [
-    { from: 'LAX 공항', to: 'SoFi Stadium (Plan B 6/28 아침)', distance: '4mi · 6.4km', icon: '🏟',
+    { from: 'LAX 공항', to: 'SoFi Stadium (Plan A 6/28 아침 ✅확정)', distance: '4mi · 6.4km', icon: '🏟',
       options: [
         { mode: '🚕 Uber/Lyft', detail: 'LAX-it 라이드쉐어 셔틀 후 픽업 (LAX 규정)', time: '25~45분 (LAX-it 셔틀 포함)', cost: '$25~40', tip: '⭐추천 — 짐 가볍고 시간 압박 시' },
         { mode: '🚇 LA Metro C Line + K Line', detail: 'LAX FlyAway 셔틀 → Aviation/LAX 역 → K Line 환승', time: '50~70분', cost: '$1.75 (LA Metro) + 셔틀 $9.75', tip: '경험 좋아하면 · 짐 없을 때만 추천' },
@@ -467,7 +467,7 @@ const transportRoutes = {
         { mode: '✈️ Alaska / Delta', detail: '직항', time: '2시간 30분', cost: '$140~220 (편도)', tip: '경기 후 저녁 비행 — 19시대 항공편 많음' },
       ]
     },
-    { from: 'SFO', to: 'LAX (Plan B 6/28 한국전 당일치기)', distance: '337mi · 543km', icon: '✈️',
+    { from: 'SFO', to: 'LAX (Plan A 6/28 한국전 당일치기 ✅확정)', distance: '337mi · 543km', icon: '✈️',
       options: [
         { mode: '✈️ Southwest', detail: '직항 매시간 · 짐 2개 무료', time: '1시간 30분', cost: '$80~140 (편도)', tip: '⭐ 새벽 6~7시 출발 · 18~19시 복귀편 다수 · 왕복 $160~280' },
         { mode: '✈️ Alaska/Delta', detail: '직항', time: '1시간 30분', cost: '$100~180', tip: '왕복 6/28 당일 · 마일리지 활용 가능' },
@@ -493,11 +493,11 @@ const transportRoutes = {
 // ── 일자별 잠자리 (A/B 100% 동일 — 호텔·항공편 모두 공유) ──
 const sleepByNight = [
   { date: '6/26 금', a: 'SF · Hyatt Regency Embarcadero',     b: 'SF · Hyatt Regency Embarcadero',     aTag: 'SF',  bTag: 'SF',  action: 'now', same: true, note: '도착 당일 — 비행 피로 회복' },
-  { date: '6/27 토', a: 'SF · Hyatt Regency Embarcadero',     b: 'SF · Hyatt Regency Embarcadero',     aTag: 'SF',  bTag: 'SF',  action: 'now', same: true, note: 'A: Alcatraz·Golden Gate·Giants 18:05 / B: 실리콘밸리·Giants 18:05' },
-  { date: '6/28 일', a: 'SF · Hyatt Regency Embarcadero',     b: 'SF · Hyatt Regency Embarcadero',     aTag: 'SF',  bTag: 'SF',  action: 'now', same: true, note: 'A: 💻 실리콘밸리 당일치기 (Stanford·Google·Apple Park) / B: 🇰🇷 LA 항공 당일치기 SFO↔LAX (Match 73)' },
+  { date: '6/27 토', a: 'SF · Hyatt Regency Embarcadero',     b: 'SF · Hyatt Regency Embarcadero',     aTag: 'SF',  bTag: 'SF',  action: 'now', same: true, note: 'A: 실리콘밸리·Giants 18:05 / B: Alcatraz·Golden Gate·Giants 18:05' },
+  { date: '6/28 일', a: 'SF · Hyatt Regency Embarcadero',     b: 'SF · Hyatt Regency Embarcadero',     aTag: 'SF',  bTag: 'SF',  action: 'now', same: true, note: 'A: 🇰🇷 LA 항공 당일치기 SFO↔LAX (Match 73) / B: 💻 실리콘밸리 당일치기 (Stanford·Google·Apple Park)' },
   { date: '6/29 월', a: 'YOS · Curry Village (투어)', b: 'YOS · Curry Village (투어)', aTag: 'YOS', bTag: 'YOS', action: 'now', same: true, note: '⭐ 마이리얼트립 1박2일 투어 730k/인 (SF픽업+숙박+가이드+BBQ 포함)' },
   { date: '6/30 화', a: 'SEA · Hyatt Regency',   b: 'SEA · Hyatt Regency',   aTag: 'SEA', bTag: 'SEA', action: 'now', same: true, note: '⭐ A/B 공통 — 같은 SFO→SEA 항공편 + 같은 Hyatt 1박 (월드컵 서징 ⚠️ 일찍)' },
-  { date: '7/1 수',  a: 'LV · Caesars Palace',  b: 'LV · Caesars Palace',  aTag: 'LV',  bTag: 'LV',  action: 'now', same: true, note: 'A: 13:00 Lumen 경기 / B: SEA 관광 (Space Needle·Pike Place) → 같은 SEA→LAS 저녁 항공편' },
+  { date: '7/1 수',  a: 'LV · Caesars Palace',  b: 'LV · Caesars Palace',  aTag: 'LV',  bTag: 'LV',  action: 'now', same: true, note: 'A: SEA 관광 (Space Needle·Pike Place) / B: 13:00 Lumen 경기 → 같은 SEA→LAS 저녁 항공편' },
   { date: '7/2 목',  a: 'LV · Caesars Palace',  b: 'LV · Caesars Palace',  aTag: 'LV',  bTag: 'LV',  action: 'now', same: true, note: '' },
   { date: '7/3 금',  a: 'LV · Caesars Palace',  b: 'LV · Caesars Palace',  aTag: 'LV',  bTag: 'LV',  action: 'now', same: true, note: '7/4 아침 체크아웃' },
 ]
@@ -509,23 +509,24 @@ const bookingItems = [
   { id: 'yosemite', label: '✅ Yosemite 1박2일 투어 (마이리얼트립)', tag: 'YOS', dates: '6/29 → 6/30', nights: 1, plans: ['A','B'], type: 'now', confirmed: true,
     note: '⭐ 마이리얼트립 요셈투어 1박2일 · 730,000원/인 · 3인 = 2,190,000원 · SF 픽업·드롭 + Curry Village 숙박 + 가이드 + 저녁 BBQ + 아침 포함 · 렌트카·입장료·예약 모두 불필요' },
   { id: 'sea-hyatt', label: 'SEA Hyatt Regency (1박)', tag: 'SEA', dates: '6/30 → 7/1', nights: 1, plans: ['A','B'], type: 'now',
-    note: '⭐ A/B 공통 — A: 경기 전날 입성 / B: 7/1 SEA 관광 (Space Needle·Pike Place) · downtown Hyatt · ⚠️ 월드컵 서징 ⚠️ 일찍 예약' },
+    note: '⭐ A/B 공통 — A: 7/1 SEA 관광 (Space Needle·Pike Place) / B: 경기 전날 입성 · downtown Hyatt · ⚠️ 월드컵 서징 ⚠️ 일찍 예약' },
   { id: 'lv-base',  label: '✅ LV Caesars Palace — Octavius Pool View, 2 Queens (예약 완료)', tag: 'LV', dates: '7/1 → 7/4', nights: 3, plans: ['A','B'], type: 'now', confirmed: true,
     note: '✅ 예약 완료 · 3570 Las Vegas Blvd S · Octavius Tower 신관(2012) · Pool View · 2 Queen Beds + Rollaway 요청 · OMNIA·Venus Pool·Forum Shops 직속 · 분수쇼 도보 3분 · 24h 프런트' },
 ]
 
 const decisions = [
-  { result: '조3위 진출 (Plan A 확정)', planTag: 'A', color: '#7c3aed',
-    keep:   ['SF 3박 (6/26~6/29)', 'Yosemite 1박 (6/29~6/30)', 'SEA Hyatt 1박 (6/30~7/1)', 'LV Paris 3박 (7/1~7/4)'],
-    cancel: ['(없음 — 호텔·항공편 변경 X · 활동만 분기: 7/1 Lumen 경기)'] },
-  { result: '조2위 진출 (Plan B 확정)', planTag: 'B', color: '#e11d48',
-    keep:   ['SF 3박 (6/26~6/29)', 'Yosemite 1박 (6/29~6/30)', 'SEA Hyatt 1박 (6/30~7/1)', 'LV Paris 3박 (7/1~7/4)'],
+  { result: '조2위 진출 — 🇰🇷 LA (Plan A · 확정 시나리오)', planTag: 'A', color: '#7c3aed',
+    keep:   ['SF 3박 (6/26~6/29)', 'Yosemite 1박 (6/29~6/30)', 'SEA Hyatt 1박 (6/30~7/1)', 'LV Caesars 3박 (7/1~7/4)'],
     cancel: ['(없음 — 호텔·항공편 변경 X · 활동만 분기: 6/28 LA 항공 당일치기 / 7/1 SEA 관광)'] },
+  { result: '조3위 진출 — 🏟 시애틀 (Plan B · 백업)', planTag: 'B', color: '#e11d48',
+    keep:   ['SF 3박 (6/26~6/29)', 'Yosemite 1박 (6/29~6/30)', 'SEA Hyatt 1박 (6/30~7/1)', 'LV Caesars 3박 (7/1~7/4)'],
+    cancel: ['(없음 — 호텔·항공편 변경 X · 활동만 분기: 7/1 Lumen 경기)'] },
 ]
 
 // ── Computed ──
-const currentDays = computed(() => activePlan.value === 'a' ? aDays : laDays)
-const currentHotels = computed(() => activePlan.value === 'a' ? aHotels : laHotels)
+// ── 체코전 승리 → LA가 새 Plan A(확정), 시애틀이 새 Plan B(백업) ──
+const currentDays = computed(() => activePlan.value === 'a' ? laDays : aDays)
+const currentHotels = computed(() => activePlan.value === 'a' ? laHotels : aHotels)
 // 1박당 1인 금액 — perPerson:true이면 그대로, 아니면 1실가격/3
 function perNightPerPerson(h, tier) { return h.perPerson ? h[tier] : h[tier] / 3 }
 // 호텔당 인당 총액 (박당 × 박수)
@@ -549,12 +550,12 @@ const cityColors = {
     <!-- ── 플랜 토글 (항상 노출) ── -->
     <div class="plan-toggle">
       <button class="plan-btn plan-a" :class="{ active: activePlan === 'a' }" @click="activePlan = 'a'">
-        🏟️ Plan A — 시애틀 R32 + LV <span class="plan-badge">조3위</span>
-        <span class="plan-sub">SF(3박) + ⛰YOS 1박 + SEA(1박) + LV(3박) · 7/1 Lumen Match 82 · ⭐ A/B 호텔·항공 100% 동일</span>
+        🇰🇷 Plan A — LA 한국 R32 + LV <span class="plan-badge">조2위 ✅확정</span>
+        <span class="plan-sub">SF(3박, ✈️ 6/28 LA 항공 당일치기) + ⛰YOS 1박 + SEA(1박 관광) + LV(3박) · Match 73 SoFi 6/28 · ⭐ 체코전 승리 → 확정 시나리오</span>
       </button>
       <button class="plan-btn plan-b" :class="{ active: activePlan === 'b' }" @click="activePlan = 'b'">
-        🇰🇷 Plan B — LA 한국 R32 + LV <span class="plan-badge red">조2위</span>
-        <span class="plan-sub">SF(3박, ✈️ 6/28 LA 항공 당일치기) + ⛰YOS 1박 + SEA(1박 관광) + LV(3박) · Match 73 SoFi 6/28 · ⭐ A와 동일 예약</span>
+        🏟️ Plan B — 시애틀 R32 + LV <span class="plan-badge red">조3위 백업</span>
+        <span class="plan-sub">SF(3박) + ⛰YOS 1박 + SEA(1박) + LV(3박) · 7/1 Lumen Match 82 · ⭐ A/B 호텔·항공 100% 동일</span>
       </button>
     </div>
 
@@ -581,8 +582,8 @@ const cityColors = {
               <span class="day-icon">{{ day.icon }}</span>
               <span class="day-city">{{ day.city }}</span>
               <span v-if="day.rvDay" class="rv-day-badge">🚐 캠핑카</span>
-              <span v-if="day.highlight && activePlan === 'a'" class="highlight-badge">⚽ R32</span>
-              <span v-if="day.highlight && activePlan === 'b'" class="highlight-badge la-badge">🇰🇷 한국 R32</span>
+              <span v-if="day.highlight && activePlan === 'b'" class="highlight-badge">⚽ R32</span>
+              <span v-if="day.highlight && activePlan === 'a'" class="highlight-badge la-badge">🇰🇷 한국 R32</span>
             </div>
             <div v-if="day.note" class="day-note">⚠️ {{ day.note }}</div>
             <div v-if="day.standby" class="day-standby">

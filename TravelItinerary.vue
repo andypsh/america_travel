@@ -64,7 +64,7 @@ const costData = {
       { name: 'YOS 1박2일 투어 (요셈투어·마이리얼트립 선납)', detail: '마이리얼트립 결제분 778,770원/인 (1박2일 그룹 합류 투어)', perPerson: 778770 },
       { name: '🏞 YOS 현지 지불 예정 (서비스+비거주자+점심)', detail: '서비스 $50 + 비거주자 $100(2026~) + 점심 $15 = 약 $165 ≈ 232,500원/인', perPerson: 232500 },
       { name: 'SEA 호텔 (쉐라톤 그랜드)', detail: '1박', perPerson: 150000 },
-      { name: '✅ LV Caesars Palace Octavius Pool View 2Q (예매 완료)', detail: '3박 1실 839,741원(전액 회사 콘도 보조) · 1박 279,914원 · 사용자 실부담: 급여공제 15만 + 카페테리아 15포인트 = 30만 · 3인 분담', perPerson: 279914 },
+      { name: '✅ LV Caesars Palace Octavius Pool View 2Q (예매 완료)', detail: '3박 1실 (1박 279,914원) · 3인 분담', perPerson: 279914 },
       { name: '✈️ LV Caesars 현지 지불 (체크인 시)', detail: 'Resort Fee $58.94 × 3박 + Rollaway $25 × 3박 + Parking·Tax · 약 $252/실 ≈ 36만', perPerson: 121000 },
     ],
     flight: [
@@ -77,8 +77,8 @@ const costData = {
       { name: '🇰🇷 R32 한국전 티켓 (Lumen Field Match 82)', detail: '7/1', perPerson: 1500000 },
     ],
     activity: [
-      { name: '✅ 🏎 SpeedVegas — Ferrari 488 GTB 7랩 + Go Kart (박성혁 1인 · 7/2 변경 확정)', detail: '7/2(목) 11:00 Ferrari (E0904718) + 13:00 Go Kart (E0904719) · $638 본 + $63.80 세금 = $701.80 PayPal · Invoice C0616037', perPerson: 1018000 },
-      { name: '✅ ⚾ Giants 티켓 — LB104 Row 12 Seats 3·4·5 (예매 완료)', detail: '6/27 vs Braves 18:05 · $282 (3장) · Order GNTV-26195758-76749976', perPerson: 136000 },
+      { name: '✅ 🏎 SpeedVegas — Ferrari 488 GTB + Go Kart (박성혁 1인 · 7/2 확정)', detail: '7/2(목) 11:00 Ferrari + 13:00 Go Kart · 예매 완료', perPerson: 1018000 },
+      { name: '✅ ⚾ Giants 티켓 (예매 완료)', detail: '6/27 vs Braves 18:05 · Lower Box Select 3장', perPerson: 136000 },
       { name: '🏝 Alcatraz 투어', detail: '6/27', perPerson: 70000 },
       { name: '🚴 Golden Gate 자전거', detail: '6/27', perPerson: 60000 },
       { name: '🏛 실리콘밸리 셀프 (Caltrain·식사)', detail: '6/28', perPerson: 80000 },
@@ -96,7 +96,7 @@ const costData = {
       { name: 'SF Hyatt Regency Embarcadero (박성한 직접 결제 · 카페테리아 후)', detail: '박성한 실부담 262,672원 ÷ 3명 = 1인 87,557원 (4박, Plan A 1박 연장 포함)', perPerson: 87557 },
       { name: 'YOS 1박2일 투어 (요셈투어·마이리얼트립 선납)', detail: '마이리얼트립 결제분 778,770원/인 (1박2일 그룹 합류 투어)', perPerson: 778770 },
       { name: '🏞 YOS 현지 지불 예정 (서비스+비거주자+점심)', detail: '서비스 $50 + 비거주자 $100(2026~) + 점심 $15 = 약 $165 ≈ 232,500원/인', perPerson: 232500 },
-      { name: '✅ LV Caesars Palace Octavius Pool View 2Q (예매 완료)', detail: '3박 1실 839,741원(전액 회사 콘도 보조) · 1박 279,914원 · 사용자 실부담: 급여공제 15만 + 카페테리아 15포인트 = 30만 · 3인 분담', perPerson: 279914 },
+      { name: '✅ LV Caesars Palace Octavius Pool View 2Q (예매 완료)', detail: '3박 1실 (1박 279,914원) · 3인 분담', perPerson: 279914 },
       { name: '✈️ LV Caesars 현지 지불 (체크인 시)', detail: 'Resort Fee $58.94 × 3박 + Rollaway $25 × 3박 + Parking·Tax · 약 $252/실 ≈ 36만', perPerson: 121000 },
     ],
     flight: [
@@ -112,10 +112,10 @@ const costData = {
       { name: '🚋 케이블카 Powell-Hyde + F Market 트램', detail: '6/27 오전', perPerson: 15000 },
       { name: '🔒 Alcatraz 투어', detail: '6/27 오전 (Pier 33)', perPerson: 70000 },
       { name: '🚴 Golden Gate 자전거', detail: '6/27 오후', perPerson: 60000 },
-      { name: '✅ ⚾ Giants 티켓 — LB104 Row 12 Seats 3·4·5 (예매 완료)', detail: '6/27 vs Braves 18:05 · $282 (3장) · Order GNTV-26195758-76749976', perPerson: 136000 },
+      { name: '✅ ⚾ Giants 티켓 (예매 완료)', detail: '6/27 vs Braves 18:05 · Lower Box Select 3장', perPerson: 136000 },
       { name: '🍲 BCD Tofu House K-town', detail: '6/28 LA 경기 후', perPerson: 45000 },
       { name: '🏛 실리콘밸리 풀데이 (Stanford·Google·Apple)', detail: '7/1 오전~오후', perPerson: 80000 },
-      { name: '✅ 🏎 SpeedVegas — Ferrari 488 GTB 7랩 + Go Kart (박성혁 1인 · 7/2 변경 확정)', detail: '7/2(목) 11:00 Ferrari (E0904718) + 13:00 Go Kart (E0904719) · $638 본 + $63.80 세금 = $701.80 PayPal · Invoice C0616037', perPerson: 1018000 },
+      { name: '✅ 🏎 SpeedVegas — Ferrari 488 GTB + Go Kart (박성혁 1인 · 7/2 확정)', detail: '7/2(목) 11:00 Ferrari + 13:00 Go Kart · 예매 완료', perPerson: 1018000 },
       { name: '🍽 Bacchanal Buffet @ Caesars × 2회', detail: 'LV (7/2 저녁 포함)', perPerson: 220000 },
       { name: '🎰 Caesars 카지노 베팅 (보수적)', detail: 'LV', perPerson: 280000 },
       { name: '🌃 OMNIA Nightclub (입장+음료)', detail: 'LV 1회', perPerson: 140000 },
@@ -172,7 +172,7 @@ const flights = [
 // ── Giants ──
 const giants = [
   { date: '6/26 금', time: '19:15', opponent: 'vs Atlanta Braves', note: '✈️ 도착 당일 — 장거리 비행 피로 회복 우선 → 관람 X' },
-  { date: '6/27 토', time: '18:05', opponent: 'vs Atlanta Braves', note: '✅ 예매 완료 — LB104 Row 12 Seats 3·4·5 (3장) · $282 · Lower Box Select · Order GNTV-26195758-76749976 · Ballpark 앱 배송' },
+  { date: '6/27 토', time: '18:05', opponent: 'vs Atlanta Braves', note: '✅ 예매 완료 (3장) · Lower Box Select · Ballpark 앱 배송' },
   { date: '6/28 일', time: '13:05', opponent: 'vs Atlanta Braves', note: 'A: 🇰🇷 LA 항공 당일치기 (Match 73) / B: 💻 실리콘밸리 (Stanford·Google·Apple) — 둘 다 관람 X' },
 ]
 
@@ -209,7 +209,7 @@ const aDays = [
     { time: '11:00', text: '⛴ Alcatraz Cruises — Pier 33 체크인 (사전 예약 필수)' },
     { time: '11:45~14:30', text: '🏝 Alcatraz Island 투어 (탈옥 역사 · 가이드 투어 · Bay View)' },
     { time: '15:00~', text: '🚴 Golden Gate Bridge 자전거 라이딩 · Sausalito 페리' },
-    { time: '18:05', text: '✅ ⚾ Giants vs Braves @ Oracle Park — LB104 Row 12 Seats 3·4·5 (예매 완료 $282) · F Market 트램 또는 도보', baseball: true, bold: true },
+    { time: '18:05', text: '✅ ⚾ Giants vs Braves @ Oracle Park (예매 완료) · F Market 트램 또는 도보', baseball: true, bold: true },
   ]},
   { date: '6/28 일', city: '실리콘밸리 (당일치기)', cityTag: 'SV', icon: '💻', items: [
     { time: '08:30', text: '🍳 Hyatt Regency Embarcadero 조식 · BART/Caltrain or Uber 준비' },
@@ -256,8 +256,8 @@ const aDays = [
   { date: '7/2 목', city: '라스베이거스 · 🏎 SpeedVegas', cityTag: 'LV', icon: '🏎', items: [
     { time: '09:00', text: '🍳 Caesars 조식 · 가벼운 워밍업 (전날 경기 피로 회복)' },
     { time: '09:30~', text: '🚖 Uber → SpeedVegas (Sloan, NV · Strip 남쪽 20분 · $25~35)' },
-    { time: '11:00', text: '✅ 🏎 SpeedVegas — Ferrari 488 GTB 7랩 (박성혁) · Standard Driving Experience · $475 + HD 영상·사진 $79 + 차량 손상 보호 $49 = $603 · E0904718 · Invoice C0616037 (PayPal $701.80 결제 완료 · 7/4→7/2 변경 확정)', bold: true },
-    { time: '13:00', text: '✅ 🏁 Go Kart Track (VSK · 같은 부지) — Sodikart RT10 1레이스 8분 · $35 · E0904719 · Invoice C0616037 (PayPal $701.80 결제 완료)', bold: true },
+    { time: '11:00', text: '✅ 🏎 SpeedVegas — Ferrari 488 GTB 7랩 (박성혁) · Standard Driving Experience + HD 영상·사진 + 차량 손상 보호 · 7/2 확정', bold: true },
+    { time: '13:00', text: '✅ 🏁 Go Kart Track (VSK · 같은 부지) — Sodikart RT10 1레이스 8분', bold: true },
     { time: '~14:00', text: '🚖 Uber → Caesars Palace 복귀' },
     { time: '오후', text: '🎡 Fremont Street Experience · 구시가지 LED 쇼 · 우버 13분' },
     { time: '저녁', text: '💦 Bellagio 분수쇼 (도보 3분) · 🎰 Caesars 카지노 빅휠·룰렛 · ⚽ Sportsbook 월드컵 R16', bold: true },
@@ -308,7 +308,7 @@ const laDays = [
     { time: '11:00', text: '⛴ Alcatraz Cruises — Pier 33 체크인 (사전 예약 필수)' },
     { time: '11:45~14:30', text: '🔒 Alcatraz Island 투어 (옛 연방 감옥 · 탈옥 역사 · 가이드 오디오 투어 · Bay View)', bold: true },
     { time: '15:00~17:30', text: '🚴 Golden Gate Bridge 자전거 라이딩 · Sausalito 페리 귀환 (Blazing Saddles 렌탈 $35~50)' },
-    { time: '18:05', text: '✅ ⚾ Giants vs Braves @ Oracle Park — LB104 Row 12 Seats 3·4·5 (예매 완료 $282) · F Market 트램 또는 도보', baseball: true, bold: true },
+    { time: '18:05', text: '✅ ⚾ Giants vs Braves @ Oracle Park (예매 완료) · F Market 트램 또는 도보', baseball: true, bold: true },
   ]},
   { date: '6/28 일', city: '🇰🇷 SF↔LA 당일치기 (Match 73 SoFi)', cityTag: 'SF↔LA', icon: '🇰🇷', highlight: true, items: [
     { time: '04:00', text: '⏰ 기상 · 당일치기 가벼운 짐만 (큰짐 호텔 보관)' },
@@ -363,8 +363,8 @@ const laDays = [
   { date: '7/2 목', city: '라스베이거스 · 🏎 SpeedVegas', cityTag: 'LV', icon: '🏎', items: [
     { time: '09:00', text: '🍳 Caesars 조식 · 가벼운 워밍업 (전날 비행·SV 강행 회복)' },
     { time: '09:30~', text: '🚖 Uber → SpeedVegas (Sloan, NV · Strip 남쪽 20분 · $25~35)' },
-    { time: '11:00', text: '✅ 🏎 SpeedVegas — Ferrari 488 GTB 7랩 (박성혁) · Standard Driving Experience · $475 + HD 영상·사진 $79 + 차량 손상 보호 $49 = $603 · E0904718 · Invoice C0616037 (PayPal $701.80 결제 완료 · 7/4→7/2 변경 확정)', bold: true },
-    { time: '13:00', text: '✅ 🏁 Go Kart Track (VSK · 같은 부지) — Sodikart RT10 1레이스 8분 · $35 · E0904719 · Invoice C0616037 (PayPal $701.80 결제 완료)', bold: true },
+    { time: '11:00', text: '✅ 🏎 SpeedVegas — Ferrari 488 GTB 7랩 (박성혁) · Standard Driving Experience + HD 영상·사진 + 차량 손상 보호 · 7/2 확정', bold: true },
+    { time: '13:00', text: '✅ 🏁 Go Kart Track (VSK · 같은 부지) — Sodikart RT10 1레이스 8분', bold: true },
     { time: '~14:00', text: '🚖 Uber → Caesars Palace 복귀' },
     { time: '오후', text: '🎡 Fremont Street Experience · 구시가지 LED 쇼 · 우버 13분 · ⚽ Sportsbook 월드컵 R16' },
     { time: '저녁', text: '🍽 Bacchanal 뷔페 @ Caesars Palace (LV 1위 뷔페 · 일본·중식·한식·미식) · 🎰 Caesars 카지노 빅휠·블랙잭', bold: true },
@@ -637,7 +637,7 @@ const bookingItems = [
   { id: 'sea-hyatt', label: 'SEA Hyatt Regency (1박) — Plan B 전용', tag: 'SEA', dates: '6/30 → 7/1', nights: 1, plans: ['B'], type: 'standby',
     note: 'Plan B(시애틀 백업) 전용 · 조3위 진출 시에만 사용 · downtown Hyatt · ⚠️ 월드컵 서징 ⚠️ 무료취소 옵션으로 예약 (6/25 23:59 이전 취소 가능)' },
   { id: 'lv-base',  label: '✅ LV Caesars Palace — Octavius Pool View, 2 Queens (예약 완료 · 사용자 결제)', tag: 'LV', dates: '7/1 → 7/4', nights: 3, plans: ['A','B'], type: 'now', confirmed: true,
-    note: '✅ 예약 완료 (사용자 직접 결제 · 하나투어) · Res# HH2634440622 · Confirm# CLVEajUAYA · 3570 Las Vegas Blvd S · Octavius Tower 신관 Pool View 2Q + Rollaway · 3 Adults · No Breakfast · 총 839,741원/실 (1박 279,914) · 회사 콘도지원 539,741 + 급여공제 150,000 + 카페테리아 15포인트(150k) · 사용자 실부담 약 30만 · ⚠️ 체크인 시 현지 지불: Resort Fee $58.94/박 + Rollaway $25/박 + Tax = 약 $252/실 (36만) 별도 · 담당자 신민주 02-2076-2228 · 호텔 TEL 1-702-731-7110' },
+    note: '✅ 예약 완료 (사용자 직접 결제) · 3570 Las Vegas Blvd S · Octavius Tower 신관 Pool View 2Q + Rollaway · 3 Adults · No Breakfast · 1박 279,914원 · 3인 분담 · ⚠️ 체크인 시 현지 지불: Resort Fee + Rollaway + Tax = 약 $252/실 (36만) 별도 · 호텔 TEL 1-702-731-7110' },
 ]
 
 const decisions = [
@@ -949,7 +949,7 @@ const tripStats = computed(() => {
             <span class="eb-plus">+</span>
             <span class="eb-item">✅ 🏎 SpeedVegas <strong>{{ fmtKRW(earmarkedCost.speedvegas) }}만</strong></span>
             <span class="eb-plus">+</span>
-            <span class="eb-item">✅ ⚾ Giants(LB104) <strong>{{ fmtKRW(earmarkedCost.giants) }}만</strong></span>
+            <span class="eb-item">✅ ⚾ Giants 티켓 <strong>{{ fmtKRW(earmarkedCost.giants) }}만</strong></span>
             <span class="eb-eq">=</span>
             <span class="eb-total">결제 완료 <strong>{{ fmtKRW(earmarkedCost.paidTotal()) }}만</strong></span>
             <span class="eb-diff" :class="{ 'eb-surplus': 2000000 - earmarkedCost.paidTotal() >= 0, 'eb-short': 2000000 - earmarkedCost.paidTotal() < 0 }">

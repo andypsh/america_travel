@@ -4,3 +4,7 @@ dist/
 *.local
 .claude/
 .vite/
+
+# 개인 메모 (친구들에게 공개하지 않을 정보)
+PRIVATE_*.md
+private/

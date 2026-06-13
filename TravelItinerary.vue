@@ -39,7 +39,8 @@ const payments = [
 // SF Hyatt는 박성한이 직접 결제 → 정산에서 제외 (사용자가 받을 돈 아님)
 // LV Caesars는 사용자가 직접 결제 → 자동 포함 (분담 비용에서 친구들 받을 돈)
 // YOS는 마이리얼트립 선납 + 현지 지불 2단계로 분리
-// 200만은 YOS(선납+현지) + SpeedVegas + Giants 명목으로 재매핑
+// 200만은 YOS 선납 + SpeedVegas + Giants 명목으로 재매핑 (이미 결제 완료된 항목만)
+// YOS 현지(서비스+비거주자+점심)는 아직 미지불 → 별도 표시
 const earmarkedCost = computed(() => {
   const c = currentCost.value
   const findFirst = (arr, kw) => arr.find(x => kw.some(k => x.name.includes(k)))?.perPerson || 0
@@ -49,6 +50,7 @@ const earmarkedCost = computed(() => {
     speedvegas: findFirst(c.activity, ['SpeedVegas']),
     giants: findFirst(c.activity, ['Giants']),
     yosemite() { return this.yosSeonNap + this.yosLocal },
+    paidTotal() { return this.yosSeonNap + this.speedvegas + this.giants },
     total() { return this.yosSeonNap + this.yosLocal + this.speedvegas + this.giants },
   }
 })
@@ -939,24 +941,27 @@ const tripStats = computed(() => {
           </div>
         </div>
 
-        <!-- 200만 선납 명목 항목 부담 가이드 (SF 호텔 제외, Giants 추가) -->
+        <!-- 200만 선납 재매핑: 이미 결제된 항목만 / YOS 현지는 미지불 별도 표시 -->
         <div class="earmark-banner">
-          <div class="eb-title">📌 200만 선납 재매핑 = 다음 항목 (1인 부담 기준 · SF 호텔 제외, ⚾ Giants·YOS 현지 추가)</div>
+          <div class="eb-title">📌 200만 선납 재매핑 = 이미 결제된 항목 (1인 부담 기준 · SF 호텔 제외)</div>
           <div class="eb-rows">
-            <span class="eb-item">🏞 YOS 선납(마이리얼트립) <strong>{{ fmtKRW(earmarkedCost.yosSeonNap) }}만</strong></span>
+            <span class="eb-item">✅ 🏞 YOS 선납(마이리얼트립) <strong>{{ fmtKRW(earmarkedCost.yosSeonNap) }}만</strong></span>
             <span class="eb-plus">+</span>
-            <span class="eb-item">🏞 YOS 현지(서비스+비거주자+점심) <strong>{{ fmtKRW(earmarkedCost.yosLocal) }}만</strong></span>
+            <span class="eb-item">✅ 🏎 SpeedVegas <strong>{{ fmtKRW(earmarkedCost.speedvegas) }}만</strong></span>
             <span class="eb-plus">+</span>
-            <span class="eb-item">🏎 SpeedVegas <strong>{{ fmtKRW(earmarkedCost.speedvegas) }}만</strong></span>
-            <span class="eb-plus">+</span>
-            <span class="eb-item">⚾ Giants(LB104) <strong>{{ fmtKRW(earmarkedCost.giants) }}만</strong></span>
+            <span class="eb-item">✅ ⚾ Giants(LB104) <strong>{{ fmtKRW(earmarkedCost.giants) }}만</strong></span>
             <span class="eb-eq">=</span>
-            <span class="eb-total">총 <strong>{{ fmtKRW(earmarkedCost.total()) }}만</strong></span>
-            <span class="eb-diff" :class="{ 'eb-surplus': 2000000 - earmarkedCost.total() >= 0, 'eb-short': 2000000 - earmarkedCost.total() < 0 }">
-              200만 대비 {{ 2000000 - earmarkedCost.total() >= 0 ? '+' : '−' }}{{ fmtKRW(Math.abs(2000000 - earmarkedCost.total())) }}만
+            <span class="eb-total">결제 완료 <strong>{{ fmtKRW(earmarkedCost.paidTotal()) }}만</strong></span>
+            <span class="eb-diff" :class="{ 'eb-surplus': 2000000 - earmarkedCost.paidTotal() >= 0, 'eb-short': 2000000 - earmarkedCost.paidTotal() < 0 }">
+              200만 대비 {{ 2000000 - earmarkedCost.paidTotal() >= 0 ? '+' : '−' }}{{ fmtKRW(Math.abs(2000000 - earmarkedCost.paidTotal())) }}만
             </span>
           </div>
-          <div class="eb-note">↳ 잔여 ({{ fmtKRW(costTotals.total - costTotals.flight - 1500000 - earmarkedCost.total()) }}만/인): LV Caesars(사용자 결제) + 기타 LV 활동(Adventuredome·서커스·OMNIA 등) + 식비 — 추가 정산 대상</div>
+          <div class="eb-pending">
+            <span class="eb-pending-label">⏳ 현지 결제 예정 (미지불):</span>
+            <span class="eb-item eb-pending-item">🏞 YOS 현지(서비스+비거주자+점심) <strong>{{ fmtKRW(earmarkedCost.yosLocal) }}만</strong></span>
+            <span class="eb-pending-note">→ 6/29 가이드에게 현장 지불 · 위 200만에 미포함</span>
+          </div>
+          <div class="eb-note">↳ 잔여 ({{ fmtKRW(costTotals.total - costTotals.flight - 1500000 - earmarkedCost.total()) }}만/인): LV Caesars(사용자 결제) + YOS 현지(미지불) + 기타 LV 활동(Adventuredome·서커스·OMNIA 등) + 식비 — 추가 정산 대상</div>
         </div>
 
         <div class="settle-grid">
@@ -1685,6 +1690,11 @@ const tripStats = computed(() => {
 .eb-diff.eb-surplus { background: rgba(34,197,94,.15); color: #22c55e; }
 .eb-diff.eb-short { background: rgba(249,115,22,.15); color: #f97316; }
 .eb-note { font-size: .68rem; color: var(--text-dim); line-height: 1.5; padding-top: .25rem; border-top: 1px dashed var(--border-muted); }
+.eb-pending { display: flex; flex-wrap: wrap; gap: .35rem .5rem; align-items: center; font-size: .73rem; padding: .4rem .55rem; background: rgba(249,115,22,.08); border: 1px dashed rgba(249,115,22,.4); border-radius: 6px; }
+.eb-pending-label { font-weight: 700; color: #f97316; }
+.eb-pending-item { background: rgba(249,115,22,.15) !important; border-color: rgba(249,115,22,.4) !important; }
+.eb-pending-item strong { color: #f97316 !important; }
+.eb-pending-note { font-size: .68rem; color: var(--text-dim); margin-left: auto; }
 
 .settle-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: .8rem; margin-bottom: .75rem; }
 .settle-card {

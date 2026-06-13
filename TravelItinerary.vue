@@ -41,7 +41,7 @@ const costData = {
     ],
     activity: [
       { name: '🏎 SpeedVegas 슈퍼카', detail: '람보·페라리·포르쉐', perPerson: 280000 },
-      { name: '⚾ Giants 경기 티켓 (외야 가장 싼 자리)', detail: '6/27 vs Braves 18:05', perPerson: 50000 },
+      { name: '✅ ⚾ Giants 티켓 — LB104 Row 12 Seats 3·4·5 (예매 완료)', detail: '6/27 vs Braves 18:05 · $282 (3장) · Order GNTV-26195758-76749976', perPerson: 136000 },
       { name: '🏝 Alcatraz 투어', detail: '6/27', perPerson: 70000 },
       { name: '🚴 Golden Gate 자전거', detail: '6/27', perPerson: 60000 },
       { name: '🏛 실리콘밸리 셀프 (Caltrain·식사)', detail: '6/28', perPerson: 80000 },
@@ -72,7 +72,7 @@ const costData = {
     activity: [
       { name: '🔒 Alcatraz 투어', detail: '6/27 오전 (Pier 33)', perPerson: 70000 },
       { name: '🚴 Golden Gate 자전거', detail: '6/27 오후', perPerson: 60000 },
-      { name: '⚾ Giants 경기 티켓 (외야 가장 싼 자리)', detail: '6/27 vs Braves 18:05', perPerson: 50000 },
+      { name: '✅ ⚾ Giants 티켓 — LB104 Row 12 Seats 3·4·5 (예매 완료)', detail: '6/27 vs Braves 18:05 · $282 (3장) · Order GNTV-26195758-76749976', perPerson: 136000 },
       { name: '🏛 실리콘밸리 풀데이 (Stanford·Google·Apple)', detail: '7/1 오전~오후', perPerson: 80000 },
       { name: '🏎 SpeedVegas 슈퍼카', detail: '7/2 LV 오후 · 람보·페라리·포르쉐', perPerson: 280000 },
       { name: '🍽 Bacchanal Buffet @ Caesars × 2회', detail: 'LV (7/2 저녁 포함)', perPerson: 220000 },
@@ -110,7 +110,7 @@ const flights = [
 // ── Giants ──
 const giants = [
   { date: '6/26 금', time: '19:15', opponent: 'vs Atlanta Braves', note: '✈️ 도착 당일 — 장거리 비행 피로 회복 우선 → 관람 X' },
-  { date: '6/27 토', time: '18:05', opponent: 'vs Atlanta Braves', note: '⭐ 이번 일정 유일 관람 경기 — A/B 공통 (🔒 Alcatraz·Golden Gate 후 저녁 합류)' },
+  { date: '6/27 토', time: '18:05', opponent: 'vs Atlanta Braves', note: '✅ 예매 완료 — LB104 Row 12 Seats 3·4·5 (3장) · $282 · Lower Box Select · Order GNTV-26195758-76749976 · Ballpark 앱 배송' },
   { date: '6/28 일', time: '13:05', opponent: 'vs Atlanta Braves', note: 'A: 🇰🇷 LA 항공 당일치기 (Match 73) / B: 💻 실리콘밸리 (Stanford·Google·Apple) — 둘 다 관람 X' },
 ]
 
@@ -147,7 +147,7 @@ const aDays = [
     { time: '11:00', text: '⛴ Alcatraz Cruises — Pier 33 체크인 (사전 예약 필수)' },
     { time: '11:45~14:30', text: '🏝 Alcatraz Island 투어 (탈옥 역사 · 가이드 투어 · Bay View)' },
     { time: '15:00~', text: '🚴 Golden Gate Bridge 자전거 라이딩 · Sausalito 페리' },
-    { time: '18:05', text: '⚾ Giants vs Braves @ Oracle Park (저녁 경기 · F Market 트램 또는 도보)', baseball: true },
+    { time: '18:05', text: '✅ ⚾ Giants vs Braves @ Oracle Park — LB104 Row 12 Seats 3·4·5 (예매 완료 $282) · F Market 트램 또는 도보', baseball: true, bold: true },
   ]},
   { date: '6/28 일', city: '실리콘밸리 (당일치기)', cityTag: 'SV', icon: '💻', items: [
     { time: '08:30', text: '🍳 Hyatt Regency Embarcadero 조식 · BART/Caltrain or Uber 준비' },
@@ -235,7 +235,7 @@ const laDays = [
     { time: '11:00', text: '⛴ Alcatraz Cruises — Pier 33 체크인 (사전 예약 필수)' },
     { time: '11:45~14:30', text: '🔒 Alcatraz Island 투어 (옛 연방 감옥 · 탈옥 역사 · 가이드 오디오 투어 · Bay View)', bold: true },
     { time: '15:00~17:30', text: '🚴 Golden Gate Bridge 자전거 라이딩 · Sausalito 페리 귀환 (Blazing Saddles 렌탈 $35~50)' },
-    { time: '18:05', text: '⚾ Giants vs Braves @ Oracle Park (저녁 경기 · F Market 트램 또는 도보)', baseball: true },
+    { time: '18:05', text: '✅ ⚾ Giants vs Braves @ Oracle Park — LB104 Row 12 Seats 3·4·5 (예매 완료 $282) · F Market 트램 또는 도보', baseball: true, bold: true },
   ]},
   { date: '6/28 일', city: 'KR ✈️ 항공 SF ↔ LA 당일치기', cityTag: 'SF↔LA', icon: '🇰🇷', highlight: true, items: [
     { time: '05:30~', text: '🚙 Hyatt Regency Embarcadero → SFO 이동 (Uber, 25~40분)' },

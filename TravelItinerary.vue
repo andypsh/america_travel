@@ -114,17 +114,19 @@ function fmtKRW(n) {
   return n.toLocaleString()
 }
 
-// ── 정산 계산 — 현재 선택된 플랜의 1인 비용 기준 ──
+// ── 정산 계산 — 항공은 각자 부담 → 호텔+티켓+액티비티만 분담 ──
+const sharedCost = computed(() => costTotals.value.total - costTotals.value.flight)
 const settlement = computed(() => {
-  const totalCost = costTotals.value.total
+  const cost = sharedCost.value
   return payments.map(p => {
     const received = p.items.reduce((s, x) => s + x.amount, 0)
     return {
       person: p.person,
       items: p.items,
       received,
-      cost: totalCost,
-      balance: totalCost - received,
+      cost,
+      flightOwn: costTotals.value.flight,
+      balance: cost - received,
     }
   })
 })
@@ -762,7 +764,7 @@ const cityColors = {
       <div class="acc-header" @click="open.settlement = !open.settlement">
         <span class="acc-icon">💸</span>
         <span class="acc-title">정산 (받은 돈 / 받을 돈)</span>
-        <span class="acc-meta">{{ currentCost.label }} · 1인 <strong style="color: var(--accent)">{{ fmtKRW(costTotals.total) }}만원</strong> 기준 · 잔여 합계 <strong :style="{ color: settlementTotal > 0 ? '#f97316' : '#22c55e' }">{{ settlementTotal > 0 ? '+' : '' }}{{ fmtKRW(settlementTotal) }}만</strong></span>
+        <span class="acc-meta">{{ currentCost.label }} · 1인 분담(항공 제외) <strong style="color: var(--accent)">{{ fmtKRW(sharedCost) }}만원</strong> · 잔여 합계 <strong :style="{ color: settlementTotal > 0 ? '#f97316' : '#22c55e' }">{{ settlementTotal > 0 ? '+' : '' }}{{ fmtKRW(settlementTotal) }}만</strong></span>
         <span class="acc-chevron" :class="{ rotated: open.settlement }">›</span>
       </div>
       <div v-show="open.settlement" class="acc-body">
@@ -791,8 +793,12 @@ const cityColors = {
                 <span class="ss-value received">{{ fmtKRW(s.received) }}만</span>
               </div>
               <div class="ss-line">
-                <span class="ss-label">1인 부담 비용</span>
+                <span class="ss-label">1인 분담 비용 <em class="ss-em">(항공 제외)</em></span>
                 <span class="ss-value cost">{{ fmtKRW(s.cost) }}만</span>
+              </div>
+              <div class="ss-line ss-line-aside">
+                <span class="ss-label">✈️ 각자 항공권 (별도 부담)</span>
+                <span class="ss-value aside">{{ fmtKRW(s.flightOwn) }}만</span>
               </div>
               <div class="ss-line ss-balance">
                 <span class="ss-label">{{ s.balance > 0 ? '받을 돈' : s.balance < 0 ? '돌려줄 돈' : '정산 OK' }}</span>
@@ -804,7 +810,7 @@ const cityColors = {
           </div>
         </div>
         <p class="settle-note">
-          💡 1인 부담 비용은 선택된 플랜의 인당 합계 (호텔·항공·티켓·액티비티+식비 모두 포함). 환율·실제 예약가에 따라 변동 가능 ·
+          💡 1인 분담 비용 = 호텔 + 티켓 + 액티비티/식비 (각자 따로 결제한 <strong>항공권은 제외</strong>). 환율·실제 예약가에 따라 변동 가능 ·
           현재 플랜 변경 시 자동 재계산됩니다.
         </p>
       </div>
@@ -1488,6 +1494,9 @@ const cityColors = {
 .ss-value { font-family: ui-monospace, monospace; font-weight: 700; }
 .ss-value.received { color: #22c55e; }
 .ss-value.cost { color: var(--text); }
+.ss-em { font-size: .65rem; color: var(--text-dim); font-style: normal; font-weight: 400; }
+.ss-line-aside { opacity: .7; font-size: .72rem; }
+.ss-value.aside { color: var(--text-dim); font-weight: 600; }
 .ss-balance { padding-top: .35rem; border-top: 1px dashed var(--border-muted); font-size: .9rem; }
 .ss-balance .ss-label { font-weight: 700; color: var(--text); }
 .ss-value.owe { color: #f97316; font-size: 1.1rem; }

@@ -11,6 +11,7 @@ function krw(n) { return `₩${Math.round(n * KRW / 10000).toLocaleString()}만`
 const open = reactive({
   timeline:   true,   // 일정 — 최상단 + 펼침 (메인)
   cost:       false,  // 💰 예상 비용
+  settlement: true,   // 💸 정산 (받은 돈 / 받을 돈) — 사용자 요청으로 펼침
   activities: false,
   transport:  false,
   worldcup:   false,
@@ -19,6 +20,18 @@ const open = reactive({
   hotels:     false,
   booking:    false,
 })
+
+// ── 💸 정산 (받은 돈 / 받을 돈) ──
+const payments = [
+  { person: '김성준', items: [
+    { amount: 2000000, type: '일반', note: '여행 경비 선납' },
+    { amount: 1500000, type: '티켓', note: 'R32 한국전 티켓 (1,500k)' },
+  ]},
+  { person: '박성한', items: [
+    { amount: 2000000, type: '일반', note: '여행 경비 선납' },
+    { amount: 1500000, type: '티켓', note: 'R32 한국전 티켓 (1,500k)' },
+  ]},
+]
 
 // ── 💰 예상 비용 (인당 · 3명 분담 기준) ──
 const costData = {
@@ -100,6 +113,24 @@ function fmtKRW(n) {
   if (n >= 10000) return (Math.round(n / 1000) / 10) + '만'
   return n.toLocaleString()
 }
+
+// ── 정산 계산 — 현재 선택된 플랜의 1인 비용 기준 ──
+const settlement = computed(() => {
+  const totalCost = costTotals.value.total
+  return payments.map(p => {
+    const received = p.items.reduce((s, x) => s + x.amount, 0)
+    return {
+      person: p.person,
+      items: p.items,
+      received,
+      cost: totalCost,
+      balance: totalCost - received,
+    }
+  })
+})
+const settlementTotal = computed(() => {
+  return settlement.value.reduce((s, x) => s + x.balance, 0)
+})
 
 // ── 항공편 ──
 const flights = [
@@ -723,6 +754,59 @@ const cityColors = {
           ※ 항공권은 성수기 6/26~7/4 예상치 (예약 시점 변동 ±50만)<br>
           ※ 카지노 베팅·쇼핑은 개인 스타일에 따라 변동 큼
         </div>
+      </div>
+    </div>
+
+    <!-- ── 💸 정산 (받은 돈 / 받을 돈) ── -->
+    <div class="accordion card">
+      <div class="acc-header" @click="open.settlement = !open.settlement">
+        <span class="acc-icon">💸</span>
+        <span class="acc-title">정산 (받은 돈 / 받을 돈)</span>
+        <span class="acc-meta">{{ currentCost.label }} · 1인 <strong style="color: var(--accent)">{{ fmtKRW(costTotals.total) }}만원</strong> 기준 · 잔여 합계 <strong :style="{ color: settlementTotal > 0 ? '#f97316' : '#22c55e' }">{{ settlementTotal > 0 ? '+' : '' }}{{ fmtKRW(settlementTotal) }}만</strong></span>
+        <span class="acc-chevron" :class="{ rotated: open.settlement }">›</span>
+      </div>
+      <div v-show="open.settlement" class="acc-body">
+        <div class="settle-grid">
+          <div v-for="s in settlement" :key="s.person" class="settle-card" :class="{ 'settle-paid': s.balance <= 0, 'settle-owe': s.balance > 0 }">
+            <div class="settle-head">
+              <span class="settle-name">{{ s.person }}</span>
+              <span class="settle-badge" :class="{ 'badge-paid': s.balance <= 0, 'badge-owe': s.balance > 0 }">
+                {{ s.balance > 0 ? '추가로 받을 돈' : s.balance < 0 ? '돌려줄 돈' : '정산 완료' }}
+              </span>
+            </div>
+
+            <div class="settle-items">
+              <div v-for="(i, idx) in s.items" :key="idx" class="settle-item-row">
+                <span class="si-type" :class="{ 'si-ticket': i.type === '티켓' }">{{ i.type }}</span>
+                <span class="si-amount">+{{ fmtKRW(i.amount) }}만</span>
+                <span class="si-note">{{ i.note }}</span>
+              </div>
+            </div>
+
+            <div class="settle-divider"></div>
+
+            <div class="settle-summary-rows">
+              <div class="ss-line">
+                <span class="ss-label">받은 총액</span>
+                <span class="ss-value received">{{ fmtKRW(s.received) }}만</span>
+              </div>
+              <div class="ss-line">
+                <span class="ss-label">1인 부담 비용</span>
+                <span class="ss-value cost">{{ fmtKRW(s.cost) }}만</span>
+              </div>
+              <div class="ss-line ss-balance">
+                <span class="ss-label">{{ s.balance > 0 ? '받을 돈' : s.balance < 0 ? '돌려줄 돈' : '정산 OK' }}</span>
+                <span class="ss-value" :class="{ owe: s.balance > 0, surplus: s.balance < 0 }">
+                  {{ s.balance > 0 ? '+' : s.balance < 0 ? '−' : '' }}{{ fmtKRW(Math.abs(s.balance)) }}만
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <p class="settle-note">
+          💡 1인 부담 비용은 선택된 플랜의 인당 합계 (호텔·항공·티켓·액티비티+식비 모두 포함). 환율·실제 예약가에 따라 변동 가능 ·
+          현재 플랜 변경 시 자동 재계산됩니다.
+        </p>
       </div>
     </div>
 
@@ -1367,6 +1451,49 @@ const cityColors = {
   white-space: nowrap;
   min-width: 60px; text-align: right;
 }
+/* ── 💸 정산 ── */
+.settle-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: .8rem; margin-bottom: .75rem; }
+.settle-card {
+  background: var(--bg); border: 1.5px solid var(--border);
+  border-radius: var(--radius-lg); padding: 1rem 1.1rem;
+  display: flex; flex-direction: column; gap: .6rem;
+  transition: var(--transition);
+}
+.settle-card.settle-owe { border-color: #f97316; background: rgba(249,115,22,.04); }
+.settle-card.settle-paid { border-color: #22c55e; background: rgba(34,197,94,.04); }
+.settle-head { display: flex; align-items: center; justify-content: space-between; gap: .5rem; }
+.settle-name { font-size: 1.05rem; font-weight: 700; color: var(--text); }
+.settle-badge {
+  font-size: .65rem; font-weight: 700; padding: 3px 8px; border-radius: 5px;
+  letter-spacing: .03em; text-transform: uppercase;
+}
+.badge-owe { background: rgba(249,115,22,.18); color: #f97316; border: 1px solid rgba(249,115,22,.4); }
+.badge-paid { background: rgba(34,197,94,.18); color: #22c55e; border: 1px solid rgba(34,197,94,.4); }
+.settle-items { display: flex; flex-direction: column; gap: .3rem; }
+.settle-item-row {
+  display: grid; grid-template-columns: 50px 80px 1fr; gap: .4rem; align-items: center;
+  font-size: .76rem;
+}
+.si-type {
+  font-size: .62rem; font-weight: 700; padding: 2px 7px; border-radius: 4px;
+  background: var(--bg-overlay); color: var(--text-muted); text-align: center;
+}
+.si-type.si-ticket { background: rgba(124,58,237,.15); color: #7c3aed; }
+.si-amount { font-family: ui-monospace, monospace; font-weight: 700; color: #22c55e; }
+.si-note { font-size: .7rem; color: var(--text-dim); }
+.settle-divider { height: 1px; background: var(--border-muted); margin: .15rem 0; }
+.settle-summary-rows { display: flex; flex-direction: column; gap: .3rem; }
+.ss-line { display: flex; justify-content: space-between; align-items: center; font-size: .8rem; }
+.ss-label { color: var(--text-muted); font-weight: 500; }
+.ss-value { font-family: ui-monospace, monospace; font-weight: 700; }
+.ss-value.received { color: #22c55e; }
+.ss-value.cost { color: var(--text); }
+.ss-balance { padding-top: .35rem; border-top: 1px dashed var(--border-muted); font-size: .9rem; }
+.ss-balance .ss-label { font-weight: 700; color: var(--text); }
+.ss-value.owe { color: #f97316; font-size: 1.1rem; }
+.ss-value.surplus { color: #22c55e; font-size: 1.1rem; }
+.settle-note { font-size: .7rem; color: var(--text-dim); background: var(--bg-overlay); padding: 7px 11px; border-radius: 7px; line-height: 1.55; }
+
 .cost-footnote {
   font-size: .68rem; color: var(--text-dim);
   padding: .55rem .7rem;

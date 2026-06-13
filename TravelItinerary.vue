@@ -58,7 +58,8 @@ const costData = {
       { name: 'SF Hyatt Regency Embarcadero (카페테리아 적용 후)', detail: '3박 객실 ≈ 54만 + 현지 $180 · 3명 분담', perPerson: 263000 },
       { name: 'YOS 1박2일 투어 (요셈투어·마이리얼트립)', detail: '778,770원 + $50 서비스 + $100 비거주자 + 점심 별도', perPerson: 1011000 },
       { name: 'SEA 호텔 (쉐라톤 그랜드)', detail: '1박', perPerson: 150000 },
-      { name: 'LV Caesars Palace Octavius (회사보조 후)', detail: '3박', perPerson: 300000 },
+      { name: '✅ LV Caesars Palace Octavius Pool View 2Q (예매 완료)', detail: '3박 1실 839,741원(전액 회사 콘도 보조) · 1박 279,914원 · 사용자 실부담: 급여공제 15만 + 카페테리아 15포인트 = 30만 · 3인 분담', perPerson: 279914 },
+      { name: '✈️ LV Caesars 현지 지불 (체크인 시)', detail: 'Resort Fee $58.94 × 3박 + Rollaway $25 × 3박 + Parking·Tax · 약 $252/실 ≈ 36만', perPerson: 121000 },
     ],
     flight: [
       { name: 'OZ212/OZ211 ICN ↔ SFO 왕복', detail: '6/26·7/4', perPerson: 1200000 },
@@ -88,7 +89,8 @@ const costData = {
     hotel: [
       { name: 'SF Hyatt Regency Embarcadero (카페테리아 적용 후)', detail: '4박 객실 ≈ 72만 + 현지 $240 · 3명 분담', perPerson: 350000 },
       { name: 'YOS 1박2일 투어 (요셈투어·마이리얼트립)', detail: '778,770원 + $50 서비스 + $100 비거주자 + 점심 별도', perPerson: 1011000 },
-      { name: 'LV Caesars Palace Octavius (회사보조 후)', detail: '3박', perPerson: 300000 },
+      { name: '✅ LV Caesars Palace Octavius Pool View 2Q (예매 완료)', detail: '3박 1실 839,741원(전액 회사 콘도 보조) · 1박 279,914원 · 사용자 실부담: 급여공제 15만 + 카페테리아 15포인트 = 30만 · 3인 분담', perPerson: 279914 },
+      { name: '✈️ LV Caesars 현지 지불 (체크인 시)', detail: 'Resort Fee $58.94 × 3박 + Rollaway $25 × 3박 + Parking·Tax · 약 $252/실 ≈ 36만', perPerson: 121000 },
     ],
     flight: [
       { name: 'OZ212/OZ211 ICN ↔ SFO 왕복', detail: '6/26·7/4', perPerson: 1200000 },
@@ -622,8 +624,8 @@ const bookingItems = [
     note: '⭐ Plan A(LA 확정) 전용 · 마이리얼트립 요세미티 투어 SF 드롭 후 1박 → 7/1 SFO→LAS 직항 · 같은 호텔 4박째 (체크인 연장 가능)' },
   { id: 'sea-hyatt', label: 'SEA Hyatt Regency (1박) — Plan B 전용', tag: 'SEA', dates: '6/30 → 7/1', nights: 1, plans: ['B'], type: 'standby',
     note: 'Plan B(시애틀 백업) 전용 · 조3위 진출 시에만 사용 · downtown Hyatt · ⚠️ 월드컵 서징 ⚠️ 무료취소 옵션으로 예약 (6/25 23:59 이전 취소 가능)' },
-  { id: 'lv-base',  label: '✅ LV Caesars Palace — Octavius Pool View, 2 Queens (예약 완료)', tag: 'LV', dates: '7/1 → 7/4', nights: 3, plans: ['A','B'], type: 'now', confirmed: true,
-    note: '✅ 예약 완료 · 3570 Las Vegas Blvd S · Octavius Tower 신관(2012) · Pool View · 2 Queen Beds + Rollaway 요청 · OMNIA·Venus Pool·Forum Shops 직속 · 분수쇼 도보 3분 · 24h 프런트' },
+  { id: 'lv-base',  label: '✅ LV Caesars Palace — Octavius Pool View, 2 Queens (예약 완료 · 사용자 결제)', tag: 'LV', dates: '7/1 → 7/4', nights: 3, plans: ['A','B'], type: 'now', confirmed: true,
+    note: '✅ 예약 완료 (사용자 직접 결제 · 하나투어) · Res# HH2634440622 · Confirm# CLVEajUAYA · 3570 Las Vegas Blvd S · Octavius Tower 신관 Pool View 2Q + Rollaway · 3 Adults · No Breakfast · 총 839,741원/실 (1박 279,914) · 회사 콘도지원 539,741 + 급여공제 150,000 + 카페테리아 15포인트(150k) · 사용자 실부담 약 30만 · ⚠️ 체크인 시 현지 지불: Resort Fee $58.94/박 + Rollaway $25/박 + Tax = 약 $252/실 (36만) 별도 · 담당자 신민주 02-2076-2228 · 호텔 TEL 1-702-731-7110' },
 ]
 
 const decisions = [

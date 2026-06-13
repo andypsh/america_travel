@@ -144,15 +144,26 @@ function fmtKRW(n) {
   return n.toLocaleString()
 }
 
-// ── 정산 계산 — 항공은 각자 부담 → 호텔+티켓+액티비티만 분담 ──
-// 3인 분담 모델: 각자 share = sharedCost. 각자 net 지출과 share의 차이가 정산 잔액.
-// - 박성혁(사용자): vendor 직접 결제 V_A + 친구 송금 700만 입금 → net = V_A − 700만
-// - 박성한: vendor 직접결제 ₩262,672 (SF Hyatt) + 박성혁 송금 350만 → net = 3,762,672
-// - 김성준: 박성혁 송금 350만 → net = 350만
-// balance = share − net_paid (양수=추가 납부 / 음수=환급받음)
+// ── 정산 계산 — 결제 완료된 항목만 (미결제 항목은 친구에게 청구 X) ──
+// 사용자 요청: "아직 쓰지 않은 돈에 대해서는 지금 달라 하면 안 돼"
+// 결제 완료 판별: name에 ✅ / 직접 결제 / 마이리얼트립 선납 / 예매 완료 키워드 포함
 const sharedCost = computed(() => costTotals.value.total - costTotals.value.flight)
+const isPaidItem = (item) => {
+  const n = item.name
+  return n.includes('✅') || n.includes('직접 결제') || n.includes('마이리얼트립 선납') || n.includes('예매 완료')
+}
+const paidSharedCost = computed(() => {
+  const c = currentCost.value
+  const sumPaid = (arr) => arr.filter(isPaidItem).reduce((s, x) => s + x.perPerson, 0)
+  return sumPaid(c.hotel) + sumPaid(c.ticket) + sumPaid(c.activity)
+})
+const pendingSharedCost = computed(() => sharedCost.value - paidSharedCost.value)
+
+// 정산: balance = 결제완료 1인 share − received (받은 돈)
+// - 양수: 박성혁이 친구로부터 받을 돈 (실제 결제분 기준 부족)
+// - 음수: 박성혁이 보관 중인 친구 advance (선납이 결제분보다 많음 → 미결제 항목 대비)
 const settlement = computed(() => {
-  const cost = sharedCost.value
+  const cost = paidSharedCost.value
   return payments.map(p => {
     const received = p.items.reduce((s, x) => s + x.amount, 0)
     return {
@@ -160,6 +171,7 @@ const settlement = computed(() => {
       items: p.items,
       received,
       cost,
+      pendingShare: pendingSharedCost.value,
       flightOwn: costTotals.value.flight,
       balance: cost - received,
     }
@@ -169,24 +181,23 @@ const settlementTotal = computed(() => {
   return settlement.value.reduce((s, x) => s + x.balance, 0)
 })
 
-// 박성혁(사용자) 본인의 정산 위치 — 친구들로부터 받을 돈 총합
+// 박성혁(사용자) 본인의 현재 결제 기준 정산
 const userSettlement = computed(() => {
-  const total = costTotals.value.total - costTotals.value.flight  // 1인분 share
-  const totalAcrossAll = total * 3  // 전체 분담 비용
+  const paid = paidSharedCost.value
+  const paidTotal = paid * 3  // 3인 결제 완료 항목 총액
   const friendsDirectPaid = 262672  // 박성한 SF Hyatt 직접결제
-  const userVendorPaid = totalAcrossAll - friendsDirectPaid  // 박성혁이 vendor에 낸 총액
-  const userOwnShare = total
+  const userVendorPaid = paidTotal - friendsDirectPaid
   const receivedFromFriends = 7000000  // 200만+150만 × 2명
   const userNetSpent = userVendorPaid - receivedFromFriends
-  const balance = userOwnShare - userNetSpent  // 음수면 박성혁이 받을 돈
+  const balance = paid - userNetSpent
   return {
     person: '박성혁 (사용자)',
     vendorPaid: userVendorPaid,
     received: receivedFromFriends,
-    share: userOwnShare,
+    share: paid,
     netSpent: userNetSpent,
     balance,
-    receivable: -balance,  // 양수: 친구들로부터 받을 돈
+    receivable: -balance,
   }
 })
 
@@ -954,24 +965,25 @@ const tripStats = computed(() => {
     <div class="accordion card">
       <div class="acc-header" @click="open.settlement = !open.settlement">
         <span class="acc-icon">💸</span>
-        <span class="acc-title">정산 (받은 돈 / 받을 돈)</span>
-        <span class="acc-meta">{{ currentCost.label }} · 1인 분담(항공 제외) <strong style="color: var(--accent)">{{ fmtKRW(sharedCost) }}만원</strong> · 잔여 합계 <strong :style="{ color: settlementTotal > 0 ? '#f97316' : '#22c55e' }">{{ settlementTotal > 0 ? '+' : '' }}{{ fmtKRW(settlementTotal) }}만</strong></span>
+        <span class="acc-title">정산 (결제 완료 기준)</span>
+        <span class="acc-meta">{{ currentCost.label }} · 결제완료 1인 <strong style="color: var(--accent)">{{ fmtKRW(paidSharedCost) }}만</strong> · 미결제 1인 <strong style="color: #f97316">{{ fmtKRW(pendingSharedCost) }}만</strong> · 정산잔여 <strong :style="{ color: settlementTotal > 0 ? '#f97316' : '#22c55e' }">{{ settlementTotal > 0 ? '+' : '' }}{{ fmtKRW(settlementTotal) }}만</strong></span>
         <span class="acc-chevron" :class="{ rotated: open.settlement }">›</span>
       </div>
       <div v-show="open.settlement" class="acc-body">
         <!-- 직접 결제 항목 안내 -->
         <div class="paid-by-banner">
-          <div class="pb-title">💳 직접 결제 항목 — 3인 정산 자동 보정</div>
+          <div class="pb-title">💳 결제 완료 항목 기준 정산 — 미결제 항목은 청구 X</div>
           <div class="pb-rows">
-            <span class="pb-item pb-bsh">🏨 <strong>SF Hyatt 4박 ₩262,672</strong> · 박성한 직접 결제 → 친구 2인분(₩175,114) 자동 차감 (박성한이 박성혁에 갚을 돈 ↓)</span>
-            <span class="pb-item pb-user">🏨 <strong>LV Caesars 3박 ₩839,741</strong> · 박성혁 직접 결제 → 친구 2인분 자동 청구 (박성혁이 친구로부터 받을 돈 ↑)</span>
+            <span class="pb-item pb-bsh">🏨 <strong>SF Hyatt 4박 ₩262,672</strong> · 박성한 직접 결제 → 친구 2인분(₩175,114) 자동 차감</span>
+            <span class="pb-item pb-user">🏨 <strong>LV Caesars 3박 ₩839,741</strong> · 박성혁 직접 결제 → 친구 2인분 자동 청구</span>
           </div>
           <div class="pb-math">
-            <strong>📐 3인 정산 수식</strong> · 각자 share = ₩{{ fmtKRW(sharedCost) }}만 (1인 분담)<br>
-            ▸ <em>balance</em> = share − (vendor 직접결제 + 박성혁 송금)<br>
-            ▸ 박성한 net = ₩262,672 (Hyatt) + ₩3,500,000 (송금) = ₩3,762,672 → balance = share − 376.3만<br>
-            ▸ 김성준 net = ₩3,500,000 (송금) → balance = share − 350만<br>
-            ▸ 박성혁(본인) = 다른 모든 vendor 직접결제 V_A − 700만 수금 → 받을 돈 = friend balance 합계
+            <strong>📐 3인 정산 원칙 — "이미 쓴 돈만 정산"</strong><br>
+            ▸ <em>결제완료 1인 share</em> = ₩{{ fmtKRW(paidSharedCost) }}만 (SF Hyatt + YOS 마이리얼트립 + SpeedVegas + Giants + LV Caesars 예매)<br>
+            ▸ <em>미결제 1인 share</em> = ₩{{ fmtKRW(pendingSharedCost) }}만 (R32 티켓·YOS 현지·LV 리조트피·식비·기타 액티비티) → <strong>현재 청구 X</strong><br>
+            ▸ <em>balance</em> = 결제완료 share − received (양수=박성혁 받을 돈 / 음수=박성혁 보관 중 advance)<br>
+            ▸ 박성한 received = ₩262,672 (Hyatt) + ₩3,500,000 (송금) = ₩3,762,672<br>
+            ▸ 김성준 received = ₩3,500,000 (송금)
           </div>
         </div>
 
@@ -1003,33 +1015,35 @@ const tripStats = computed(() => {
           <div class="settle-card settle-self">
             <div class="settle-head">
               <span class="settle-name">🧑 {{ userSettlement.person }}</span>
-              <span class="settle-badge badge-self">총 받을 돈</span>
+              <span class="settle-badge badge-self">{{ userSettlement.receivable >= 0 ? '현재 받을 돈' : '친구 advance 보관' }}</span>
             </div>
             <div class="settle-items">
               <div class="settle-item-row">
                 <span class="si-type">vendor 결제</span>
                 <span class="si-amount">−{{ fmtKRW(userSettlement.vendorPaid) }}만</span>
-                <span class="si-note">LV Caesars · SpeedVegas · Giants · YOS 마이리얼트립 · 기타 (SF Hyatt 제외)</span>
+                <span class="si-note">결제 완료 항목만 (LV Caesars 예매 · SpeedVegas · Giants · YOS 마이리얼트립)</span>
               </div>
               <div class="settle-item-row">
                 <span class="si-type">친구 송금</span>
                 <span class="si-amount">+{{ fmtKRW(userSettlement.received) }}만</span>
-                <span class="si-note">김성준 350만 + 박성한 350만</span>
+                <span class="si-note">김성준 350만 + 박성한 350만 (선납 + R32 티켓 명목)</span>
               </div>
             </div>
             <div class="settle-divider"></div>
             <div class="settle-summary-rows">
               <div class="ss-line">
-                <span class="ss-label">본인 1인 분담 (share)</span>
+                <span class="ss-label">본인 1인 결제완료 share</span>
                 <span class="ss-value cost">{{ fmtKRW(userSettlement.share) }}만</span>
               </div>
               <div class="ss-line">
                 <span class="ss-label">실제 본인 out-of-pocket</span>
-                <span class="ss-value">{{ fmtKRW(userSettlement.netSpent) }}만</span>
+                <span class="ss-value" :style="{ color: userSettlement.netSpent < 0 ? '#22c55e' : 'var(--text)' }">{{ userSettlement.netSpent < 0 ? '+' : '' }}{{ fmtKRW(userSettlement.netSpent) }}만</span>
               </div>
               <div class="ss-line ss-balance">
-                <span class="ss-label">친구로부터 받을 돈 (총합)</span>
-                <span class="ss-value owe">+{{ fmtKRW(userSettlement.receivable) }}만</span>
+                <span class="ss-label">{{ userSettlement.receivable >= 0 ? '현재 친구로부터 받을 돈' : '친구 advance 보관 중' }}</span>
+                <span class="ss-value" :class="{ owe: userSettlement.receivable >= 0, surplus: userSettlement.receivable < 0 }">
+                  {{ userSettlement.receivable >= 0 ? '+' : '−' }}{{ fmtKRW(Math.abs(userSettlement.receivable)) }}만
+                </span>
               </div>
             </div>
           </div>
@@ -1038,7 +1052,7 @@ const tripStats = computed(() => {
             <div class="settle-head">
               <span class="settle-name">{{ s.person }}</span>
               <span class="settle-badge" :class="{ 'badge-paid': s.balance <= 0, 'badge-owe': s.balance > 0 }">
-                {{ s.balance > 0 ? '추가로 받을 돈' : s.balance < 0 ? '돌려줄 돈' : '정산 완료' }}
+                {{ s.balance > 0 ? '현재 추가로 받을 돈' : s.balance < 0 ? '박성혁 advance 보관' : '정산 완료' }}
               </span>
             </div>
 
@@ -1054,19 +1068,23 @@ const tripStats = computed(() => {
 
             <div class="settle-summary-rows">
               <div class="ss-line">
-                <span class="ss-label">받은 총액</span>
+                <span class="ss-label">박성혁에게 송금/결제한 총액</span>
                 <span class="ss-value received">{{ fmtKRW(s.received) }}만</span>
               </div>
               <div class="ss-line">
-                <span class="ss-label">1인 분담 비용 <em class="ss-em">(항공 제외)</em></span>
+                <span class="ss-label">결제완료 1인 share <em class="ss-em">(현재까지)</em></span>
                 <span class="ss-value cost">{{ fmtKRW(s.cost) }}만</span>
+              </div>
+              <div class="ss-line ss-line-aside">
+                <span class="ss-label">미결제 1인 예상 <em class="ss-em">(아직 청구 X)</em></span>
+                <span class="ss-value aside">+{{ fmtKRW(s.pendingShare) }}만</span>
               </div>
               <div class="ss-line ss-line-aside">
                 <span class="ss-label">✈️ 각자 항공권 (별도 부담)</span>
                 <span class="ss-value aside">{{ fmtKRW(s.flightOwn) }}만</span>
               </div>
               <div class="ss-line ss-balance">
-                <span class="ss-label">{{ s.balance > 0 ? '받을 돈' : s.balance < 0 ? '돌려줄 돈' : '정산 OK' }}</span>
+                <span class="ss-label">{{ s.balance > 0 ? '현재 받을 돈' : s.balance < 0 ? '박성혁 advance 보관' : '정산 OK' }}</span>
                 <span class="ss-value" :class="{ owe: s.balance > 0, surplus: s.balance < 0 }">
                   {{ s.balance > 0 ? '+' : s.balance < 0 ? '−' : '' }}{{ fmtKRW(Math.abs(s.balance)) }}만
                 </span>
@@ -1075,8 +1093,8 @@ const tripStats = computed(() => {
           </div>
         </div>
         <p class="settle-note">
-          💡 1인 분담 비용 = 호텔 + 티켓 + 액티비티/식비 (각자 따로 결제한 <strong>항공권은 제외</strong>). 환율·실제 예약가에 따라 변동 가능 ·
-          현재 플랜 변경 시 자동 재계산됩니다.
+          💡 <strong>결제 완료 기준 정산</strong>: 미결제 항목(R32 티켓·YOS 현지·LV 리조트피·식비 등)은 친구에게 청구하지 않음. 친구들이 advance로 보낸 350만은 미결제 항목 발생 시 그쪽으로 차감됨 ·
+          항공권은 각자 부담.
         </p>
       </div>
     </div>

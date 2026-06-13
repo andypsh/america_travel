@@ -55,7 +55,7 @@ const costData = {
   a: {
     label: 'Plan B (SEA 한국전 · 조3위 백업)',
     hotel: [
-      { name: 'SF Hyatt Regency Embarcadero (카페테리아 적용 후)', detail: '3박 객실 ≈ 54만 + 현지 $180 · 3명 분담', perPerson: 263000 },
+      { name: 'SF Hyatt Regency Embarcadero (박성한 직접 결제 · 카페테리아 후)', detail: '박성한 실부담 262,672원 ÷ 3명 = 1인 87,557원', perPerson: 87557 },
       { name: 'YOS 1박2일 투어 (요셈투어·마이리얼트립)', detail: '778,770원 + $50 서비스 + $100 비거주자 + 점심 별도', perPerson: 1011000 },
       { name: 'SEA 호텔 (쉐라톤 그랜드)', detail: '1박', perPerson: 150000 },
       { name: '✅ LV Caesars Palace Octavius Pool View 2Q (예매 완료)', detail: '3박 1실 839,741원(전액 회사 콘도 보조) · 1박 279,914원 · 사용자 실부담: 급여공제 15만 + 카페테리아 15포인트 = 30만 · 3인 분담', perPerson: 279914 },
@@ -87,7 +87,7 @@ const costData = {
   b: {
     label: 'Plan A (LA 한국전 · 조2위 ✅확정)',
     hotel: [
-      { name: 'SF Hyatt Regency Embarcadero (카페테리아 적용 후)', detail: '4박 객실 ≈ 72만 + 현지 $240 · 3명 분담', perPerson: 350000 },
+      { name: 'SF Hyatt Regency Embarcadero (박성한 직접 결제 · 카페테리아 후)', detail: '박성한 실부담 262,672원 ÷ 3명 = 1인 87,557원 (4박, Plan A 1박 연장 포함)', perPerson: 87557 },
       { name: 'YOS 1박2일 투어 (요셈투어·마이리얼트립)', detail: '778,770원 + $50 서비스 + $100 비거주자 + 점심 별도', perPerson: 1011000 },
       { name: '✅ LV Caesars Palace Octavius Pool View 2Q (예매 완료)', detail: '3박 1실 839,741원(전액 회사 콘도 보조) · 1박 279,914원 · 사용자 실부담: 급여공제 15만 + 카페테리아 15포인트 = 30만 · 3인 분담', perPerson: 279914 },
       { name: '✈️ LV Caesars 현지 지불 (체크인 시)', detail: 'Resort Fee $58.94 × 3박 + Rollaway $25 × 3박 + Parking·Tax · 약 $252/실 ≈ 36만', perPerson: 121000 },

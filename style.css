@@ -1,21 +1,21 @@
-/* Design tokens — dark theme (GitHub dark palette) */
+/* Design tokens — light theme (모바일 APP 친화 · 한눈에 보이는 UI) */
 :root {
-  --bg:           #0d1117;
-  --bg-elevated:  #161b22;
-  --bg-overlay:   #21262d;
-  --border:       #30363d;
-  --border-muted: #21262d;
-  --text:         #ffffff;
-  --text-muted:   #f1f5fa;
-  --text-dim:     #eaf0f7;
-  --accent:       #58a6ff;
-  --accent-hover: #79c0ff;
-  --accent-bg:    rgba(88,166,255,.12);
-  --green:        #3fb950;
-  --orange:       #d29922;
-  --red:          #f85149;
-  --yellow:       #e3b341;
-  --yellow-bg:    rgba(227,179,65,.15);
+  --bg:           #f1f5f9;
+  --bg-elevated:  #ffffff;
+  --bg-overlay:   #f8fafc;
+  --border:       #cbd5e1;
+  --border-muted: #e2e8f0;
+  --text:         #0f172a;
+  --text-muted:   #334155;
+  --text-dim:     #64748b;
+  --accent:       #2563eb;
+  --accent-hover: #1d4ed8;
+  --accent-bg:    rgba(37,99,235,.10);
+  --green:        #16a34a;
+  --orange:       #ea580c;
+  --red:          #dc2626;
+  --yellow:       #ca8a04;
+  --yellow-bg:    rgba(234,179,8,.15);
   --radius-sm:    6px;
   --radius:       10px;
   --radius-lg:    14px;

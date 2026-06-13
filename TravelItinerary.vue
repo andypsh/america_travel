@@ -131,9 +131,15 @@ const aHotels = [
   { city: '라스베이거스',     tag: 'LV',  nights: 3, dates: '7/1~7/4',  economy: 140, mid: 240, note: 'Caesars Palace (24h 체크인) · 평일 요금 · 7/4 저녁 SFO' },
 ]
 const aDays = [
-  { date: '6/26 금', city: '샌프란시스코', cityTag: 'SF', icon: '✈️', items: [
-    { time: '~14:30', text: 'OZ212 SFO 도착 — Hyatt Regency Embarcadero 체크인' },
-    { time: '저녁', text: '🍜 Ferry Building 푸드홀 가벼운 저녁 (Hog Island Oysters, Slanted Door 등) (Mensho 라멘 등) · 시차 적응 · 일찍 취침 (Giants 19:15 ❌ 패스 — 장거리 비행 피로)' },
+  { date: '6/26 금', city: '샌프란시스코 도착', cityTag: 'SF', icon: '✈️', items: [
+    { time: '14:30', text: '🛬 OZ212 SFO 도착 (International Terminal G) · 게이트 → 입국심사장 도보 10분' },
+    { time: '14:40~16:00', text: '🛂 입국심사 (ESTA) + 🧳 수하물 + 🛃 세관 (성수기 1~1.5시간 · APC 키오스크 활용 권장)', bold: true },
+    { time: '16:10', text: '🚶 SFO 공항 내 BART 역 이동 (International Terminal 직결 · AirTrain 불필요)' },
+    { time: '16:20~16:55', text: '🚇 BART Yellow Line SFO → Embarcadero ($10.85/인 · 약 30분 · 3인 = $32.55)', bold: true },
+    { time: '16:55~17:00', text: '🚶 Embarcadero 역 → Hyatt Regency Embarcadero 도보 3분 (호텔 옆 역 직결)' },
+    { time: '17:00~18:30', text: '🏨 체크인 · 짐 정리 · 빠른 샤워 · 시차 적응' },
+    { time: '18:30~', text: '🍜 Ferry Building 푸드홀 가벼운 저녁 (Hog Island Oysters · Slanted Door · Mensho 라멘 · 도보 10분) · ⚾ Giants 19:15 ❌ 패스 (장거리 비행 피로)' },
+    { time: '22:00 이전', text: '🛌 일찍 취침 · 내일 09:00 케이블카 출발' },
   ]},
   { date: '6/27 토', city: '샌프란시스코', cityTag: 'SF', icon: '🚋', items: [
     { time: '09:00~09:30', text: '🚋 케이블카 Powell-Hyde 라인 탑승 (Powell/Market → Hyde/Beach, 편도 $8) · Lombard St·Russian Hill 절경', bold: true },
@@ -213,9 +219,15 @@ const laHotels = [
   { city: '라스베이거스', tag: 'LV',  nights: 3, dates: '7/1~7/4',  economy: 140, mid: 240, note: 'Caesars Palace · 평일 요금 · 7/4 저녁 SFO' },
 ]
 const laDays = [
-  { date: '6/26 금', city: '샌프란시스코', cityTag: 'SF', icon: '✈️', items: [
-    { time: '~14:30', text: 'OZ212 SFO 도착 — 호텔 체크인' },
-    { time: '저녁', text: '🍜 Ferry Building 푸드홀 가벼운 저녁 (Hog Island Oysters, Slanted Door 등) · 시차 적응 · 일찍 취침 (Giants 19:15 ❌ 패스)' },
+  { date: '6/26 금', city: '샌프란시스코 도착', cityTag: 'SF', icon: '✈️', items: [
+    { time: '14:30', text: '🛬 OZ212 SFO 도착 (International Terminal G) · 게이트 → 입국심사장 도보 10분' },
+    { time: '14:40~16:00', text: '🛂 입국심사 (ESTA) + 🧳 수하물 + 🛃 세관 (성수기 1~1.5시간 · APC 키오스크 활용 권장)', bold: true },
+    { time: '16:10', text: '🚶 SFO 공항 내 BART 역 이동 (International Terminal 직결)' },
+    { time: '16:20~16:55', text: '🚇 BART Yellow Line SFO → Embarcadero ($10.85/인 · 약 30분 · 3인 = $32.55)', bold: true },
+    { time: '16:55~17:00', text: '🚶 Embarcadero 역 → Hyatt Regency Embarcadero 도보 3분 (호텔 옆 역 직결)' },
+    { time: '17:00~18:30', text: '🏨 체크인 · 짐 정리 · 빠른 샤워 · 시차 적응' },
+    { time: '18:30~', text: '🍜 Ferry Building 푸드홀 가벼운 저녁 (Hog Island Oysters · Slanted Door · Mensho 라멘 · 도보 10분) · ⚾ Giants 19:15 ❌ 패스 (장거리 비행 피로)' },
+    { time: '22:00 이전', text: '🛌 일찍 취침 · 내일 09:00 케이블카 출발' },
   ]},
   { date: '6/27 토', city: '샌프란시스코', cityTag: 'SF', icon: '🚋', items: [
     { time: '09:00~09:30', text: '🚋 케이블카 Powell-Hyde 라인 탑승 (Powell/Market 시점 → Hyde/Beach 종점, 편도 $8) · Lombard St·Russian Hill 절경', bold: true },

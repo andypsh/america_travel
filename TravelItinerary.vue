@@ -89,8 +89,7 @@ const costData = {
     flight: [
       { name: 'OZ212/OZ211 ICN ↔ SFO 왕복', detail: '6/26·7/4', perPerson: 1200000 },
       { name: 'SFO ↔ LAX 왕복 (Southwest 직항)', detail: '6/28 · 06:05 SFO→LAX / 21:05 LAX→SFO', perPerson: 390069 },
-      { name: 'SFO → LAS', detail: '7/1', perPerson: 220000 },
-      { name: 'LAS → SFO (United 직항)', detail: '7/4 · 18:20 LAS → 20:02 SFO (1h 42m)', perPerson: 249800 },
+      { name: 'SFO ↔ LAS 왕복 (United 직항)', detail: '7/1 19:37→21:27 SFO→LAS / 7/4 18:20→20:02 LAS→SFO', perPerson: 606600 },
     ],
     ticket: [
       { name: '🇰🇷 R32 한국전 티켓 (SoFi Stadium Match 73)', detail: '6/28', perPerson: 1500000 },
@@ -332,9 +331,11 @@ const laDays = [
     { time: '12:00~13:00', text: '🍜 Palo Alto / Mountain View 점심 (인도·중식·한식 풍부)' },
     { time: '13:00~14:00', text: '🔵 Google Visitor Center (Mountain View) · 안드로이드 동상 · Visitor Experience', bold: true },
     { time: '14:00~15:00', text: '🍎 Apple Park Visitor Center (Cupertino) · 옥상 카페 · Apple 굿즈' },
-    { time: '15:00~', text: '🚙 Uber → SF Hyatt 짐 픽업 → SFO 공항 (총 1.5시간)' },
-    { time: '17:30~', text: '✈️ SFO → LAS 국내선 (Southwest/Alaska 직항 1h 30m)' },
-    { time: '~20:00', text: '🛬 라스베이거스 도착 · Uber로 Caesars Palace 체크인 · The Strip 야경 · Bellagio 분수쇼' },
+    { time: '15:00~', text: '🚙 Uber → SF Hyatt 짐 픽업 (~16:00)' },
+    { time: '16:00~17:30', text: '☕ Ferry Building 마지막 SF 저녁 · 짐 정리 · 19:37 출발 여유롭게' },
+    { time: '17:30', text: '🚇 Hyatt → Embarcadero BART → SFO (BART 직결, 약 35분, $10.85/인)' },
+    { time: '19:37', text: '✈️ SFO → LAS (United 직항 · 1h 50m · ₩606,600 왕복)', bold: true },
+    { time: '21:27', text: '🛬 라스베이거스 도착 · Uber로 Caesars Palace 체크인 · The Strip 야경 · Bellagio 분수쇼' },
   ]},
   { date: '7/2 목', city: '라스베이거스', cityTag: 'LV', icon: '🎰', items: [
     { time: '오전', text: '😴 늦잠 · Caesars 풀장 (Garden of the Gods) · 브런치 (전날 비행·SV 강행 회복)' },

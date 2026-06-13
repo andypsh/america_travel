@@ -38,15 +38,18 @@ const payments = [
 // 200만 선납 명목 항목들의 실제 1인 부담 합계
 // SF Hyatt는 박성한이 직접 결제 → 정산에서 제외 (사용자가 받을 돈 아님)
 // LV Caesars는 사용자가 직접 결제 → 자동 포함 (분담 비용에서 친구들 받을 돈)
-// 200만은 YOS + SpeedVegas + Giants 명목으로 재매핑
+// YOS는 마이리얼트립 선납 + 현지 지불 2단계로 분리
+// 200만은 YOS(선납+현지) + SpeedVegas + Giants 명목으로 재매핑
 const earmarkedCost = computed(() => {
   const c = currentCost.value
   const findFirst = (arr, kw) => arr.find(x => kw.some(k => x.name.includes(k)))?.perPerson || 0
   return {
-    yosemite: findFirst(c.hotel, ['YOS']),
+    yosSeonNap: findFirst(c.hotel, ['YOS 1박2일']),
+    yosLocal: findFirst(c.hotel, ['YOS 현지']),
     speedvegas: findFirst(c.activity, ['SpeedVegas']),
     giants: findFirst(c.activity, ['Giants']),
-    total() { return this.yosemite + this.speedvegas + this.giants },
+    yosemite() { return this.yosSeonNap + this.yosLocal },
+    total() { return this.yosSeonNap + this.yosLocal + this.speedvegas + this.giants },
   }
 })
 
@@ -938,9 +941,11 @@ const tripStats = computed(() => {
 
         <!-- 200만 선납 명목 항목 부담 가이드 (SF 호텔 제외, Giants 추가) -->
         <div class="earmark-banner">
-          <div class="eb-title">📌 200만 선납 재매핑 = 다음 3개 항목 (1인 부담 기준 · SF 호텔 제외, ⚾ Giants 추가)</div>
+          <div class="eb-title">📌 200만 선납 재매핑 = 다음 항목 (1인 부담 기준 · SF 호텔 제외, ⚾ Giants·YOS 현지 추가)</div>
           <div class="eb-rows">
-            <span class="eb-item">🏞 요세미티(요셈투어) <strong>{{ fmtKRW(earmarkedCost.yosemite) }}만</strong></span>
+            <span class="eb-item">🏞 YOS 선납(마이리얼트립) <strong>{{ fmtKRW(earmarkedCost.yosSeonNap) }}만</strong></span>
+            <span class="eb-plus">+</span>
+            <span class="eb-item">🏞 YOS 현지(서비스+비거주자+점심) <strong>{{ fmtKRW(earmarkedCost.yosLocal) }}만</strong></span>
             <span class="eb-plus">+</span>
             <span class="eb-item">🏎 SpeedVegas <strong>{{ fmtKRW(earmarkedCost.speedvegas) }}만</strong></span>
             <span class="eb-plus">+</span>

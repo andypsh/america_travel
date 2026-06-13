@@ -22,27 +22,31 @@ const open = reactive({
 })
 
 // ── 💸 정산 (받은 돈 / 받을 돈) ──
-// 200만 = 🏨 SF Hyatt + 🏞 요세미티 + 🏎 SpeedVegas 3개 항목 명목 선납
+// 200만 = 원래 SF+YOS+SpeedVegas 명목이었으나, SF 호텔은 박성한이 직접 결제 →
+//        200만은 🏞 요세미티 + 🏎 SpeedVegas + ⚾ Giants 명목으로 재매핑
 // 150만 = R32 한국전 티켓 (1,500k 정가)
 const payments = [
   { person: '김성준', items: [
-    { amount: 2000000, type: '선납', note: '🏨 SF Hyatt + 🏞 요세미티 + 🏎 SpeedVegas 명목' },
+    { amount: 2000000, type: '선납', note: '🏞 요세미티 + 🏎 SpeedVegas + ⚾ Giants 명목 (SF 호텔은 박성한 직접 결제)' },
     { amount: 1500000, type: '티켓', note: 'R32 한국전 티켓 (1,500k)' },
   ]},
   { person: '박성한', items: [
-    { amount: 2000000, type: '선납', note: '🏨 SF Hyatt + 🏞 요세미티 + 🏎 SpeedVegas 명목' },
+    { amount: 2000000, type: '선납', note: '🏞 요세미티 + 🏎 SpeedVegas + ⚾ Giants 명목 (SF 호텔 4박은 박성한이 별도 직접 결제 · 정산 무관)' },
     { amount: 1500000, type: '티켓', note: 'R32 한국전 티켓 (1,500k)' },
   ]},
 ]
-// 200만 선납 명목 항목들의 실제 1인 부담 합계 (참고용)
+// 200만 선납 명목 항목들의 실제 1인 부담 합계
+// SF Hyatt는 박성한이 직접 결제 → 정산에서 제외 (사용자가 받을 돈 아님)
+// LV Caesars는 사용자가 직접 결제 → 자동 포함 (분담 비용에서 친구들 받을 돈)
+// 200만은 YOS + SpeedVegas + Giants 명목으로 재매핑
 const earmarkedCost = computed(() => {
   const c = currentCost.value
   const findFirst = (arr, kw) => arr.find(x => kw.some(k => x.name.includes(k)))?.perPerson || 0
   return {
-    sfHyatt: findFirst(c.hotel, ['SF Hyatt']),
     yosemite: findFirst(c.hotel, ['YOS']),
     speedvegas: findFirst(c.activity, ['SpeedVegas']),
-    total() { return this.sfHyatt + this.yosemite + this.speedvegas },
+    giants: findFirst(c.activity, ['Giants']),
+    total() { return this.yosemite + this.speedvegas + this.giants },
   }
 })
 
@@ -95,16 +99,20 @@ const costData = {
       { name: '🇰🇷 R32 한국전 티켓 (SoFi Stadium Match 73)', detail: '6/28', perPerson: 1500000 },
     ],
     activity: [
+      { name: '🚇 BART 공항픽업 (SFO→Embarcadero)', detail: '6/26 도착일', perPerson: 16000 },
+      { name: '🚋 케이블카 Powell-Hyde + F Market 트램', detail: '6/27 오전', perPerson: 15000 },
       { name: '🔒 Alcatraz 투어', detail: '6/27 오전 (Pier 33)', perPerson: 70000 },
       { name: '🚴 Golden Gate 자전거', detail: '6/27 오후', perPerson: 60000 },
       { name: '✅ ⚾ Giants 티켓 — LB104 Row 12 Seats 3·4·5 (예매 완료)', detail: '6/27 vs Braves 18:05 · $282 (3장) · Order GNTV-26195758-76749976', perPerson: 136000 },
+      { name: '🍲 BCD Tofu House K-town', detail: '6/28 LA 경기 후', perPerson: 45000 },
       { name: '🏛 실리콘밸리 풀데이 (Stanford·Google·Apple)', detail: '7/1 오전~오후', perPerson: 80000 },
-      { name: '✅ 🏎 SpeedVegas — Ferrari 488 GTB 7랩 + Go Kart (박성혁 1인 예약)', detail: '7/4 11:00·13:00 · $603 (Ferrari) + $35 (Go Kart) = $638 · Ref C0616037', perPerson: 925000 },
+      { name: '✅ 🏎 SpeedVegas — Ferrari 488 GTB 7랩 + Go Kart (박성혁 1인 예약)', detail: '7/2 11:00·13:00 · $603 (Ferrari) + $35 (Go Kart) = $638 · Ref C0616037', perPerson: 925000 },
       { name: '🍽 Bacchanal Buffet @ Caesars × 2회', detail: 'LV (7/2 저녁 포함)', perPerson: 220000 },
       { name: '🎰 Caesars 카지노 베팅 (보수적)', detail: 'LV', perPerson: 280000 },
       { name: '🌃 OMNIA Nightclub (입장+음료)', detail: 'LV 1회', perPerson: 140000 },
+      { name: '🎢 Circus Circus Adventuredome 데이패스', detail: '7/3 LV · 실내 놀이공원', perPerson: 87000 },
       { name: '🛍 Forum Shops 쇼핑 (보수적)', detail: 'LV', perPerson: 200000 },
-      { name: '🍔 일반 식사·음료·우버', detail: '8박 9일 (팁·세금 포함)', perPerson: 800000 },
+      { name: '🍔 일반 식사·음료·우버', detail: '8박 9일 (팁·세금·리조트피 포함)', perPerson: 1050000 },
     ],
   },
 }
@@ -910,22 +918,31 @@ const tripStats = computed(() => {
         <span class="acc-chevron" :class="{ rotated: open.settlement }">›</span>
       </div>
       <div v-show="open.settlement" class="acc-body">
-        <!-- 선납 명목 항목 부담 가이드 -->
+        <!-- 직접 결제 항목 안내 -->
+        <div class="paid-by-banner">
+          <div class="pb-title">💳 직접 결제 항목 (정산 보정)</div>
+          <div class="pb-rows">
+            <span class="pb-item pb-bsh">🏨 <strong>SF Hyatt 4박</strong> · 박성한 직접 예약·결제 → 정산 제외</span>
+            <span class="pb-item pb-user">🏨 <strong>LV Caesars 3박</strong> · 사용자 직접 예약·결제 → 친구들 분담 대상</span>
+          </div>
+        </div>
+
+        <!-- 200만 선납 명목 항목 부담 가이드 (SF 호텔 제외, Giants 추가) -->
         <div class="earmark-banner">
-          <div class="eb-title">📌 200만 선납 명목 = 다음 3개 항목 (1인 부담 기준)</div>
+          <div class="eb-title">📌 200만 선납 재매핑 = 다음 3개 항목 (1인 부담 기준 · SF 호텔 제외, ⚾ Giants 추가)</div>
           <div class="eb-rows">
-            <span class="eb-item">🏨 SF Hyatt 4박 <strong>{{ fmtKRW(earmarkedCost.sfHyatt) }}만</strong></span>
-            <span class="eb-plus">+</span>
             <span class="eb-item">🏞 요세미티(요셈투어) <strong>{{ fmtKRW(earmarkedCost.yosemite) }}만</strong></span>
             <span class="eb-plus">+</span>
             <span class="eb-item">🏎 SpeedVegas <strong>{{ fmtKRW(earmarkedCost.speedvegas) }}만</strong></span>
+            <span class="eb-plus">+</span>
+            <span class="eb-item">⚾ Giants(LB104) <strong>{{ fmtKRW(earmarkedCost.giants) }}만</strong></span>
             <span class="eb-eq">=</span>
             <span class="eb-total">총 <strong>{{ fmtKRW(earmarkedCost.total()) }}만</strong></span>
             <span class="eb-diff" :class="{ 'eb-surplus': 2000000 - earmarkedCost.total() >= 0, 'eb-short': 2000000 - earmarkedCost.total() < 0 }">
               200만 대비 {{ 2000000 - earmarkedCost.total() >= 0 ? '+' : '−' }}{{ fmtKRW(Math.abs(2000000 - earmarkedCost.total())) }}만
             </span>
           </div>
-          <div class="eb-note">↳ 잔여 ({{ fmtKRW(costTotals.total - costTotals.flight - 1500000 - earmarkedCost.total()) }}만/인): LV Caesars + 기타 LV 활동(Adventuredome·서커스 등) + 식비 — 추가 정산 대상</div>
+          <div class="eb-note">↳ 잔여 ({{ fmtKRW(costTotals.total - costTotals.flight - 1500000 - earmarkedCost.total()) }}만/인): LV Caesars(사용자 결제) + 기타 LV 활동(Adventuredome·서커스·OMNIA 등) + 식비 — 추가 정산 대상</div>
         </div>
 
         <div class="settle-grid">
@@ -1622,6 +1639,20 @@ const tripStats = computed(() => {
   min-width: 60px; text-align: right;
 }
 /* ── 💸 정산 ── */
+.paid-by-banner {
+  background: var(--bg); border: 1px solid var(--border);
+  border-left: 3px solid #22c55e;
+  border-radius: var(--radius-lg); padding: .75rem 1rem;
+  margin-bottom: .65rem;
+  display: flex; flex-direction: column; gap: .35rem;
+}
+.pb-title { font-size: .78rem; font-weight: 700; color: var(--text); }
+.pb-rows { display: flex; flex-direction: column; gap: .25rem; font-size: .76rem; }
+.pb-item { padding: 4px 9px; border-radius: 6px; line-height: 1.5; }
+.pb-bsh { background: rgba(225,29,72,.08); border: 1px solid rgba(225,29,72,.25); color: var(--text-muted); }
+.pb-user { background: rgba(96,180,255,.1); border: 1px solid rgba(96,180,255,.3); color: var(--text-muted); }
+.pb-item strong { color: var(--text); }
+
 .earmark-banner {
   background: var(--bg-overlay); border: 1px solid var(--border);
   border-left: 3px solid var(--accent);

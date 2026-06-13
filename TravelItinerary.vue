@@ -22,16 +22,29 @@ const open = reactive({
 })
 
 // ── 💸 정산 (받은 돈 / 받을 돈) ──
+// 200만 = 🏨 SF Hyatt + 🏞 요세미티 + 🏎 SpeedVegas 3개 항목 명목 선납
+// 150만 = R32 한국전 티켓 (1,500k 정가)
 const payments = [
   { person: '김성준', items: [
-    { amount: 2000000, type: '일반', note: '여행 경비 선납' },
+    { amount: 2000000, type: '선납', note: '🏨 SF Hyatt + 🏞 요세미티 + 🏎 SpeedVegas 명목' },
     { amount: 1500000, type: '티켓', note: 'R32 한국전 티켓 (1,500k)' },
   ]},
   { person: '박성한', items: [
-    { amount: 2000000, type: '일반', note: '여행 경비 선납' },
+    { amount: 2000000, type: '선납', note: '🏨 SF Hyatt + 🏞 요세미티 + 🏎 SpeedVegas 명목' },
     { amount: 1500000, type: '티켓', note: 'R32 한국전 티켓 (1,500k)' },
   ]},
 ]
+// 200만 선납 명목 항목들의 실제 1인 부담 합계 (참고용)
+const earmarkedCost = computed(() => {
+  const c = currentCost.value
+  const findFirst = (arr, kw) => arr.find(x => kw.some(k => x.name.includes(k)))?.perPerson || 0
+  return {
+    sfHyatt: findFirst(c.hotel, ['SF Hyatt']),
+    yosemite: findFirst(c.hotel, ['YOS']),
+    speedvegas: findFirst(c.activity, ['SpeedVegas']),
+    total() { return this.sfHyatt + this.yosemite + this.speedvegas },
+  }
+})
 
 // ── 💰 예상 비용 (인당 · 3명 분담 기준) ──
 const costData = {
@@ -778,6 +791,24 @@ const cityColors = {
         <span class="acc-chevron" :class="{ rotated: open.settlement }">›</span>
       </div>
       <div v-show="open.settlement" class="acc-body">
+        <!-- 선납 명목 항목 부담 가이드 -->
+        <div class="earmark-banner">
+          <div class="eb-title">📌 200만 선납 명목 = 다음 3개 항목 (1인 부담 기준)</div>
+          <div class="eb-rows">
+            <span class="eb-item">🏨 SF Hyatt 4박 <strong>{{ fmtKRW(earmarkedCost.sfHyatt) }}만</strong></span>
+            <span class="eb-plus">+</span>
+            <span class="eb-item">🏞 요세미티(요셈투어) <strong>{{ fmtKRW(earmarkedCost.yosemite) }}만</strong></span>
+            <span class="eb-plus">+</span>
+            <span class="eb-item">🏎 SpeedVegas <strong>{{ fmtKRW(earmarkedCost.speedvegas) }}만</strong></span>
+            <span class="eb-eq">=</span>
+            <span class="eb-total">총 <strong>{{ fmtKRW(earmarkedCost.total()) }}만</strong></span>
+            <span class="eb-diff" :class="{ 'eb-surplus': 2000000 - earmarkedCost.total() >= 0, 'eb-short': 2000000 - earmarkedCost.total() < 0 }">
+              200만 대비 {{ 2000000 - earmarkedCost.total() >= 0 ? '+' : '−' }}{{ fmtKRW(Math.abs(2000000 - earmarkedCost.total())) }}만
+            </span>
+          </div>
+          <div class="eb-note">↳ 잔여 ({{ fmtKRW(costTotals.total - costTotals.flight - 1500000 - earmarkedCost.total()) }}만/인): LV Caesars + 기타 LV 활동(Adventuredome·서커스 등) + 식비 — 추가 정산 대상</div>
+        </div>
+
         <div class="settle-grid">
           <div v-for="s in settlement" :key="s.person" class="settle-card" :class="{ 'settle-paid': s.balance <= 0, 'settle-owe': s.balance > 0 }">
             <div class="settle-head">
@@ -1468,6 +1499,25 @@ const cityColors = {
   min-width: 60px; text-align: right;
 }
 /* ── 💸 정산 ── */
+.earmark-banner {
+  background: var(--bg-overlay); border: 1px solid var(--border);
+  border-left: 3px solid var(--accent);
+  border-radius: var(--radius-lg); padding: .75rem 1rem;
+  margin-bottom: .85rem;
+  display: flex; flex-direction: column; gap: .35rem;
+}
+.eb-title { font-size: .78rem; font-weight: 700; color: var(--text); }
+.eb-rows { display: flex; flex-wrap: wrap; gap: .35rem .5rem; align-items: center; font-size: .76rem; color: var(--text-muted); }
+.eb-item { background: var(--bg); padding: 3px 8px; border-radius: 5px; border: 1px solid var(--border-muted); }
+.eb-item strong { color: var(--accent); font-family: ui-monospace, monospace; margin-left: .2rem; }
+.eb-plus, .eb-eq { color: var(--text-dim); font-weight: 700; font-family: ui-monospace, monospace; }
+.eb-total { font-weight: 700; color: var(--text); }
+.eb-total strong { font-family: ui-monospace, monospace; color: var(--accent); margin-left: .2rem; }
+.eb-diff { padding: 2px 8px; border-radius: 5px; font-size: .72rem; font-weight: 700; margin-left: auto; }
+.eb-diff.eb-surplus { background: rgba(34,197,94,.15); color: #22c55e; }
+.eb-diff.eb-short { background: rgba(249,115,22,.15); color: #f97316; }
+.eb-note { font-size: .68rem; color: var(--text-dim); line-height: 1.5; padding-top: .25rem; border-top: 1px dashed var(--border-muted); }
+
 .settle-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: .8rem; margin-bottom: .75rem; }
 .settle-card {
   background: var(--bg); border: 1.5px solid var(--border);

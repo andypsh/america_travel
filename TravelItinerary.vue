@@ -109,7 +109,7 @@ const flights = [
 const giants = [
   { date: '6/26 금', time: '19:15', opponent: 'vs Atlanta Braves', note: '✈️ 도착 당일 — 장거리 비행 피로 회복 우선 → 관람 X' },
   { date: '6/27 토', time: '18:05', opponent: 'vs Atlanta Braves', note: '⭐ 이번 일정 유일 관람 경기 (A: 실리콘밸리 후 합류 / B: 관광 후)' },
-  { date: '6/28 일', time: '13:05', opponent: 'vs Atlanta Braves', note: 'A: 🇰🇷 LA 항공 당일치기 / B: Alcatraz·Golden Gate — 둘 다 관람 X' },
+  { date: '6/28 일', time: '13:05', opponent: 'vs Atlanta Braves', note: 'A: 🇰🇷 LA 항공 당일치기 (Match 73) / B: 💻 실리콘밸리 (Stanford·Google·Apple) — 둘 다 관람 X' },
 ]
 
 // ── 월드컵 시나리오 (FIFA Annex C 원문 파싱 결과) ──
@@ -199,11 +199,11 @@ const aDays = [
   ]},
 ]
 
-// ── Plan B: SF 3박 → YOS 1박 → SEA 1박 → LV 3박 → SFO (A와 호텔·항공편 100% 동일) ──
+// ── Plan A (확정): SF 3박 → YOS 1박 (마이리얼트립) → SF 1박 (복귀) → LV 3박 → SFO · 시애틀 X ──
 const laHotels = [
   { city: '샌프란시스코', tag: 'SF',  nights: 3, dates: '6/26~6/29', economy: 190, mid: 230, note: '✅ Hyatt Regency Embarcadero · 정가 1실 3박 1,200k원 → CJ 콘도지원 후 실부담 인당 ~212k원 · 6/28 LA 항공 당일치기(SFO↔LAX) 포함' },
-  { city: 'Yosemite',    tag: 'YOS', nights: 1, dates: '6/29~6/30', economy: 530, mid: 530, perPerson: true, note: '⭐ A/B 공통 · 마이리얼트립 1박2일 투어 730,000원/인 · SF 픽업·드롭 + Curry Village 숙박 + 가이드 + 저녁 BBQ 포함' },
-  { city: '시애틀',       tag: 'SEA', nights: 1, dates: '6/30~7/1', economy: 280, mid: 400, note: '⭐ A/B 공통 — Hyatt Regency · A: SEA 관광 (Space Needle·Chihuly) / B: 경기 전날 입성' },
+  { city: 'Yosemite',    tag: 'YOS', nights: 1, dates: '6/29~6/30', economy: 530, mid: 530, perPerson: true, note: '⭐ 마이리얼트립 1박2일 투어 730,000원/인 · SF 픽업·드롭 + Curry Village 숙박 + 가이드 + 저녁 BBQ 포함 (렌트카·예약·입장료 모두 불필요)' },
+  { city: '샌프란시스코', tag: 'SF',  nights: 1, dates: '6/30~7/1', economy: 190, mid: 230, note: 'Hyatt Regency Embarcadero 1박 연장 · 마이리얼트립 SF 드롭 후 1박 휴식 · 7/1 LV 비행' },
   { city: '라스베이거스', tag: 'LV',  nights: 3, dates: '7/1~7/4',  economy: 140, mid: 240, note: 'Caesars Palace · 평일 요금 · 7/4 저녁 SFO' },
 ]
 const laDays = [
@@ -238,24 +238,21 @@ const laDays = [
     { time: '13:00~16:00', text: '⛰ 오후 투어 — Yosemite Valley · Bridalveil Fall · El Capitan' },
     { time: '17:00~', text: '🍽 저녁 식사 · 야간 폭포 야경 · LA 경기 회복' },
   ]},
-  { date: '6/30 화', city: '요세미티 → SF → 시애틀', cityTag: 'YOS→SEA', icon: '✈️', items: [
-    { time: '07:00', text: '🌅 아침 조식 · 일출 감상 (El Capitan / Cathedral Rocks)' },
-    { time: '08:00~10:30', text: '🥾 짧은 하이킹 (Tunnel View · Bridalveil Fall)' },
-    { time: '11:00', text: '🚙 Yosemite → SF 귀환 드라이브 (3.5시간) · 차내 점심' },
-    { time: '~14:30', text: 'SF Hyatt Regency Embarcadero 도착 · 빠르게 짐 챙김' },
-    { time: '15:00', text: '🚙 SFO 공항 이동' },
-    { time: '16:30~', text: '✈️ SFO → SEA 국내선 (Alaska/Delta 직항 2h 30m) ⭐ A와 공통 항공편' },
-    { time: '~19:00', text: '🛬 SEA 도착 · Uber로 Hyatt Regency Seattle (downtown)' },
-    { time: '저녁', text: '🍽 Pike Place Market 저녁 · Ivar\'s 씨푸드 · 일찍 휴식' },
+  { date: '6/30 화', city: '요세미티 → 샌프란시스코', cityTag: 'YOS→SF', icon: '⛰️', items: [
+    { time: '07:00', text: '🌅 Curry Village 조식 · 일출 감상 (El Capitan / Cathedral Rocks)' },
+    { time: '08:00~10:30', text: '🥾 짧은 하이킹 (Tunnel View · Bridalveil Fall · Mirror Lake)' },
+    { time: '11:00', text: '🚐 마이리얼트립 셔틀 → SF 귀환 드라이브 (3.5시간) · 차내 점심' },
+    { time: '~15:00', text: '🏨 SF Hyatt Regency Embarcadero 1박 연장 체크인 · 보관 짐 정리 · 휴식' },
+    { time: '오후', text: '🚴 가벼운 Embarcadero 산책 · Ferry Building 둘러보기' },
+    { time: '저녁', text: '🦞 Embarcadero 마지막 SF 저녁 (Hog Island Oysters · Slanted Door) · LV 출발 준비' },
   ]},
-  { date: '7/1 수', city: '시애틀 관광 → 라스베이거스', cityTag: 'SEA→LV', icon: '🌲', items: [
-    { time: '09:00', text: '☀️ 늦잠 · 호텔 조식 (A는 같은 호텔에서 경기 준비)' },
-    { time: '오전', text: '🗼 Space Needle · Chihuly Garden & Glass · Seattle Center' },
-    { time: '점심', text: '🦀 Pike Place Market · Ivar\'s 클램차우더 · 스타벅스 1호점' },
-    { time: '오후', text: '🌉 Kerry Park 전망 · Capitol Hill 카페거리 · Olympic Sculpture Park (선택)' },
-    { time: '16:30-17:00', text: '🚙 호텔 체크아웃 · Uber로 SEA 공항' },
-    { time: '17:30~', text: '✈️ SEA → LAS 야간 국내선 (약 2.5시간) ⭐ A와 공통 항공편' },
-    { time: '~20:00', text: '🎰 라스베이거스 도착 · 심야 체크인 (Caesars Palace 24h) · The Strip 야경' },
+  { date: '7/1 수', city: '샌프란시스코 → 라스베이거스', cityTag: 'SF→LV', icon: '✈️', items: [
+    { time: '오전', text: '🥞 Hyatt 조식 · 체크아웃 · Ferry Building 마지막 쇼핑' },
+    { time: '점심', text: '🍜 SF 마지막 점심 (인앤아웃·차이나타운·Mission)' },
+    { time: '~13:00', text: '🚙 BART/Uber → SFO 공항 이동' },
+    { time: '15:00~', text: '✈️ SFO → LAS 국내선 (Southwest/Alaska 직항 1h 30m)' },
+    { time: '~17:00', text: '🛬 라스베이거스 도착 · Uber로 Caesars Palace 체크인' },
+    { time: '저녁', text: '🎰 The Strip 야경 · Bellagio 분수쇼 · Caesars 카지노 오리엔테이션 · ⚽ Sportsbook 월드컵 R32 라이브' },
   ]},
   { date: '7/2 목', city: '라스베이거스', cityTag: 'LV', icon: '🎰', items: [
     { time: '오전', text: '😴 늦잠 · Caesars 풀장 (Garden of the Gods) · 브런치' },
@@ -496,8 +493,8 @@ const sleepByNight = [
   { date: '6/27 토', a: 'SF · Hyatt Regency Embarcadero',     b: 'SF · Hyatt Regency Embarcadero',     aTag: 'SF',  bTag: 'SF',  action: 'now', same: true, note: 'A: 실리콘밸리·Giants 18:05 / B: Alcatraz·Golden Gate·Giants 18:05' },
   { date: '6/28 일', a: 'SF · Hyatt Regency Embarcadero',     b: 'SF · Hyatt Regency Embarcadero',     aTag: 'SF',  bTag: 'SF',  action: 'now', same: true, note: 'A: 🇰🇷 LA 항공 당일치기 SFO↔LAX (Match 73) / B: 💻 실리콘밸리 당일치기 (Stanford·Google·Apple Park)' },
   { date: '6/29 월', a: 'YOS · Curry Village (투어)', b: 'YOS · Curry Village (투어)', aTag: 'YOS', bTag: 'YOS', action: 'now', same: true, note: '⭐ 마이리얼트립 1박2일 투어 730k/인 (SF픽업+숙박+가이드+BBQ 포함)' },
-  { date: '6/30 화', a: 'SEA · Hyatt Regency',   b: 'SEA · Hyatt Regency',   aTag: 'SEA', bTag: 'SEA', action: 'now', same: true, note: '⭐ A/B 공통 — 같은 SFO→SEA 항공편 + 같은 Hyatt 1박 (월드컵 서징 ⚠️ 일찍)' },
-  { date: '7/1 수',  a: 'LV · Caesars Palace',  b: 'LV · Caesars Palace',  aTag: 'LV',  bTag: 'LV',  action: 'now', same: true, note: 'A: SEA 관광 (Space Needle·Pike Place) / B: 13:00 Lumen 경기 → 같은 SEA→LAS 저녁 항공편' },
+  { date: '6/30 화', a: 'SF · Hyatt Regency Embarcadero (1박 연장)', b: 'SEA · Hyatt Regency',   aTag: 'SF',  bTag: 'SEA', action: 'now', same: false, note: 'A(LA 확정): 시애틀 X · SF 1박 연장 → 7/1 LV 직항 / B(시애틀 백업): SFO→SEA 비행 + Hyatt 1박 (월드컵 서징 ⚠️)' },
+  { date: '7/1 수',  a: 'LV · Caesars Palace',  b: 'LV · Caesars Palace',  aTag: 'LV',  bTag: 'LV',  action: 'now', same: true, note: 'A: SFO → LAS 직항 (시애틀 X) / B: 13:00 Lumen 경기 → SEA→LAS 저녁 항공편' },
   { date: '7/2 목',  a: 'LV · Caesars Palace',  b: 'LV · Caesars Palace',  aTag: 'LV',  bTag: 'LV',  action: 'now', same: true, note: '' },
   { date: '7/3 금',  a: 'LV · Caesars Palace',  b: 'LV · Caesars Palace',  aTag: 'LV',  bTag: 'LV',  action: 'now', same: true, note: '7/4 아침 체크아웃' },
 ]
@@ -508,19 +505,21 @@ const bookingItems = [
     note: '✅ 예약 완료 · 정가 1실 3박 1,200k원 → CJ 콘도지원 후 실부담 인당 ~212k원 (한국 결제 149k + 현지 fees $46) · 5 Embarcadero Center · BART 직결' },
   { id: 'yosemite', label: '✅ Yosemite 1박2일 투어 (마이리얼트립)', tag: 'YOS', dates: '6/29 → 6/30', nights: 1, plans: ['A','B'], type: 'now', confirmed: true,
     note: '⭐ 마이리얼트립 요셈투어 1박2일 · 730,000원/인 · 3인 = 2,190,000원 · SF 픽업·드롭 + Curry Village 숙박 + 가이드 + 저녁 BBQ + 아침 포함 · 렌트카·입장료·예약 모두 불필요' },
-  { id: 'sea-hyatt', label: 'SEA Hyatt Regency (1박)', tag: 'SEA', dates: '6/30 → 7/1', nights: 1, plans: ['A','B'], type: 'now',
-    note: '⭐ A/B 공통 — A: 7/1 SEA 관광 (Space Needle·Pike Place) / B: 경기 전날 입성 · downtown Hyatt · ⚠️ 월드컵 서징 ⚠️ 일찍 예약' },
+  { id: 'sf-extend', label: 'SF Hyatt Regency Embarcadero — 1박 연장 (Plan A 전용)', tag: 'SF', dates: '6/30 → 7/1', nights: 1, plans: ['A'], type: 'now',
+    note: '⭐ Plan A(LA 확정) 전용 · 마이리얼트립 요세미티 투어 SF 드롭 후 1박 → 7/1 SFO→LAS 직항 · 같은 호텔 4박째 (체크인 연장 가능)' },
+  { id: 'sea-hyatt', label: 'SEA Hyatt Regency (1박) — Plan B 전용', tag: 'SEA', dates: '6/30 → 7/1', nights: 1, plans: ['B'], type: 'standby',
+    note: 'Plan B(시애틀 백업) 전용 · 조3위 진출 시에만 사용 · downtown Hyatt · ⚠️ 월드컵 서징 ⚠️ 무료취소 옵션으로 예약 (6/25 23:59 이전 취소 가능)' },
   { id: 'lv-base',  label: '✅ LV Caesars Palace — Octavius Pool View, 2 Queens (예약 완료)', tag: 'LV', dates: '7/1 → 7/4', nights: 3, plans: ['A','B'], type: 'now', confirmed: true,
     note: '✅ 예약 완료 · 3570 Las Vegas Blvd S · Octavius Tower 신관(2012) · Pool View · 2 Queen Beds + Rollaway 요청 · OMNIA·Venus Pool·Forum Shops 직속 · 분수쇼 도보 3분 · 24h 프런트' },
 ]
 
 const decisions = [
   { result: '조2위 진출 — 🇰🇷 LA (Plan A · 확정 시나리오)', planTag: 'A', color: '#7c3aed',
-    keep:   ['SF 3박 (6/26~6/29)', 'Yosemite 1박 (6/29~6/30)', 'SEA Hyatt 1박 (6/30~7/1)', 'LV Caesars 3박 (7/1~7/4)'],
-    cancel: ['(없음 — 호텔·항공편 변경 X · 활동만 분기: 6/28 LA 항공 당일치기 / 7/1 SEA 관광)'] },
+    keep:   ['SF 3박 (6/26~6/29)', 'Yosemite 1박 (6/29~6/30 · 마이리얼트립)', 'SF 1박 연장 (6/30~7/1)', 'LV Caesars 3박 (7/1~7/4)'],
+    cancel: ['SEA Hyatt 1박 (시애틀 안 감)', '(6/28 LA 항공 당일치기 SFO↔LAX 확정)'] },
   { result: '조3위 진출 — 🏟 시애틀 (Plan B · 백업)', planTag: 'B', color: '#e11d48',
-    keep:   ['SF 3박 (6/26~6/29)', 'Yosemite 1박 (6/29~6/30)', 'SEA Hyatt 1박 (6/30~7/1)', 'LV Caesars 3박 (7/1~7/4)'],
-    cancel: ['(없음 — 호텔·항공편 변경 X · 활동만 분기: 7/1 Lumen 경기)'] },
+    keep:   ['SF 3박 (6/26~6/29)', 'Yosemite 1박 (6/29~6/30 · 마이리얼트립)', 'SEA Hyatt 1박 (6/30~7/1)', 'LV Caesars 3박 (7/1~7/4)'],
+    cancel: ['SF 1박 연장 (Plan A 전용)', '(7/1 Lumen 경기 · 시애틀 진출 시)'] },
 ]
 
 // ── Computed ──

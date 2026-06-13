@@ -188,9 +188,9 @@ const aDays = [
     { time: '오후', text: '🎡 Fremont Street Experience · 구시가지 LED 쇼 · 우버 13분' },
     { time: '저녁', text: '💦 Bellagio 분수쇼 (도보 3분) · 🎰 Caesars 카지노 빅휠·룰렛 · ⚽ Sportsbook 월드컵 R16' },
   ]},
-  { date: '7/3 금', city: '라스베이거스', cityTag: 'LV', icon: '🏎', items: [
+  { date: '7/3 금', city: '라스베이거스 · 서커스서커스', cityTag: 'LV', icon: '🎪', items: [
     { time: '오전', text: '🏎 SpeedVegas 슈퍼카 레이싱 (람보·페라리·포르쉐, 국제면허 필수)', bold: true },
-    { time: '오후', text: '🛍 Forum Shops 쇼핑 (Caesars 직결) · 호텔 카지노' },
+    { time: '오후', text: '🎢 Circus Circus Adventuredome (실내 놀이공원 · Canyon Blaster·El Loco·범퍼카) + 🎪 Carnival Midway 무료 서커스 공연 관람', bold: true },
     { time: '저녁', text: '🍽 Bacchanal 뷔페 (LV 1위) · 🎰 Caesars 카지노 빅휠·블랙잭 · 🌃 OMNIA Nightclub (선택)' },
   ]},
   { date: '7/4 토', city: '라스베이거스 → SFO 귀국', cityTag: 'LV→SFO', icon: '🏠',
@@ -265,9 +265,11 @@ const laDays = [
     { time: '오후', text: '🏎 SpeedVegas 슈퍼카 레이싱 (람보르기니·페라리·포르쉐 · 강사 동승 · 국제면허 필수)', bold: true },
     { time: '저녁', text: '🍽 Bacchanal 뷔페 @ Caesars Palace (LV 1위 뷔페 · 일본·중식·한식·미식) · 🎰 Caesars 카지노 빅휠·블랙잭', bold: true },
   ]},
-  { date: '7/3 금', city: '라스베이거스', cityTag: 'LV', icon: '🎰', items: [
-    { time: '오전', text: '🏗 후버댐 투어 (왕복 ~3시간) or Caesars 풀장 휴식' },
-    { time: '오후', text: '🛍 Forum Shops 쇼핑 (Caesars 직결) · ⚽ Sportsbook 월드컵 R16 라이브' },
+  { date: '7/3 금', city: '라스베이거스 · 서커스서커스', cityTag: 'LV', icon: '🎪', items: [
+    { time: '10:00~12:30', text: '🎢 Circus Circus Adventuredome 입장 ($60/인 데이패스 · 실내 놀이공원 25개 라이드) — Canyon Blaster 더블 루프 코스터·El Loco·범퍼카·미니골프 (스트립 북쪽 끝, Uber 10분)', bold: true },
+    { time: '12:30~13:30', text: '🍔 Circus Circus 호텔 내 푸드코트 점심 (The Steakhouse·Pizzeria·Westside Deli)' },
+    { time: '13:30~14:30', text: '🎪 Carnival Midway 서커스 공연 관람 (무료 · 30분 간격 · 공중곡예·저글링·곡예사·마술 — 카지노 2층)', bold: true },
+    { time: '15:00~', text: '🚙 Caesars 복귀 · 🛍 Forum Shops 쇼핑 · ⚽ Sportsbook 월드컵 R16 라이브' },
     { time: '저녁', text: '🎰 Caesars 카지노 마무리 · 💦 Bellagio 분수쇼 · 🌃 OMNIA Nightclub (선택)' },
   ]},
   { date: '7/4 토', city: '라스베이거스 → SFO 귀국', cityTag: 'LV→SFO', icon: '🏠',
@@ -304,6 +306,10 @@ const activities = {
       desc: '주말 오전 Soccer Field 6~7면 상시 픽업게임 · 그냥 가면 끼워줌 · 월드컵 시즌 특히 활발 · 미국인·라틴계 혼합 팀', tip: 'Playo 앱으로 사전 게임 조인 가능 · 클릿 없이 런닝화도 OK · 물 꼭 챙기기' },
   ],
   LV: [
+    { emoji: '🎢', name: 'Circus Circus Adventuredome (실내 놀이공원)', type: '액티브', price: '$60/인 데이패스 · $7~12/라이드', duration: '3~5h',
+      desc: '5에이커 실내 돔 놀이공원 · 25개 라이드 · Canyon Blaster (미국 유일 실내 더블 루프 코스터)·El Loco·범퍼카·미니골프·VR 어트랙션 · 스트립 북쪽 끝 Circus Circus 호텔 직속', tip: '⭐ 라이드 5개 이상 탈 거면 데이패스 무조건 이득 · 36인치 미만은 키즈 라이드만 · 에어컨 빵빵해서 7월 LV 더위 회피 최적 · Caesars에서 Uber 12분 ($15)' },
+    { emoji: '🎪', name: 'Circus Circus Carnival Midway 서커스 공연', type: '관람', price: '무료', duration: '15~20분/공연',
+      desc: 'Circus Circus 카지노 2층 무료 라이브 서커스 · 30분 간격 운영 (11am~12am) · 공중곡예·저글링·곡예사·마술 등 매번 다른 액트 · 1968년부터 명물', tip: '⭐ 무료라 시간 맞춰 가서 1~2개 보고 옆 Adventuredome 연결 동선 굿 · 좋은 자리는 공연 10분 전 도착' },
     { emoji: '🏎️', name: 'SpeedVegas 슈퍼카 레이싱', type: '액티브', price: '$399~599/인 (5랩)', duration: '1~2h',
       desc: 'Huracán/488 GTB $399 · F8/STO $499~599 · 강사 동승 + Porsche SUV 디스커버리 랩 2회 무료', tip: '스트립 남쪽 15분 · 사전 예약 필수 · 멀티카 추가시 차량당 $100 할인' },
     { emoji: '🏁', name: 'Vegas Superkarts (SpeedVegas 부지)', type: '액티브', price: '$35~85/인', duration: '8~30분',

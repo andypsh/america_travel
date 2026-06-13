@@ -27,12 +27,13 @@ const open = reactive({
 // 150만 = R32 한국전 티켓 (1,500k 정가)
 const payments = [
   { person: '김성준', items: [
-    { amount: 2000000, type: '선납', note: '🏞 요세미티 + 🏎 SpeedVegas + ⚾ Giants 명목 (SF 호텔은 박성한 직접 결제)' },
-    { amount: 1500000, type: '티켓', note: 'R32 한국전 티켓 (1,500k)' },
+    { amount: 2000000, type: '현금→박성혁', note: '🏞 요세미티 + 🏎 SpeedVegas + ⚾ Giants 명목 선납' },
+    { amount: 1500000, type: '현금→박성혁', note: 'R32 한국전 티켓 1,500k 명목' },
   ]},
   { person: '박성한', items: [
-    { amount: 2000000, type: '선납', note: '🏞 요세미티 + 🏎 SpeedVegas + ⚾ Giants 명목 (SF 호텔 4박은 박성한이 별도 직접 결제 · 정산 무관)' },
-    { amount: 1500000, type: '티켓', note: 'R32 한국전 티켓 (1,500k)' },
+    { amount: 2000000, type: '현금→박성혁', note: '🏞 요세미티 + 🏎 SpeedVegas + ⚾ Giants 명목 선납' },
+    { amount: 1500000, type: '현금→박성혁', note: 'R32 한국전 티켓 1,500k 명목' },
+    { amount: 262672, type: '직접결제→Hyatt', note: '🏨 SF Hyatt 1실 4박 ₩262,672 직접 결제 → 본인 1인분(87,557) + 친구 2인분(175,114) 자동 정산 (박성혁에게 갚을 돈에서 차감)' },
   ]},
 ]
 // 200만 선납 명목 항목들의 실제 1인 부담 합계
@@ -144,6 +145,11 @@ function fmtKRW(n) {
 }
 
 // ── 정산 계산 — 항공은 각자 부담 → 호텔+티켓+액티비티만 분담 ──
+// 3인 분담 모델: 각자 share = sharedCost. 각자 net 지출과 share의 차이가 정산 잔액.
+// - 박성혁(사용자): vendor 직접 결제 V_A + 친구 송금 700만 입금 → net = V_A − 700만
+// - 박성한: vendor 직접결제 ₩262,672 (SF Hyatt) + 박성혁 송금 350만 → net = 3,762,672
+// - 김성준: 박성혁 송금 350만 → net = 350만
+// balance = share − net_paid (양수=추가 납부 / 음수=환급받음)
 const sharedCost = computed(() => costTotals.value.total - costTotals.value.flight)
 const settlement = computed(() => {
   const cost = sharedCost.value
@@ -161,6 +167,27 @@ const settlement = computed(() => {
 })
 const settlementTotal = computed(() => {
   return settlement.value.reduce((s, x) => s + x.balance, 0)
+})
+
+// 박성혁(사용자) 본인의 정산 위치 — 친구들로부터 받을 돈 총합
+const userSettlement = computed(() => {
+  const total = costTotals.value.total - costTotals.value.flight  // 1인분 share
+  const totalAcrossAll = total * 3  // 전체 분담 비용
+  const friendsDirectPaid = 262672  // 박성한 SF Hyatt 직접결제
+  const userVendorPaid = totalAcrossAll - friendsDirectPaid  // 박성혁이 vendor에 낸 총액
+  const userOwnShare = total
+  const receivedFromFriends = 7000000  // 200만+150만 × 2명
+  const userNetSpent = userVendorPaid - receivedFromFriends
+  const balance = userOwnShare - userNetSpent  // 음수면 박성혁이 받을 돈
+  return {
+    person: '박성혁 (사용자)',
+    vendorPaid: userVendorPaid,
+    received: receivedFromFriends,
+    share: userOwnShare,
+    netSpent: userNetSpent,
+    balance,
+    receivable: -balance,  // 양수: 친구들로부터 받을 돈
+  }
 })
 
 // ── 항공편 ──
@@ -934,10 +961,17 @@ const tripStats = computed(() => {
       <div v-show="open.settlement" class="acc-body">
         <!-- 직접 결제 항목 안내 -->
         <div class="paid-by-banner">
-          <div class="pb-title">💳 직접 결제 항목 (정산 보정)</div>
+          <div class="pb-title">💳 직접 결제 항목 — 3인 정산 자동 보정</div>
           <div class="pb-rows">
-            <span class="pb-item pb-bsh">🏨 <strong>SF Hyatt 4박</strong> · 박성한 직접 예약·결제 → 정산 제외</span>
-            <span class="pb-item pb-user">🏨 <strong>LV Caesars 3박</strong> · 사용자 직접 예약·결제 → 친구들 분담 대상</span>
+            <span class="pb-item pb-bsh">🏨 <strong>SF Hyatt 4박 ₩262,672</strong> · 박성한 직접 결제 → 친구 2인분(₩175,114) 자동 차감 (박성한이 박성혁에 갚을 돈 ↓)</span>
+            <span class="pb-item pb-user">🏨 <strong>LV Caesars 3박 ₩839,741</strong> · 박성혁 직접 결제 → 친구 2인분 자동 청구 (박성혁이 친구로부터 받을 돈 ↑)</span>
+          </div>
+          <div class="pb-math">
+            <strong>📐 3인 정산 수식</strong> · 각자 share = ₩{{ fmtKRW(sharedCost) }}만 (1인 분담)<br>
+            ▸ <em>balance</em> = share − (vendor 직접결제 + 박성혁 송금)<br>
+            ▸ 박성한 net = ₩262,672 (Hyatt) + ₩3,500,000 (송금) = ₩3,762,672 → balance = share − 376.3만<br>
+            ▸ 김성준 net = ₩3,500,000 (송금) → balance = share − 350만<br>
+            ▸ 박성혁(본인) = 다른 모든 vendor 직접결제 V_A − 700만 수금 → 받을 돈 = friend balance 합계
           </div>
         </div>
 
@@ -965,6 +999,41 @@ const tripStats = computed(() => {
         </div>
 
         <div class="settle-grid">
+          <!-- 박성혁(사용자) 본인 카드 -->
+          <div class="settle-card settle-self">
+            <div class="settle-head">
+              <span class="settle-name">🧑 {{ userSettlement.person }}</span>
+              <span class="settle-badge badge-self">총 받을 돈</span>
+            </div>
+            <div class="settle-items">
+              <div class="settle-item-row">
+                <span class="si-type">vendor 결제</span>
+                <span class="si-amount">−{{ fmtKRW(userSettlement.vendorPaid) }}만</span>
+                <span class="si-note">LV Caesars · SpeedVegas · Giants · YOS 마이리얼트립 · 기타 (SF Hyatt 제외)</span>
+              </div>
+              <div class="settle-item-row">
+                <span class="si-type">친구 송금</span>
+                <span class="si-amount">+{{ fmtKRW(userSettlement.received) }}만</span>
+                <span class="si-note">김성준 350만 + 박성한 350만</span>
+              </div>
+            </div>
+            <div class="settle-divider"></div>
+            <div class="settle-summary-rows">
+              <div class="ss-line">
+                <span class="ss-label">본인 1인 분담 (share)</span>
+                <span class="ss-value cost">{{ fmtKRW(userSettlement.share) }}만</span>
+              </div>
+              <div class="ss-line">
+                <span class="ss-label">실제 본인 out-of-pocket</span>
+                <span class="ss-value">{{ fmtKRW(userSettlement.netSpent) }}만</span>
+              </div>
+              <div class="ss-line ss-balance">
+                <span class="ss-label">친구로부터 받을 돈 (총합)</span>
+                <span class="ss-value owe">+{{ fmtKRW(userSettlement.receivable) }}만</span>
+              </div>
+            </div>
+          </div>
+
           <div v-for="s in settlement" :key="s.person" class="settle-card" :class="{ 'settle-paid': s.balance <= 0, 'settle-owe': s.balance > 0 }">
             <div class="settle-head">
               <span class="settle-name">{{ s.person }}</span>
@@ -1671,6 +1740,13 @@ const tripStats = computed(() => {
 .pb-bsh { background: rgba(225,29,72,.08); border: 1px solid rgba(225,29,72,.25); color: var(--text-muted); }
 .pb-user { background: rgba(96,180,255,.1); border: 1px solid rgba(96,180,255,.3); color: var(--text-muted); }
 .pb-item strong { color: var(--text); }
+.pb-math {
+  margin-top: .35rem; padding: .55rem .7rem;
+  background: var(--bg-overlay); border: 1px dashed var(--border);
+  border-radius: 6px; font-size: .72rem; color: var(--text-muted); line-height: 1.7;
+}
+.pb-math strong { color: var(--accent); display: block; margin-bottom: .2rem; font-size: .76rem; }
+.pb-math em { color: #7c3aed; font-style: normal; font-family: ui-monospace, monospace; }
 
 .earmark-banner {
   background: var(--bg-overlay); border: 1px solid var(--border);
@@ -1705,6 +1781,9 @@ const tripStats = computed(() => {
 }
 .settle-card.settle-owe { border-color: #f97316; background: rgba(249,115,22,.04); }
 .settle-card.settle-paid { border-color: #22c55e; background: rgba(34,197,94,.04); }
+.settle-card.settle-self { border-color: #7c3aed; background: rgba(124,58,237,.06); border-width: 2px; }
+.settle-card.settle-self .si-amount { color: var(--text); }
+.badge-self { background: rgba(124,58,237,.18); color: #7c3aed; border: 1px solid rgba(124,58,237,.4); font-size: .65rem; font-weight: 700; padding: 3px 8px; border-radius: 5px; letter-spacing: .03em; text-transform: uppercase; }
 .settle-head { display: flex; align-items: center; justify-content: space-between; gap: .5rem; }
 .settle-name { font-size: 1.05rem; font-weight: 700; color: var(--text); }
 .settle-badge {

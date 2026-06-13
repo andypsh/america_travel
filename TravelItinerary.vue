@@ -1342,18 +1342,22 @@ const tripStats = computed(() => {
 .itinerary {
   display: flex; flex-direction: column; gap: 1rem;
 
-  /* ── 밝은 다크 톤 — 가독성 우선 ── */
-  --text:         #ffffff;
-  --text-muted:   #f4f8fd;
-  --text-dim:     #e6eef9;
-  --bg:           #1a2a44;
-  --bg-elevated:  #243753;
-  --bg-overlay:   #2f4564;
-  --border:       #587498;
-  --border-muted: #426087;
-  --accent:       #a8d7ff;
-  --accent-hover: #d0e9ff;
-  --accent-bg:    rgba(168,215,255,.25);
+  /* ── 라이트 테마 — 모바일 APP 친화 · 한눈에 보이는 UI ── */
+  --text:         #0f172a;
+  --text-muted:   #334155;
+  --text-dim:     #64748b;
+  --bg:           #f1f5f9;
+  --bg-elevated:  #ffffff;
+  --bg-overlay:   #f8fafc;
+  --border:       #cbd5e1;
+  --border-muted: #e2e8f0;
+  --accent:       #2563eb;
+  --accent-hover: #1d4ed8;
+  --accent-bg:    rgba(37,99,235,.10);
+
+  background: #e2e8f0;
+  padding: 1rem;
+  border-radius: 16px;
 }
 
 /* ── Plan Toggle ── */
@@ -1379,7 +1383,7 @@ const tripStats = computed(() => {
 .plan-badge.sky { background: rgba(14,165,233,.15); color: #0ea5e9; }
 
 /* ── Accordion ── */
-.accordion { padding: 0; overflow: hidden; }
+.accordion { padding: 0; overflow: hidden; background: var(--bg-elevated); border: 1px solid var(--border); border-radius: var(--radius-lg); box-shadow: 0 1px 3px rgba(15,23,42,.06); }
 .acc-header {
   display: flex; align-items: center; gap: .6rem;
   padding: .9rem 1.1rem; cursor: pointer;

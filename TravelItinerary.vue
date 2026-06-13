@@ -989,91 +989,51 @@ const tripStats = computed(() => {
           <div class="eb-note">↳ 잔여 ({{ fmtKRW(costTotals.total - costTotals.flight - 1500000 - earmarkedCost.total()) }}만/인): LV Caesars(사용자 결제) + YOS 현지(미지불) + 기타 LV 활동(Adventuredome·서커스·OMNIA 등) + 식비 — 추가 정산 대상</div>
         </div>
 
-        <div class="settle-grid">
-          <!-- 박성혁(사용자) 본인 카드 -->
-          <div class="settle-card settle-self">
-            <div class="settle-head">
-              <span class="settle-name">🧑 {{ userSettlement.person }}</span>
-              <span class="settle-badge badge-self">{{ userSettlement.receivable >= 0 ? '현재 받을 돈' : '친구 advance 보관' }}</span>
-            </div>
-            <div class="settle-items">
-              <div class="settle-item-row">
-                <span class="si-type">vendor 결제</span>
-                <span class="si-amount">−{{ fmtKRW(userSettlement.vendorPaid) }}만</span>
-                <span class="si-note">결제 완료 항목만 (LV Caesars 예매 · SpeedVegas · Giants · YOS 마이리얼트립)</span>
-              </div>
-              <div class="settle-item-row">
-                <span class="si-type">친구 송금</span>
-                <span class="si-amount">+{{ fmtKRW(userSettlement.received) }}만</span>
-                <span class="si-note">김성준 350만 + 박성한 350만 (선납 + R32 티켓 명목)</span>
-              </div>
-            </div>
-            <div class="settle-divider"></div>
-            <div class="settle-summary-rows">
-              <div class="ss-line">
-                <span class="ss-label">본인 1인 결제완료 share</span>
-                <span class="ss-value cost">{{ fmtKRW(userSettlement.share) }}만</span>
-              </div>
-              <div class="ss-line">
-                <span class="ss-label">실제 본인 out-of-pocket</span>
-                <span class="ss-value" :style="{ color: userSettlement.netSpent < 0 ? '#22c55e' : 'var(--text)' }">{{ userSettlement.netSpent < 0 ? '+' : '' }}{{ fmtKRW(userSettlement.netSpent) }}만</span>
-              </div>
-              <div class="ss-line ss-balance">
-                <span class="ss-label">{{ userSettlement.receivable >= 0 ? '현재 친구로부터 받을 돈' : '친구 advance 보관 중' }}</span>
-                <span class="ss-value" :class="{ owe: userSettlement.receivable >= 0, surplus: userSettlement.receivable < 0 }">
-                  {{ userSettlement.receivable >= 0 ? '+' : '−' }}{{ fmtKRW(Math.abs(userSettlement.receivable)) }}만
+        <!-- 핵심 결론 -->
+        <div class="settle-headline">
+          <div class="sh-title">📊 정산 결과 한눈에</div>
+          <div class="sh-rows">
+            <div v-for="s in settlement" :key="'h-'+s.person" class="sh-row">
+              <span class="sh-arrow">{{ s.balance >= 0 ? '↗' : '↙' }}</span>
+              <span class="sh-text">
+                <strong>박성혁</strong> →
+                <strong>{{ s.person }}</strong>:
+                <span class="sh-amount" :class="{ 'sh-pay': s.balance < 0, 'sh-receive': s.balance > 0 }">
+                  {{ s.balance < 0 ? '돌려줄 돈' : s.balance > 0 ? '더 받을 돈' : '정산 완료' }}
+                  <strong>{{ fmtKRW(Math.abs(s.balance)) }}만</strong>
                 </span>
-              </div>
+              </span>
             </div>
           </div>
+        </div>
 
+        <!-- 친구별 간략 카드 -->
+        <div class="settle-grid">
           <div v-for="s in settlement" :key="s.person" class="settle-card" :class="{ 'settle-paid': s.balance <= 0, 'settle-owe': s.balance > 0 }">
             <div class="settle-head">
               <span class="settle-name">{{ s.person }}</span>
-              <span class="settle-badge" :class="{ 'badge-paid': s.balance <= 0, 'badge-owe': s.balance > 0 }">
-                {{ s.balance > 0 ? '현재 추가로 받을 돈' : s.balance < 0 ? '박성혁 advance 보관' : '정산 완료' }}
-              </span>
             </div>
-
-            <div class="settle-items">
-              <div v-for="(i, idx) in s.items" :key="idx" class="settle-item-row">
-                <span class="si-type" :class="{ 'si-ticket': i.type === '티켓' }">{{ i.type }}</span>
-                <span class="si-amount">+{{ fmtKRW(i.amount) }}만</span>
-                <span class="si-note">{{ i.note }}</span>
-              </div>
-            </div>
-
-            <div class="settle-divider"></div>
-
             <div class="settle-summary-rows">
               <div class="ss-line">
-                <span class="ss-label">박성혁에게 송금/결제한 총액</span>
+                <span class="ss-label">📥 박성혁에게 보낸 돈</span>
                 <span class="ss-value received">{{ fmtKRW(s.received) }}만</span>
               </div>
               <div class="ss-line">
-                <span class="ss-label">결제완료 1인 share <em class="ss-em">(현재까지)</em></span>
+                <span class="ss-label">📤 본인 부담분 (결제완료 share)</span>
                 <span class="ss-value cost">{{ fmtKRW(s.cost) }}만</span>
               </div>
-              <div class="ss-line ss-line-aside">
-                <span class="ss-label">미결제 1인 예상 <em class="ss-em">(아직 청구 X)</em></span>
-                <span class="ss-value aside">+{{ fmtKRW(s.pendingShare) }}만</span>
-              </div>
-              <div class="ss-line ss-line-aside">
-                <span class="ss-label">✈️ 각자 항공권 (별도 부담)</span>
-                <span class="ss-value aside">{{ fmtKRW(s.flightOwn) }}만</span>
-              </div>
               <div class="ss-line ss-balance">
-                <span class="ss-label">{{ s.balance > 0 ? '현재 받을 돈' : s.balance < 0 ? '박성혁 advance 보관' : '정산 OK' }}</span>
+                <span class="ss-label">{{ s.balance > 0 ? '➕ 박성혁에게 추가 송금' : s.balance < 0 ? '↩ 박성혁이 돌려줄 돈' : '✅ 정산 완료' }}</span>
                 <span class="ss-value" :class="{ owe: s.balance > 0, surplus: s.balance < 0 }">
-                  {{ s.balance > 0 ? '+' : s.balance < 0 ? '−' : '' }}{{ fmtKRW(Math.abs(s.balance)) }}만
+                  <strong>{{ fmtKRW(Math.abs(s.balance)) }}만</strong>
                 </span>
               </div>
             </div>
           </div>
         </div>
+
         <p class="settle-note">
-          💡 <strong>결제 완료 기준 정산</strong>: 미결제 항목(R32 티켓·YOS 현지·LV 리조트피·식비 등)은 친구에게 청구하지 않음. 친구들이 advance로 보낸 350만은 미결제 항목 발생 시 그쪽으로 차감됨 ·
-          항공권은 각자 부담.
+          💡 결제완료 항목만 정산 대상 (LV Caesars · YOS 마이리얼트립 선납 · SpeedVegas · Giants · SF Hyatt). 미결제(R32 티켓·YOS 현지·LV 리조트피·식비·기타 액티비티)는 현지에서 각자 부담 · 항공권 별도.
         </p>
       </div>
     </div>
@@ -1768,6 +1728,23 @@ const tripStats = computed(() => {
 .eb-pending-item { background: rgba(249,115,22,.15) !important; border-color: rgba(249,115,22,.4) !important; }
 .eb-pending-item strong { color: #f97316 !important; }
 .eb-pending-note { font-size: .68rem; color: var(--text-dim); margin-left: auto; }
+
+.settle-headline {
+  background: linear-gradient(135deg, rgba(96,180,255,.08), rgba(34,197,94,.04));
+  border: 1.5px solid var(--accent);
+  border-radius: var(--radius-lg); padding: 1rem 1.2rem;
+  margin-bottom: 1rem;
+  display: flex; flex-direction: column; gap: .55rem;
+}
+.sh-title { font-size: .9rem; font-weight: 800; color: var(--text); }
+.sh-rows { display: flex; flex-direction: column; gap: .35rem; }
+.sh-row { display: flex; align-items: center; gap: .55rem; font-size: .9rem; color: var(--text); }
+.sh-arrow { font-size: 1.2rem; color: var(--accent); font-weight: 700; }
+.sh-text strong { font-weight: 700; }
+.sh-amount { font-family: ui-monospace, monospace; }
+.sh-amount.sh-pay { color: #f97316; }
+.sh-amount.sh-receive { color: #22c55e; }
+.sh-amount strong { font-size: 1.05rem; margin-left: .25rem; }
 
 .settle-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: .8rem; margin-bottom: .75rem; }
 .settle-card {

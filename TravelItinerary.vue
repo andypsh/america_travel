@@ -69,10 +69,10 @@ const costData = {
       { name: '✈️ LV Caesars 현지 지불 (체크인 시)', detail: 'Resort Fee $58.94 × 3박 + Rollaway $25 × 3박 + Parking·Tax · 약 $252/실 ≈ 36만', perPerson: 121000 },
     ],
     flight: [
-      { name: 'OZ212/OZ211 ICN ↔ SFO 왕복', detail: '6/26·7/4', perPerson: 1200000 },
+      { name: 'OZ212/OZ211 ICN ↔ SFO 왕복', detail: '6/26·7/3', perPerson: 1200000 },
       { name: 'SFO → SEA', detail: '6/30 저녁', perPerson: 250000 },
       { name: 'SEA → LAS', detail: '7/1 저녁', perPerson: 180000 },
-      { name: '✅ LAS → SFO (Southwest 직항)', detail: '7/3 · 17:50 LAS → 19:30 SFO (1h 40m) · 7/3 밤 SF 1박 후 7/4 OZ211', perPerson: 222932 },
+      { name: '✅ LAS → SFO (Southwest 직항)', detail: '7/3 · 17:50 LAS → 19:30 SFO (1h 40m) · 같은 날 23:50 OZ211 환승 (4h 20분 여유)', perPerson: 222932 },
     ],
     ticket: [
       { name: '🇰🇷 R32 한국전 티켓 (Lumen Field Match 82)', detail: '7/1', perPerson: 1500000 },
@@ -92,9 +92,9 @@ const costData = {
       { name: '✈️ LV Caesars 현지 지불 (체크인 시)', detail: 'Resort Fee $58.94 × 3박 + Rollaway $25 × 3박 + Parking·Tax · 약 $252/실 ≈ 36만', perPerson: 121000 },
     ],
     flight: [
-      { name: 'OZ212/OZ211 ICN ↔ SFO 왕복', detail: '6/26·7/4', perPerson: 1200000 },
+      { name: 'OZ212/OZ211 ICN ↔ SFO 왕복', detail: '6/26·7/3', perPerson: 1200000 },
       { name: 'SFO ↔ LAX 왕복 (Southwest 직항)', detail: '6/28 · 06:05 SFO→LAX / 21:05 LAX→SFO', perPerson: 390069 },
-      { name: '✅ SFO ↔ LAS 왕복 (Frontier 7/1 + Southwest 7/4 직항)', detail: '7/1 22:58→00:44 SFO→LAS (Frontier 1h 46m) / 7/4 17:50→19:30 LAS→SFO (Southwest 1h 40m) · ⭐ OZ211까지 4h 20분 여유', perPerson: 445864 },
+      { name: '✅ SFO ↔ LAS 왕복 (Frontier 7/1 + Southwest 7/3 직항)', detail: '7/1 22:58→00:44 SFO→LAS (Frontier 1h 46m) / 7/3 17:50→19:30 LAS→SFO (Southwest 1h 40m) · ⭐ 같은 날 23:50 OZ211 환승 4h 20분 여유', perPerson: 445864 },
     ],
     ticket: [
       { name: '🇰🇷 R32 한국전 티켓 (SoFi Stadium Match 73)', detail: '6/28', perPerson: 1500000 },
@@ -183,7 +183,7 @@ const userSettlement = computed(() => {
 // ── 항공편 ──
 const flights = [
   { label: '출국', flight: 'OZ212', route: 'ICN → SFO', dep: '6/26(금) 20:50 KST', arr: '6/26(금) ~14:30 PDT', aircraft: 'A350-900', duration: '약 10시간 10분' },
-  { label: '귀국', flight: 'OZ211', route: 'SFO → ICN', dep: '7/4(토) 23:50 PDT', arr: '7/6(일) 05:45 KST', aircraft: 'A350-900', duration: '약 12시간 55분' },
+  { label: '귀국', flight: 'OZ211', route: 'SFO → ICN', dep: '7/3(금) 23:50 PDT', arr: '7/5(일) 05:45 KST', aircraft: 'A350-900', duration: '약 12시간 55분' },
 ]
 
 // ── Giants ──
@@ -279,33 +279,22 @@ const aDays = [
     { time: '오후', text: '🎡 Fremont Street Experience · 구시가지 LED 쇼 · 우버 13분' },
     { time: '저녁', text: '💦 Bellagio 분수쇼 (도보 3분) · 🎰 Caesars 카지노 빅휠·룰렛 · ⚽ Sportsbook 월드컵 R16', bold: true },
   ]},
-  { date: '7/3 금', city: '🎪 LV 마지막 → SFO 복귀', cityTag: 'LV→SFO', icon: '🎪',
-    note: '✅ 17:50 LAS→SFO · 7/3 밤 SF 도착 → 7/4 SF 여유',
+  { date: '7/3 금', city: '🎪 LV 마지막 → SFO → 🇰🇷 귀국', cityTag: 'LV→SFO', icon: '✈️',
+    note: '⭐ 7/3 마지막날 — LV 정리 + LAS→SFO + 같은 날 23:50 OZ211',
     items: [
       { time: '오전', text: '😴 늦잠 · Caesars 풀장 · 브런치' },
       { time: '10:30~12:30', text: '🎢 Circus Circus Adventuredome 빠른 방문 (선택)' },
-      { time: '12:30~13:30', text: '🍔 점심 · 🎪 Carnival Midway 무료 서커스 1편 관람' },
-      { time: '13:30~14:30', text: '🛍 Forum Shops 마지막 쇼핑 · 💦 Bellagio 분수쇼 · 🎰 마지막 카지노' },
+      { time: '12:30~13:30', text: '🍔 점심 · 🎪 Carnival Midway 무료 서커스 1편' },
+      { time: '13:30~14:30', text: '🛍 Forum Shops · 💦 Bellagio 분수쇼 · 🎰 마지막 카지노' },
       { time: '14:30', text: '🏨 Caesars 체크아웃 · 짐 픽업' },
-      { time: '15:00', text: '🚖 Caesars → LAS 공항 (Uber 20분)' },
-      { time: '17:50', text: '✅ ✈️ LAS → SFO (Southwest 직항 1h 40m · ₩445,864 왕복 분담)', bold: true },
+      { time: '15:00', text: '🚖 Caesars → LAS 공항' },
+      { time: '17:50', text: '✅ ✈️ LAS → SFO (Southwest 직항 1h 40m)', bold: true },
       { time: '19:30', text: '🛬 SFO 도착 · 짐 픽업' },
-      { time: '20:00', text: '🚇 BART → SF Embarcadero (35분 $10.85/인)' },
-      { time: '~21:00', text: '🏨 SF 호텔 체크인 (7/3~7/4 1박 · ⚠️ 별도 예약 필요)' },
-      { time: '저녁', text: '🍣 SF 늦은 저녁' },
-  ]},
-  { date: '7/4 토', city: '🌉 SF 여유 → OZ211 귀국', cityTag: 'SF→SFO', icon: '🌉',
-    note: '⏰ 미국 독립기념일 · SF 마지막 풀데이 + 저녁 OZ211',
-    items: [
-      { time: '오전', text: '🥞 SF 호텔 조식 · 휴식 (4일 강행 회복)' },
-      { time: '11:00', text: '🏨 체크아웃 · 짐 호텔 보관' },
-      { time: '오후', text: '🌉 SF 마지막 산책 — Fisherman\'s Wharf · Pier 39 · 자유 관광' },
-      { time: '14:00', text: '🦞 SF 마지막 점심 (씨푸드 · In-N-Out 등)' },
-      { time: '16:00', text: '🎆 미국 독립기념일 분위기 즐기기' },
-      { time: '18:00', text: '🚖 호텔 짐 픽업 · BART → SFO Intl Terminal G' },
-      { time: '20:00', text: '🛂 아시아나 카운터 체크인 (마감 22:50 · 여유)', bold: true },
-      { time: '21:00~23:00', text: '🍽 Terminal G 식사·면세점 쇼핑·휴식' },
-      { time: '23:50', text: '✈️ OZ211 SFO 출발 → 인천 7/6(일) 05:45 도착', bold: true },
+      { time: '20:00', text: '🚇 AirTrain → International Terminal G' },
+      { time: '20:30', text: '🛂 아시아나 OZ211 체크인 (마감 22:50)', bold: true },
+      { time: '21:00~23:00', text: '🍽 Terminal G 마지막 식사·면세점·휴식' },
+      { time: '23:00~23:30', text: '🛂 보안검사 + 게이트 이동' },
+      { time: '23:50', text: '✈️ OZ211 SFO 출발 → 인천 7/5(일) 05:45 도착', bold: true },
   ]},
 ]
 
@@ -394,34 +383,22 @@ const laDays = [
     { time: '오후', text: '🎡 Fremont Street Experience · 구시가지 LED 쇼 · 우버 13분 · ⚽ Sportsbook 월드컵 R16' },
     { time: '저녁', text: '🍽 Bacchanal 뷔페 @ Caesars Palace (LV 1위 뷔페 · 일본·중식·한식·미식) · 🎰 Caesars 카지노 빅휠·블랙잭', bold: true },
   ]},
-  { date: '7/3 금', city: '🎪 LV 마지막 → SFO 복귀', cityTag: 'LV→SFO', icon: '🎪',
-    note: '✅ 17:50 LAS→SFO 비행 · 7/3 밤 SF 도착 → 7/4 SF 여유',
+  { date: '7/3 금', city: '🎪 LV 마지막 → SFO → 🇰🇷 귀국', cityTag: 'LV→SFO', icon: '✈️',
+    note: '⭐ 7/3 마지막날 풀스케줄 — LV 정리 + LAS→SFO + 같은 날 23:50 OZ211 인천행',
     items: [
       { time: '오전', text: '😴 늦잠 · Caesars 풀장 (Garden of the Gods) · 브런치' },
-      { time: '10:30~12:30', text: '🎢 Circus Circus Adventuredome 빠른 방문 (선택 · Canyon Blaster·El Loco)', bold: false },
-      { time: '12:30~13:30', text: '🍔 점심 · 🎪 Carnival Midway 무료 서커스 공연 (15분 1개 즉석)' },
+      { time: '10:30~12:30', text: '🎢 Circus Circus Adventuredome 빠른 방문 (선택 · Canyon Blaster·El Loco)' },
+      { time: '12:30~13:30', text: '🍔 LV 마지막 점심 · 🎪 Carnival Midway 무료 서커스 1편 관람' },
       { time: '13:30~14:30', text: '🛍 Forum Shops 마지막 쇼핑 · 💦 Bellagio 분수쇼 · 🎰 마지막 카지노 (보수적)' },
-      { time: '14:30', text: '🏨 Caesars 체크아웃 · 짐 픽업' },
-      { time: '15:00', text: '🚖 Caesars → LAS 공항 (Uber 20분 · 여유 2~3h)' },
-      { time: '17:50', text: '✅ ✈️ LAS → SFO (Southwest 직항 1h 40m · ₩445,864 왕복 분담)', bold: true },
-      { time: '19:30', text: '🛬 SFO 도착 (Southwest Terminal 2) · 짐 픽업' },
-      { time: '20:00', text: '🚇 BART → SF Embarcadero (35분 $10.85/인 · 금요일 막차 12시 여유)' },
-      { time: '~21:00', text: '🏨 SF 호텔 체크인 (7/3~7/4 1박 · ⚠️ 별도 예약 필요)' },
-      { time: '저녁', text: '🍣 늦은 SF 저녁 (Ferry Building or Hyatt 인근 · 가볍게)' },
-  ]},
-  { date: '7/4 토', city: '🌉 SF 여유 → OZ211 귀국', cityTag: 'SF→SFO', icon: '🌉',
-    note: '⏰ 미국 독립기념일 · SF 마지막 풀데이 + 저녁 OZ211 출국',
-    items: [
-      { time: '오전', text: '🥞 SF 호텔 조식 · 늦잠 · 휴식 (4일 강행 회복)' },
-      { time: '11:00', text: '🏨 체크아웃 · 짐 호텔 보관' },
-      { time: '오후', text: '🌉 SF 마지막 산책 — Fisherman\'s Wharf · Pier 39 · 골든게이트 자유 관광' },
-      { time: '14:00', text: '🦞 SF 마지막 점심 (씨푸드 · In-N-Out · 마지막 In-N-Out 등)' },
-      { time: '16:00', text: '🎆 미국 독립기념일 분위기 즐기기 (시내 곳곳 행사)' },
-      { time: '18:00', text: '🚖 호텔 짐 픽업 · BART → SFO Intl Terminal G' },
-      { time: '20:00', text: '🛂 아시아나 카운터 체크인 (마감 22:50 · 여유)', bold: true },
-      { time: '21:00~23:00', text: '🍽 Terminal G 식사·면세점 쇼핑·휴식' },
+      { time: '14:30', text: '🏨 Caesars 체크아웃 · 짐 픽업 (3박 booking 중 2박만 실 사용)' },
+      { time: '15:00', text: '🚖 Caesars → LAS 공항 (Uber 20분)' },
+      { time: '17:50', text: '✅ ✈️ LAS → SFO (Southwest 직항 1h 40m)', bold: true },
+      { time: '19:30', text: '🛬 SFO 도착 (Southwest Terminal 2) · 짐 픽업 (~15분)' },
+      { time: '20:00', text: '🚇 AirTrain → International Terminal G (~15분)' },
+      { time: '20:30', text: '🛂 아시아나 OZ211 카운터 체크인 (마감 22:50 · 충분한 여유 2h+)', bold: true },
+      { time: '21:00~23:00', text: '🍽 Terminal G 마지막 미국 식사·면세점 쇼핑·휴식' },
       { time: '23:00~23:30', text: '🛂 보안검사 + 게이트 이동' },
-      { time: '23:50', text: '✈️ OZ211 SFO 출발 → 인천 7/6(일) 05:45 도착', bold: true },
+      { time: '23:50', text: '✈️ OZ211 SFO 출발 → 인천 7/5(일) 05:45 도착', bold: true },
   ]},
 ]
 
@@ -1143,7 +1120,7 @@ const tripStats = computed(() => {
       <div class="acc-header" @click="open.flights = !open.flights">
         <span class="acc-icon">✈️</span>
         <span class="acc-title">아시아나 항공편</span>
-        <span class="acc-meta">OZ212 · OZ211 · 6/26~7/4</span>
+        <span class="acc-meta">OZ212 · OZ211 · 6/26~7/3</span>
         <span class="acc-chevron" :class="{ rotated: open.flights }">›</span>
       </div>
       <div v-show="open.flights" class="acc-body">

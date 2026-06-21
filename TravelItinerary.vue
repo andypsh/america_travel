@@ -298,12 +298,11 @@ const aDays = [
   ]},
 ]
 
-// ── Plan A (확정): SF 3박 → YOS 1박 (마이리얼트립) → SF 1박 (복귀) → LV 3박 → SFO · 시애틀 X ──
+// ── Plan A (확정): SF 4박 (6/25~6/29) → YOS 1박 (마이리얼트립) → LV 4박 (6/30~7/3) → SFO ──
 const laHotels = [
-  { city: '샌프란시스코', tag: 'SF',  nights: 3, dates: '6/26~6/29', economy: 190, mid: 230, note: '✅ Hyatt Regency Embarcadero · 정가 1실 3박 1,200k원 → CJ 콘도지원 후 실부담 인당 ~212k원 · 6/28 LA 항공 당일치기(SFO↔LAX) 포함' },
-  { city: 'Yosemite',    tag: 'YOS', nights: 1, dates: '6/29~6/30', economy: 700, mid: 700, perPerson: true, note: '⭐ 마이리얼트립 [요셈투어 1박2일] 778,770원/인 + $50 서비스 + $100 비거주자(2026~) + 점심 별도 = 약 101만원/인 · 힐튼 유니온스퀘어 8:00 AM 픽업 · 팬션 숙박 + 스테이크 저녁 + 아침 + 입장료·통행료 포함 · 평점 5.0 (1,616개) · 최소 5명 출발' },
-  { city: '샌프란시스코', tag: 'SF',  nights: 1, dates: '6/30~7/1', economy: 190, mid: 230, note: 'Hyatt Regency Embarcadero 1박 연장 · 마이리얼트립 SF 드롭 후 1박 휴식 · 7/1 LV 비행' },
-  { city: '라스베이거스', tag: 'LV',  nights: 3, dates: '7/1~7/4',  economy: 140, mid: 240, note: 'Caesars Palace · 평일 요금 · 7/4 저녁 SFO' },
+  { city: '샌프란시스코', tag: 'SF',  nights: 4, dates: '6/25~6/29', economy: 190, mid: 230, note: '✅ Hyatt Regency Embarcadero · 6/25 도착·6/26 SF풀데이·6/27 SV+Giants·6/28 LA당일치기 · BART Embarcadero 역 직결' },
+  { city: 'Yosemite',    tag: 'YOS', nights: 1, dates: '6/29~6/30', economy: 700, mid: 700, perPerson: true, note: '⭐ 마이리얼트립 [요셈투어 1박2일] 778,770원/인 + 현지 지불 별도 · 힐튼 유니온스퀘어 8:00 AM 픽업 · 팬션 숙박 + 스테이크 저녁 · 평점 5.0' },
+  { city: '라스베이거스', tag: 'LV',  nights: 3, dates: '6/30~7/3',  economy: 140, mid: 240, note: 'Caesars Palace · 6/30 야간 도착 (요셈투어 드롭 직후 SFO→LAS 직행) · ⚠️ 기존 7/1~7/4 booking → 6/30~7/3로 변경 필요 (담당자 신민주 02-2076-2228)' },
 ]
 const laDays = [
   { date: '6/25 목', city: '🛬 6/25 출국 → SF 도착', cityTag: 'SF', icon: '✈️', items: [
@@ -316,13 +315,26 @@ const laDays = [
     { time: '18:30~', text: '🍜 Ferry Building 푸드홀 가벼운 저녁 (Hog Island Oysters · Slanted Door · Mensho 라멘 · 도보 10분) · ⚾ Giants 19:15 ❌ 패스 (장거리 비행 피로)' },
     { time: '22:00 이전', text: '🛌 일찍 취침 · 내일 09:00 케이블카 출발' },
   ]},
-  { date: '6/27 토', city: '샌프란시스코', cityTag: 'SF', icon: '🚋', items: [
-    { time: '09:00~09:30', text: '🚋 케이블카 Powell-Hyde 라인 탑승 (Powell/Market 시점 → Hyde/Beach 종점, 편도 $8) · Lombard St·Russian Hill 절경', bold: true },
-    { time: '~10:30', text: '🍫 Ghirardelli Square 산책 · Aquatic Park · Hyde St Pier · 도보로 Pier 33 이동 (10분)' },
+  { date: '6/26 금', city: '🌉 SF 풀데이 — 케이블카·🔒감옥·골든게이트', cityTag: 'SF', icon: '🚋', items: [
+    { time: '09:00~09:30', text: '🚋 케이블카 Powell-Hyde 라인 탑승 (Powell/Market → Hyde/Beach, 편도 $8) · Lombard St·Russian Hill 절경', bold: true },
+    { time: '~10:30', text: '🍫 Ghirardelli Square · Aquatic Park · Hyde St Pier · 도보로 Pier 33 이동 (10분)' },
     { time: '11:00', text: '⛴ Alcatraz Cruises — Pier 33 체크인 (사전 예약 필수)' },
     { time: '11:45~14:30', text: '🔒 Alcatraz Island 투어 (옛 연방 감옥 · 탈옥 역사 · 가이드 오디오 투어 · Bay View)', bold: true },
-    { time: '15:00~17:30', text: '🚴 Golden Gate Bridge 자전거 라이딩 · Sausalito 페리 귀환 (Blazing Saddles 렌탈 $35~50)' },
-    { time: '18:05', text: '✅ ⚾ Giants vs Braves @ Oracle Park (예매 완료) · F Market 트램 또는 도보', baseball: true, bold: true },
+    { time: '15:00~17:30', text: '🚴 Golden Gate Bridge 자전거 라이딩 · Sausalito 페리 귀환 (Blazing Saddles $35~50)' },
+    { time: '18:00~', text: '🍽 Pier 39 / Fisherman\'s Wharf 씨푸드 저녁 · Bay View · 야경' },
+    { time: '21:00', text: '🏨 Hyatt 복귀 · 휴식 · 내일 실리콘밸리 출발 대비' },
+  ]},
+  { date: '6/27 토', city: '💻 실리콘밸리 → ⚾ Giants 경기', cityTag: 'SV→SF', icon: '💻', items: [
+    { time: '07:30', text: '🍳 Hyatt 조식 · 일찍 출발 준비' },
+    { time: '08:30', text: '🚂 Caltrain (4th & King) → Palo Alto (1시간) or 🚙 Uber 50분' },
+    { time: '09:30~11:30', text: '🏛 Stanford University 캠퍼스 — Hoover Tower · Main Quad · Memorial Church · 기념품샵', bold: true },
+    { time: '11:30~12:30', text: '🍜 Palo Alto / Mountain View 점심 (인도·중식·한식 풍부)' },
+    { time: '12:30~13:30', text: '🔵 Google Visitor Center (Mountain View) · 안드로이드 동상 · Visitor Experience', bold: true },
+    { time: '13:30~14:30', text: '🍎 Apple Park Visitor Center (Cupertino) · 옥상 카페 · Apple 굿즈' },
+    { time: '14:30', text: '🚙 Uber → SF Oracle Park (1시간 15분, $80~100) or Caltrain SF 귀환' },
+    { time: '16:00', text: '⚾ Oracle Park 도착 · 식사·맥주·파크 워크 · MLB 분위기 만끽' },
+    { time: '18:05', text: '✅ ⚾ Giants vs Braves @ Oracle Park (예매 완료 · Lower Box Select 3장)', baseball: true, bold: true },
+    { time: '~21:00', text: '🏨 경기 후 Hyatt 복귀 · 휴식 · 내일 LA 새벽 출발 대비' },
   ]},
   { date: '6/28 일', city: '🇰🇷 SF↔LA 당일치기 (Match 73 SoFi)', cityTag: 'SF↔LA', icon: '🇰🇷', highlight: true, items: [
     { time: '04:00', text: '⏰ 기상 · 당일치기 가벼운 짐만 (큰짐 호텔 보관)' },
@@ -351,28 +363,26 @@ const laDays = [
     { time: '오후', text: '⛰ Yosemite Valley 명소 — Tunnel View · Bridalveil Fall · El Capitan 전망 · LA 경기 회복' },
     { time: '저녁', text: '🥩 스테이크 저녁식사 (투어 포함) · 팬션 체크인' },
   ]},
-  { date: '6/30 화', city: '요세미티 → 샌프란시스코', cityTag: 'YOS→SF', icon: '🚐', items: [
-    { time: '07:00', text: '🌅 팬션 조식 · 일출 감상 (El Capitan / Cathedral Rocks)' },
-    { time: '08:00~12:00', text: '🥾 가이드 인솔 하이킹·관광 (Tunnel View · Bridalveil Fall · Glacier Point 등 풀 일정)' },
-    { time: '점심', text: '🥪 가이드 추천 점심 (별도 $10~20)' },
-    { time: '13:00~', text: '🚐 요셈투어 SF 복귀 드라이브 (~3.5시간 + 휴게소)' },
-    { time: '~19:00', text: '🛬 힐튼 유니온스퀘어 도착 (요셈투어 드롭)', bold: true },
-    { time: '19:30', text: '🚖 Uber → Hyatt Regency Embarcadero 복귀 (5분) · 보관 짐 정리 · 1박 연장 체크인' },
-    { time: '늦은 저녁', text: '🦞 Embarcadero 늦은 저녁 (Hog Island Oysters · Slanted Door 등) · 휴식 · 내일 SV 출발 준비' },
+  { date: '6/30 화', city: '🏞 요세미티 → SF → 🎰 LAS 직행', cityTag: 'YOS→LV', icon: '✈️',
+    note: '⭐ 요셈투어 SF 드롭 후 그 날 저녁 LAS 비행 — SF 1박 연장 없이 곧장 LV',
+    items: [
+      { time: '07:00', text: '🌅 팬션 조식 · 일출 감상 (El Capitan / Cathedral Rocks)' },
+      { time: '08:00~12:00', text: '🥾 가이드 인솔 하이킹·관광 (Tunnel View · Bridalveil Fall · Glacier Point)' },
+      { time: '점심', text: '🥪 가이드 추천 점심 (별도 $10~20)' },
+      { time: '13:00~', text: '🚐 요셈투어 SF 복귀 드라이브 (~3.5시간 + 휴게소)' },
+      { time: '~19:00', text: '🛬 힐튼 유니온스퀘어 도착 (요셈투어 드롭)', bold: true },
+      { time: '19:15', text: '🚖 Uber → SF Hyatt 짐 픽업 (5분)' },
+      { time: '19:30', text: '🍔 빠른 SF 저녁 · 짐 정리 (15분 이내)' },
+      { time: '20:00', text: '🚖 Uber → SFO (30분, surge 가능)' },
+      { time: '20:45', text: '🛂 SFO 도착 · 체크인 · 보안검사' },
+      { time: '22:00~22:58', text: '✈️ SFO → LAS (Frontier 22:58 · 또는 새 항공권 6/30로 변경 필요 ⚠️)', bold: true },
+      { time: '00:44 (+1)', text: '🛬 라스베이거스 도착 (자정 넘김) · Uber로 Caesars Palace 심야 체크인 (24h 프런트)', bold: true },
   ]},
-  { date: '7/1 수', city: '실리콘밸리 → 라스베이거스 (저녁 비행 권장)', cityTag: 'SV→LV', icon: '💻', items: [
-    { time: '07:30', text: '🍳 Hyatt 조식 · 체크아웃 · 큰짐 호텔 보관 (오후 픽업)' },
-    { time: '08:30~', text: '🚂 Caltrain (4th & King) → Palo Alto (1시간) or 🚙 Uber 50분 (이른 출발)' },
-    { time: '09:30~11:30', text: '🏛 Stanford University 캠퍼스 — Hoover Tower · Main Quad · Memorial Church · 기념품샵', bold: true },
-    { time: '11:30~12:30', text: '🍜 Palo Alto / Mountain View 점심 (인도·중식·한식 풍부)' },
-    { time: '12:30~13:30', text: '🔵 Google Visitor Center (Mountain View) · 안드로이드 동상 · Visitor Experience', bold: true },
-    { time: '13:30~14:30', text: '🍎 Apple Park Visitor Center (Cupertino) · 옥상 카페 · Apple 굿즈' },
-    { time: '14:30~15:30', text: '🚙 Uber → SF Hyatt 짐 픽업 (1시간)' },
-    { time: '15:30~16:15', text: '🚇 Hyatt → Embarcadero BART → SFO (35분, $10.85/인)' },
-    { time: '17:30~18:30', text: '✈️ SFO → LAS (저녁 직항 권장 · Southwest/United/Alaska · 1h 30m~1h 50m)', bold: true },
-    { time: '19:00~20:00', text: '🛬 라스베이거스 도착 · Uber로 Caesars Palace 체크인 (저녁 시간대 체크인 정상)', bold: true },
-    { time: '20:30', text: '🍽 LV 첫 저녁 (Caesars 내 또는 Strip 인근) · 한숨 돌리기' },
-    { time: '21:00~', text: '🌃 The Strip 야경 · Bellagio 분수쇼 · 카지노 오리엔테이션 · 일찍 잠 (내일 11시 SpeedVegas 대비)' },
+  { date: '7/1 수', city: '🎰 라스베이거스 자유일', cityTag: 'LV', icon: '🎰', items: [
+    { time: '오전', text: '😴 늦잠 · Caesars 풀장 (Garden of the Gods) · 브런치 (전날 야간 강행 회복)' },
+    { time: '오후', text: '🎡 Fremont Street Experience · 구시가지 LED 쇼 · 우버 13분' },
+    { time: '저녁', text: '🍽 Bacchanal 뷔페 (LV 1위) · 💦 Bellagio 분수쇼 · 🎰 카지노 빅휠·블랙잭 · ⚽ Sportsbook 월드컵 R16' },
+    { time: '22:00 이전', text: '🛌 일찍 취침 · 내일 11시 SpeedVegas 대비' },
   ]},
   { date: '7/2 목', city: '라스베이거스 · 🏎 SpeedVegas', cityTag: 'LV', icon: '🏎', items: [
     { time: '09:00', text: '🍳 Caesars 조식 · 가벼운 워밍업 (전날 비행·SV 강행 회복)' },

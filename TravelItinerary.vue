@@ -69,7 +69,7 @@ const costData = {
       { name: '✈️ LV Caesars 현지 지불 (체크인 시)', detail: 'Resort Fee $58.94 × 3박 + Rollaway $25 × 3박 + Parking·Tax · 약 $252/실 ≈ 36만', perPerson: 121000 },
     ],
     flight: [
-      { name: 'OZ212/OZ211 ICN ↔ SFO 왕복', detail: '6/26·7/3', perPerson: 1200000 },
+      { name: 'OZ212/OZ211 ICN ↔ SFO 왕복', detail: '6/25(목)·7/3(금)', perPerson: 1200000 },
       { name: 'SFO → SEA', detail: '6/30 저녁', perPerson: 250000 },
       { name: 'SEA → LAS', detail: '7/1 저녁', perPerson: 180000 },
       { name: '✅ LAS → SFO (Southwest 직항)', detail: '7/3 · 17:50 LAS → 19:30 SFO (1h 40m) · 같은 날 23:50 OZ211 환승 (4h 20분 여유)', perPerson: 222932 },
@@ -92,7 +92,7 @@ const costData = {
       { name: '✈️ LV Caesars 현지 지불 (체크인 시)', detail: 'Resort Fee $58.94 × 3박 + Rollaway $25 × 3박 + Parking·Tax · 약 $252/실 ≈ 36만', perPerson: 121000 },
     ],
     flight: [
-      { name: 'OZ212/OZ211 ICN ↔ SFO 왕복', detail: '6/26·7/3', perPerson: 1200000 },
+      { name: 'OZ212/OZ211 ICN ↔ SFO 왕복', detail: '6/25(목)·7/3(금)', perPerson: 1200000 },
       { name: 'SFO ↔ LAX 왕복 (Southwest 직항)', detail: '6/28 · 06:05 SFO→LAX / 21:05 LAX→SFO', perPerson: 390069 },
       { name: '✅ SFO ↔ LAS 왕복 (Frontier 7/1 + Southwest 7/3 직항)', detail: '7/1 22:58→00:44 SFO→LAS (Frontier 1h 46m) / 7/3 17:50→19:30 LAS→SFO (Southwest 1h 40m) · ⭐ 같은 날 23:50 OZ211 환승 4h 20분 여유', perPerson: 445864 },
     ],
@@ -182,13 +182,13 @@ const userSettlement = computed(() => {
 
 // ── 항공편 ──
 const flights = [
-  { label: '출국', flight: 'OZ212', route: 'ICN → SFO', dep: '6/26(금) 20:50 KST', arr: '6/26(금) ~14:30 PDT', aircraft: 'A350-900', duration: '약 10시간 10분' },
+  { label: '출국', flight: 'OZ212', route: 'ICN → SFO', dep: '6/25(목) 20:50 KST', arr: '6/25(목) ~14:30 PDT', aircraft: 'A350-900', duration: '약 10시간 10분' },
   { label: '귀국', flight: 'OZ211', route: 'SFO → ICN', dep: '7/3(금) 23:50 PDT', arr: '7/5(일) 05:45 KST', aircraft: 'A350-900', duration: '약 12시간 55분' },
 ]
 
 // ── Giants ──
 const giants = [
-  { date: '6/26 금', time: '19:15', opponent: 'vs Atlanta Braves', note: '✈️ 도착 당일 — 장거리 비행 피로 회복 우선 → 관람 X' },
+  { date: '6/25 목', time: '19:15', opponent: 'vs Atlanta Braves', note: '✈️ 도착 당일 — 장거리 비행 피로 회복 우선 → 관람 X' },
   { date: '6/27 토', time: '18:05', opponent: 'vs Atlanta Braves', note: '✅ 예매 완료 (3장) · Lower Box Select · Ballpark 앱 배송' },
   { date: '6/28 일', time: '13:05', opponent: 'vs Atlanta Braves', note: 'A: 🇰🇷 LA 항공 당일치기 (Match 73) / B: 💻 실리콘밸리 (Stanford·Google·Apple) — 둘 다 관람 X' },
 ]
@@ -210,8 +210,8 @@ const aHotels = [
   { city: '라스베이거스',     tag: 'LV',  nights: 3, dates: '7/1~7/4',  economy: 140, mid: 240, note: 'Caesars Palace (24h 체크인) · 평일 요금 · 7/4 저녁 SFO' },
 ]
 const aDays = [
-  { date: '6/26 금', city: '샌프란시스코 도착', cityTag: 'SF', icon: '✈️', items: [
-    { time: '14:30', text: '🛬 OZ212 SFO 도착 (International Terminal G) · 게이트 → 입국심사장 도보 10분' },
+  { date: '6/25 목', city: '🛬 6/25 출국 → SF 도착', cityTag: 'SF', icon: '✈️', items: [
+    { time: '14:30', text: '🛬 OZ212 SFO 도착 (International Terminal G · 6/25 KST 출국 → 6/25 PDT 도착) · 게이트 → 입국심사장 도보 10분' },
     { time: '14:40~16:00', text: '🛂 입국심사 (ESTA) + 🧳 수하물 + 🛃 세관 (성수기 1~1.5시간 · APC 키오스크 활용 권장)', bold: true },
     { time: '16:10', text: '🚶 SFO 공항 내 BART 역 이동 (International Terminal 직결 · AirTrain 불필요)' },
     { time: '16:20~16:55', text: '🚇 BART Yellow Line SFO → Embarcadero ($10.85/인 · 약 30분 · 3인 = $32.55)', bold: true },
@@ -306,8 +306,8 @@ const laHotels = [
   { city: '라스베이거스', tag: 'LV',  nights: 3, dates: '7/1~7/4',  economy: 140, mid: 240, note: 'Caesars Palace · 평일 요금 · 7/4 저녁 SFO' },
 ]
 const laDays = [
-  { date: '6/26 금', city: '샌프란시스코 도착', cityTag: 'SF', icon: '✈️', items: [
-    { time: '14:30', text: '🛬 OZ212 SFO 도착 (International Terminal G) · 게이트 → 입국심사장 도보 10분' },
+  { date: '6/25 목', city: '🛬 6/25 출국 → SF 도착', cityTag: 'SF', icon: '✈️', items: [
+    { time: '14:30', text: '🛬 OZ212 SFO 도착 (International Terminal G · 6/25 KST 출국 → 6/25 PDT 도착) · 게이트 → 입국심사장 도보 10분' },
     { time: '14:40~16:00', text: '🛂 입국심사 (ESTA) + 🧳 수하물 + 🛃 세관 (성수기 1~1.5시간 · APC 키오스크 활용 권장)', bold: true },
     { time: '16:10', text: '🚶 SFO 공항 내 BART 역 이동 (International Terminal 직결)' },
     { time: '16:20~16:55', text: '🚇 BART Yellow Line SFO → Embarcadero ($10.85/인 · 약 30분 · 3인 = $32.55)', bold: true },
@@ -625,7 +625,7 @@ const transportRoutes = {
 // ── 예약 전략 ──
 // ── 일자별 잠자리 (A/B 100% 동일 — 호텔·항공편 모두 공유) ──
 const sleepByNight = [
-  { date: '6/26 금', a: 'SF · Hyatt Regency Embarcadero',     b: 'SF · Hyatt Regency Embarcadero',     aTag: 'SF',  bTag: 'SF',  action: 'now', same: true, note: '도착 당일 — 비행 피로 회복' },
+  { date: '6/25 목', a: 'SF · Hyatt Regency Embarcadero',     b: 'SF · Hyatt Regency Embarcadero',     aTag: 'SF',  bTag: 'SF',  action: 'now', same: true, note: '✈️ 6/25 KST 출국 → 6/25 PDT 도착 · 비행 피로 회복' },
   { date: '6/27 토', a: 'SF · Hyatt Regency Embarcadero',     b: 'SF · Hyatt Regency Embarcadero',     aTag: 'SF',  bTag: 'SF',  action: 'now', same: true, note: '⭐ A/B 공통 — 🚋 케이블카 Powell-Hyde · 🔒 Alcatraz · 🚴 Golden Gate · ⚾ Giants 18:05' },
   { date: '6/28 일', a: 'SF · Hyatt Regency Embarcadero',     b: 'SF · Hyatt Regency Embarcadero',     aTag: 'SF',  bTag: 'SF',  action: 'now', same: true, note: 'A: 🇰🇷 LA 항공 당일치기 SFO↔LAX (Match 73) / B: 💻 실리콘밸리 당일치기 (Stanford·Google·Apple Park)' },
   { date: '6/29 월', a: 'YOS · 요셈투어 팬션 (마이리얼트립)', b: 'YOS · 요셈투어 팬션 (마이리얼트립)', aTag: 'YOS', bTag: 'YOS', action: 'now', same: true, note: '⭐ 요셈투어 1박2일 · 약 101만원/인 (본가 778k + $50 서비스 + $100 비거주자 + 점심) · 힐튼 유니온스퀘어 8:00 AM 픽업 · 평점 5.0 (1,616개)' },
@@ -1120,7 +1120,7 @@ const tripStats = computed(() => {
       <div class="acc-header" @click="open.flights = !open.flights">
         <span class="acc-icon">✈️</span>
         <span class="acc-title">아시아나 항공편</span>
-        <span class="acc-meta">OZ212 · OZ211 · 6/26~7/3</span>
+        <span class="acc-meta">OZ212 · OZ211 · 6/25(목)~7/3(금)</span>
         <span class="acc-chevron" :class="{ rotated: open.flights }">›</span>
       </div>
       <div v-show="open.flights" class="acc-body">

@@ -94,7 +94,7 @@ const costData = {
     flight: [
       { name: 'OZ212/OZ211 ICN ↔ SFO 왕복', detail: '6/25(목)·7/3(금)', perPerson: 1200000 },
       { name: 'SFO ↔ LAX 왕복 (Southwest 직항)', detail: '6/28 · 06:05 SFO→LAX / 21:05 LAX→SFO', perPerson: 390069 },
-      { name: '✅ SFO ↔ LAS 왕복 (Frontier 7/1 + Southwest 7/3 직항)', detail: '7/1 22:58→00:44 SFO→LAS (Frontier 1h 46m) / 7/3 17:50→19:30 LAS→SFO (Southwest 1h 40m) · ⭐ 같은 날 23:50 OZ211 환승 4h 20분 여유', perPerson: 445864 },
+      { name: '✅ SFO ↔ LAS 왕복 (Frontier 직항 · 예매 완료)', detail: '6/30 22:58→00:46 SFO→LAS F9 4402 / 7/3 17:51→19:33 LAS→SFO F9 3801 · $1,654.88 총액 (3인 왕복 · 좌석·체크백 2개·우선탑승·무변경수수료 포함) · 1인 $551.63 ≈ ₩799,859', perPerson: 799859 },
     ],
     ticket: [
       { name: '🇰🇷 R32 한국전 티켓 (SoFi Stadium Match 73)', detail: '6/28', perPerson: 1500000 },

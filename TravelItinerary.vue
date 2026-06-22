@@ -93,7 +93,7 @@ const costData = {
     ],
     flight: [
       { name: 'OZ212/OZ211 ICN ↔ SFO 왕복', detail: '6/25(목)·7/3(금)', perPerson: 1200000 },
-      { name: 'SFO ↔ LAX 왕복 (Southwest 직항)', detail: '6/28 · 06:05 SFO→LAX / 21:05 LAX→SFO', perPerson: 390069 },
+      { name: '✅ SFO ↔ LAX 왕복 (6/28 당일치기 · 예매 완료)', detail: '6/28 SFO→LAX / LAX→SFO · 3인 총액 ₩1,416,300 · 1인 ₩472,100', perPerson: 472100 },
       { name: '✅ SFO ↔ LAS 왕복 (Frontier 직항 · 예매 완료)', detail: '6/30 22:58→00:46 SFO→LAS F9 4402 / 7/3 17:51→19:33 LAS→SFO F9 3801 · $1,654.88 총액 (3인 왕복 · 좌석·체크백 2개·우선탑승·무변경수수료 포함) · 1인 $551.63 ≈ ₩799,859', perPerson: 799859 },
     ],
     ticket: [
